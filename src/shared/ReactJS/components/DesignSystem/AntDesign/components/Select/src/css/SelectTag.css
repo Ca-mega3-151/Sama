@@ -1,0 +1,7 @@
+.SelectTag__container.yy-select {
+  width: 100%;
+}
+
+.SelectTag__readOnly {
+  pointer-events: none;
+}
