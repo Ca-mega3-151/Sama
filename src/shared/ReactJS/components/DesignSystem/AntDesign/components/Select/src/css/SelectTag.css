@@ -1,7 +1,7 @@
-.SelectTag__container.yy-select {
+.AntSelectTag__container.yy-select {
   width: 100%;
 }
 
-.SelectTag__readOnly {
+.AntSelectTag__readOnly {
   pointer-events: none;
 }

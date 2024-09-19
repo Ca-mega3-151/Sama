@@ -1,13 +1,13 @@
-.SelectMultiple__container.yy-select {
+.AntSelectMultiple__container.yy-select {
   width: 100%;
 }
 
-.SelectMultiple__loading {
+.AntSelectMultiple__loading {
   padding-bottom: 16px;
   padding-top: 16px;
   text-align: center;
 }
 
-.SelectMultiple__readOnly {
+.AntSelectMultiple__readOnly {
   pointer-events: none;
 }
