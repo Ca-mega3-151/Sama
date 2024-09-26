@@ -12,6 +12,9 @@ export const common = {
     showing_range_result: 'Show from {{from}} to {{to}} in {{total}} records',
     showing_range_results: 'Show from {{from}} to {{to}} in {{total}} records',
     no_data: 'No data',
+    quantity_records_selected: '{{quantity}} records selected',
+    reset: 'Reset',
+    displayed_fields: 'Displayed fields',
   },
   fr: {
     welcome: 'Bonjour {{name}}',

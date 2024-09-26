@@ -1,13 +1,16 @@
 import { ColumnGroupType as AntColumnGroupType, ColumnType as AntColumnType } from 'antd/es/table';
+import { ReactNode } from 'react';
 
-type TakeBaseProps = 'align' | 'title' | 'className' | 'fixed' | 'onCell';
+type TakeBaseProps = 'align' | 'className' | 'fixed' | 'onCell';
 type ColumnGroupType<RecordType> = Pick<AntColumnGroupType<RecordType>, TakeBaseProps | 'children'> & {
+  title?: ReactNode;
   render: (
     record: RecordType,
     index: number,
   ) => ReturnType<Exclude<AntColumnGroupType<RecordType>['render'], undefined>>;
 };
 type ColumnSingleType<RecordType, ActionKey> = Pick<AntColumnType<RecordType>, TakeBaseProps> & {
+  title?: ReactNode;
   actions?: {
     key: ActionKey;
     sort?: boolean;
@@ -36,4 +39,5 @@ export type ColumnType<
   width: number;
   hidden?: boolean;
   onCell?: (record: RecordType, index: number) => CellConfig;
+  uid: string;
 };

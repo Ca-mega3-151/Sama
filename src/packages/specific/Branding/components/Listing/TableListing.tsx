@@ -6,7 +6,7 @@ import { StatusMappingToTagColor } from '../../constants/StatusMappingToTagColor
 import { Branding } from '../../models/Branding';
 import { ListingSearchParams } from '../../types/ListingSearchParams';
 import { HeaderListing } from '~/components/HeaderListing/HeaderListing';
-import { Table, TableActions, TableColumnType, TableProps, Tag } from '~/shared/ReactJS';
+import { Button, Segmented, Table, TableActions, TableColumnType, TableProps, Tag } from '~/shared/ReactJS';
 import { FormQueryStateValues } from '~/shared/TypescriptUtilities';
 import { dayjs } from '~/shared/Utilities';
 
@@ -45,12 +45,7 @@ export const TableListing = ({
 
   const columns: Array<TableColumnType<Branding, keyof SortValues>> = [
     {
-      title: '#',
-      width: 48,
-      align: 'center',
-      render: (_, index) => pageSize * (currentPage - 1) + index + 1,
-    },
-    {
+      uid: 'code',
       title: t('branding:code'),
       width: 320,
       actions: {
@@ -62,11 +57,13 @@ export const TableListing = ({
       },
     },
     {
+      uid: 'name',
       title: t('branding:name'),
       width: 320,
       render: record => record.brandingName,
     },
     {
+      uid: 'status',
       title: t('branding:status'),
       width: 160,
       align: 'center',
@@ -75,6 +72,7 @@ export const TableListing = ({
       },
     },
     {
+      uid: 'updated_by',
       title: t('branding:updated_by'),
       width: 320,
       render: record => {
@@ -82,6 +80,7 @@ export const TableListing = ({
       },
     },
     {
+      uid: 'updated_at',
       title: t('branding:updated_at'),
       width: 160,
       render: record => {
@@ -89,6 +88,7 @@ export const TableListing = ({
       },
     },
     {
+      uid: 'action',
       title: t('branding:action'),
       width: 80,
       align: 'center',
@@ -127,6 +127,39 @@ export const TableListing = ({
         importBtn={t('branding:import_data')}
       />
       <Table
+        offsetHeader={84}
+        title={
+          <Segmented
+            items={[
+              { value: 'ACTIVE', label: StatusMappingToLabels['ACTIVE'] },
+              { value: 'DEACTIVE', label: StatusMappingToLabels['DEACTIVE'] },
+            ]}
+          />
+        }
+        displayColumnsConfigable={{
+          enable: true,
+          texts: {
+            title: t('common:displayed_fields'),
+          },
+        }}
+        renderStickyAction={({ selectedRows }) => {
+          return (
+            <div className="flex h-12 w-[400px] max-w-md items-center gap-4">
+              <div className="flex grow items-center justify-between">
+                <div className="font-medium">
+                  {t('common:quantity_records_selected', {
+                    quantity: selectedRows.length,
+                  })}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button icon={<DeleteOutlined />} type="text" color="error" className="!text-white">
+                    {t('branding:delete')}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          );
+        }}
         rowKey={record => record._id}
         currentPage={currentPage}
         pageSize={pageSize}
