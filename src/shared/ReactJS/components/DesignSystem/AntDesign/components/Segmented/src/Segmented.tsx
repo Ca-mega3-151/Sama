@@ -4,6 +4,7 @@ import { isEmpty } from 'ramda';
 import { ReactNode, useMemo, useState } from 'react';
 import { useDeepCompareEffect, useIsMounted } from '../../../../../../hooks';
 import { useInitializeContext } from '../../../base';
+import './styles.css';
 
 export interface Props<Value extends string>
   extends Pick<AntSegmentedProps<string>, 'className' | 'block' | 'disabled' | 'size'> {
@@ -27,8 +28,8 @@ export interface Props<Value extends string>
 }
 
 /**
- * Segmented component that extends the functionality of the Ant Design Segmented component
- * by providing additional customization and support for stricter type safety.
+ * Segmented component extends the functionality of the Ant Design Segmented component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Segmented component.
  *
  * @param {Props<Value>} props - The properties for the Segmented component.
  * @param {string} [props.className] - Custom CSS class for styling the segmented control.
