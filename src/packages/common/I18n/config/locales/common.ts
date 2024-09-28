@@ -15,6 +15,8 @@ export const common = {
     quantity_records_selected: '{{quantity}} records selected',
     reset: 'Reset',
     displayed_fields: 'Displayed fields',
+    all: 'All',
+    quantity_columns_selected_on_total: 'Selected {{selected}}/{{total}} columns',
   },
   fr: {
     welcome: 'Bonjour {{name}}',

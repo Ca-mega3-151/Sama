@@ -39,5 +39,6 @@ export type ColumnType<
   width: number;
   hidden?: boolean;
   onCell?: (record: RecordType, index: number) => CellConfig;
-  uid: string;
+  id: string;
+  configable?: boolean;
 };

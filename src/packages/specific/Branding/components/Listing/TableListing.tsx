@@ -43,79 +43,82 @@ export const TableListing = ({
     return getStatusMappingToLabels(t);
   }, [t]);
 
-  const columns: Array<TableColumnType<Branding, keyof SortValues>> = [
-    {
-      uid: 'code',
-      title: t('branding:code'),
-      width: 320,
-      actions: {
-        key: 'brandingCode',
-        sort: true,
+  const columns: Array<TableColumnType<Branding, keyof SortValues>> = useMemo(() => {
+    return [
+      {
+        id: 'code',
+        title: t('branding:code'),
+        width: 320,
+        actions: {
+          key: 'brandingCode',
+          sort: true,
+        },
+        render: record => {
+          return <div>{record.brandingCode}</div>;
+        },
       },
-      render: record => {
-        return <div>{record.brandingCode}</div>;
+      {
+        id: 'name',
+        title: t('branding:name'),
+        width: 320,
+        render: record => record.brandingName,
       },
-    },
-    {
-      uid: 'name',
-      title: t('branding:name'),
-      width: 320,
-      render: record => record.brandingName,
-    },
-    {
-      uid: 'status',
-      title: t('branding:status'),
-      width: 160,
-      align: 'center',
-      render: record => {
-        return <Tag color={StatusMappingToTagColor[record.status]}>{StatusMappingToLabels[record.status]}</Tag>;
+      {
+        id: 'status',
+        title: t('branding:status'),
+        width: 160,
+        align: 'center',
+        render: record => {
+          return <Tag color={StatusMappingToTagColor[record.status]}>{StatusMappingToLabels[record.status]}</Tag>;
+        },
       },
-    },
-    {
-      uid: 'updated_by',
-      title: t('branding:updated_by'),
-      width: 320,
-      render: record => {
-        return record.updatedBy || record.createdBy;
+      {
+        id: 'updated_by',
+        title: t('branding:updated_by'),
+        width: 320,
+        render: record => {
+          return record.updatedBy || record.createdBy;
+        },
       },
-    },
-    {
-      uid: 'updated_at',
-      title: t('branding:updated_at'),
-      width: 160,
-      render: record => {
-        return dayjs(record.updatedAt).format('DD/MM/YYYY HH:mm');
+      {
+        id: 'updated_at',
+        title: t('branding:updated_at'),
+        width: 160,
+        render: record => {
+          return dayjs(record.updatedAt).format('DD/MM/YYYY HH:mm');
+        },
       },
-    },
-    {
-      uid: 'action',
-      title: t('branding:action'),
-      width: 80,
-      align: 'center',
-      fixed: 'right',
-      render: record => {
-        return (
-          <TableActions
-            items={[
-              {
-                key: '1',
-                label: t('branding:edit'),
-                icon: <EditOutlined />,
-                onClick: () => onEdit?.(record),
-              },
-              {
-                key: '2',
-                danger: true,
-                label: <div>{t('branding:delete')}</div>,
-                icon: <DeleteOutlined />,
-                onClick: () => onDelete?.(record),
-              },
-            ]}
-          />
-        );
+      {
+        id: 'action',
+        title: t('branding:action'),
+        width: 80,
+        align: 'center',
+        fixed: 'right',
+        render: record => {
+          return (
+            <TableActions
+              items={[
+                {
+                  key: '1',
+                  label: t('branding:edit'),
+                  icon: <EditOutlined />,
+                  onClick: () => onEdit?.(record),
+                },
+                {
+                  key: '2',
+                  danger: true,
+                  label: <div>{t('branding:delete')}</div>,
+                  icon: <DeleteOutlined />,
+                  onClick: () => onDelete?.(record),
+                },
+              ]}
+            />
+          );
+        },
       },
-    },
-  ];
+    ];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [t]);
 
   return (
     <div className="flex flex-1 flex-col">
@@ -138,8 +141,13 @@ export const TableListing = ({
         }
         displayColumnsConfigable={{
           enable: true,
+          type: 'advance',
           texts: {
             title: t('common:displayed_fields'),
+            selectAllLabel: t('common:all'),
+            showCurrentState: ({ selected, total }) => {
+              return t('common:quantity_columns_selected_on_total', { selected, total });
+            },
           },
         }}
         renderStickyAction={({ selectedRows }) => {

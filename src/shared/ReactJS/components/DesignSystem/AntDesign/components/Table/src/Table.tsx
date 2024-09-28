@@ -4,12 +4,14 @@ import { Key, ReactNode, useEffect, useMemo, useState } from 'react';
 import Highlighter from 'react-highlight-words';
 import { useInitializeContext } from '../../../base';
 import { Checkbox } from '../../Checkbox';
+import { AdvanceConfigColumns } from './components/ConfigColumns/AdvanceConfigColumns';
+import { QuickConfigColumns } from './components/ConfigColumns/QuickConfigColumns';
 import { SortIcon } from './components/SortIcon/SortIcon';
-import './styles.css';
 import { StickyAction } from './components/StickyAction/StickyAction';
-import { Title } from './components/Title/Title';
 import { IdOfAntTableIndexColumn } from './constants/IdOfAntTableIndexColumn';
+import './styles.css';
 import { AntColumnProp } from './types/AntColumnProp';
+import { ColumnsState } from './types/ColumnsState';
 import { ColumnType } from './types/ColumnType';
 import { SortOrder, SortValues } from './types/Sorter';
 import { isRecordSelected } from './utils/isRecordSelected';
@@ -69,9 +71,12 @@ export interface Props<RecordType extends AnyRecord, ActionKey extends string = 
   title?: ReactNode;
   /** Configuration for enabling and customizing the display of columns. */
   displayColumnsConfigable?: {
+    type?: 'quick' | 'advance';
     enable: true;
     texts: {
       title: ReactNode;
+      selectAllLabel: ReactNode;
+      showCurrentState: (params: { selected: number; total: number }) => ReactNode;
     };
   };
 }
@@ -169,20 +174,32 @@ export const Table = <RecordType extends AnyRecord, ActionKey extends string = s
   //#endregion
 
   //#region Config view columns
-  const defaultVisibleColumns = useMemo(() => {
-    return columns.reduce<string[]>((result, column) => {
-      if (column.hidden) {
+  const availableColumns = useMemo(() => {
+    return columns.reduce<Exclude<Props<RecordType, ActionKey>['columns'], undefined>>((result, column) => {
+      if (column.hidden || !column.title || column.id === IdOfAntTableIndexColumn) {
         return result;
       }
-      return result.concat(column.uid);
+      return result.concat(column);
     }, []);
   }, [columns]);
-  const [visibleColumns, setVisibleColumns] = useState<string[]>(defaultVisibleColumns);
+
+  const [columnsState, setColumnsState] = useState<ColumnsState<RecordType, ActionKey>>(() => {
+    return availableColumns.map(item => ({
+      id: item.id,
+      visible: true,
+      rawData: item,
+    }));
+  });
 
   useEffect(() => {
-    setVisibleColumns(defaultVisibleColumns);
-  }, [defaultVisibleColumns]);
-
+    setColumnsState(
+      availableColumns.map(item => ({
+        id: item.id,
+        visible: true,
+        rawData: item,
+      })),
+    );
+  }, [availableColumns]);
   //#endregion
 
   //#region Transform to ant table props
@@ -194,35 +211,37 @@ export const Table = <RecordType extends AnyRecord, ActionKey extends string = s
     tableWidth: number;
   } = useMemo(() => {
     let tableWidth = 0;
-    const columns_ = columns.reduce<AntColumnProp>((result, column) => {
-      if (column.hidden || !visibleColumns.includes(column.uid)) {
+    const columns_ = columnsState.reduce<AntColumnProp>((result, columnState) => {
+      const columnRawData = columnState.rawData;
+      if (!columnState?.visible) {
         return result;
       }
-      tableWidth += column.width;
-      const columnActionKey = 'actions' in column ? column.actions?.key : undefined;
+
+      tableWidth += columnRawData.width;
+      const columnActionKey = 'actions' in columnRawData ? columnRawData.actions?.key : undefined;
       const sortValue = sortValues && columnActionKey ? sortValues[columnActionKey] : undefined;
 
       return result.concat({
-        ...column,
-        uid: column.uid,
+        ...columnRawData,
+        id: columnRawData.id,
         onCell: (record, index) => {
           const isSelected = isRecordSelected({ record, rowKey, selectedRowsState });
-          const onCellData = column.onCell?.(record, index);
+          const onCellData = columnRawData.onCell?.(record, index);
           return {
             ...onCellData,
             className: classNames(onCellData?.className, isSelected ? 'AntCell__selected' : ''),
           };
         },
         render: (_, record, index) => {
-          return column.render(record, index);
+          return columnRawData.render(record, index);
         },
         // Sorter
         key: columnActionKey,
         sorter:
-          'actions' in column && column.actions?.key
+          'actions' in columnRawData && columnRawData.actions?.key
             ? {
-                compare: column.actions.sortStatic ? column.actions.sortStatic : (): number => 0,
-                multiple: column.actions.sortPriority,
+                compare: columnRawData.actions.sortStatic ? columnRawData.actions.sortStatic : (): number => 0,
+                multiple: columnRawData.actions.sortPriority,
               }
             : false,
         sortOrder: sortValue?.order,
@@ -240,7 +259,7 @@ export const Table = <RecordType extends AnyRecord, ActionKey extends string = s
     if (autoIndex) {
       if (renderStickyAction) {
         columns_.unshift({
-          uid: IdOfAntTableIndexColumn,
+          id: IdOfAntTableIndexColumn,
           width: 70,
           align: 'center',
           onCell: record => {
@@ -292,7 +311,7 @@ export const Table = <RecordType extends AnyRecord, ActionKey extends string = s
         });
       } else {
         columns_.unshift({
-          uid: IdOfAntTableIndexColumn,
+          id: IdOfAntTableIndexColumn,
           title: '#',
           width: 48,
           align: 'center',
@@ -322,7 +341,7 @@ export const Table = <RecordType extends AnyRecord, ActionKey extends string = s
     pageSize,
     selectedRowsState,
     sortValues,
-    visibleColumns,
+    columnsState,
   ]);
 
   const from = Math.max((currentPage - 1) * pageSize, 0) + 1;
@@ -330,19 +349,57 @@ export const Table = <RecordType extends AnyRecord, ActionKey extends string = s
 
   const TitleOfAntTable = useMemo(() => {
     if (!displayColumnsConfigable?.enable) {
-      return undefined;
+      return title;
     }
-    return (
-      <Title
-        Left={title}
-        defaultVisibleColumns={defaultVisibleColumns}
-        visibleColumns={visibleColumns}
-        setVisibleColumns={setVisibleColumns}
-        columns={columns}
-        title={displayColumnsConfigable?.texts.title}
-      />
-    );
-  }, [columns, defaultVisibleColumns, displayColumnsConfigable, title, visibleColumns]);
+
+    if (!displayColumnsConfigable?.type || displayColumnsConfigable.type === 'quick') {
+      return (
+        <QuickConfigColumns
+          Left={title}
+          columnsState={columnsState}
+          onSort={setColumnsState}
+          title={displayColumnsConfigable.texts.title}
+          onRefresh={() => {
+            setColumnsState(() => {
+              return availableColumns.map(item => ({
+                id: item.id,
+                visible: true,
+                rawData: item,
+              }));
+            });
+          }}
+          onVisibleChange={({ id, visible }) => {
+            setColumnsState(state => {
+              return state.map(itemState => {
+                if (itemState.id === id) {
+                  return {
+                    ...itemState,
+                    visible: visible,
+                  };
+                }
+                return itemState;
+              });
+            });
+          }}
+        />
+      );
+    }
+
+    if (displayColumnsConfigable.type === 'advance') {
+      return (
+        <AdvanceConfigColumns
+          selectAllLabel={displayColumnsConfigable.texts.selectAllLabel}
+          showCurrentState={displayColumnsConfigable.texts.showCurrentState}
+          Left={title}
+          columnsState={columnsState}
+          title={displayColumnsConfigable.texts.title}
+          onChange={setColumnsState}
+        />
+      );
+    }
+
+    return title;
+  }, [displayColumnsConfigable, title, columnsState, availableColumns]);
   //#endregion
 
   return (
@@ -350,7 +407,7 @@ export const Table = <RecordType extends AnyRecord, ActionKey extends string = s
       <AntTable
         bordered
         tableLayout={tableLayout}
-        title={() => TitleOfAntTable}
+        title={!title && !displayColumnsConfigable?.enable ? undefined : (): ReactNode => TitleOfAntTable}
         sticky={offsetHeader === undefined ? undefined : { offsetHeader }}
         size={size}
         rowKey={rowKey}

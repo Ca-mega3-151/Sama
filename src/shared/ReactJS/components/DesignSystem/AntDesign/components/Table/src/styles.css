@@ -83,41 +83,52 @@
 }
 /* #endregion */
 
-.AntTable__container.yy-table-wrapper .yy-table {
-  border: var(--yy-line-width) var(--yy-line-type) var(--yy-table-border-color);
-  border-radius: var(--yy-table-header-border-radius);
-  overflow: hidden;
-}
-
+/* #region Rounded table */
 .AntTable__container.yy-table-wrapper .yy-table .yy-table-container {
   border-inline-start: none !important;
 }
 
-.AntTable__container.yy-table-wrapper
-  .yy-table
-  .yy-table-thead
-  .yy-table-cell:last-child,
+/* Every first cell of row */
+
 .AntTable__container.yy-table-wrapper
   .yy-table
   .yy-table-row
-  .yy-table-cell:last-child {
-  border-inline-end: none !important;
+  .yy-table-cell:first-child,
+.AntTable__container.yy-table-wrapper
+  .yy-table
+  .yy-table-header
+  .yy-table-cell:first-child {
+  border-inline-start: var(--yy-line-width) var(--yy-line-type)
+    var(--yy-table-border-color);
 }
 
-.AntTable__container.yy-table-wrapper .yy-table .yy-table-title:empty {
-  display: none;
-}
-
-.AntTable__container.yy-table-wrapper .yy-table .yy-table-title {
-  border: none;
-  border-radius: 0px;
-}
-
+/* Bottom left of table */
 .AntTable__container.yy-table-wrapper
   .yy-table
   .yy-table-row:last-child
-  .yy-table-cell {
-  border-bottom: none;
+  .yy-table-cell:first-child {
+  border-block-end: var(--yy-line-width) var(--yy-line-type)
+    var(--yy-table-border-color);
+  border-bottom-left-radius: var(--yy-table-header-border-radius);
+  border-inline-start: var(--yy-line-width) var(--yy-line-type)
+    var(--yy-table-border-color);
+}
+/* Bottom right of table */
+.AntTable__container.yy-table-wrapper
+  .yy-table
+  .yy-table-row:last-child
+  .yy-table-cell:last-child {
+  border-block-end: var(--yy-line-width) var(--yy-line-type)
+    var(--yy-table-border-color);
+  border-bottom-right-radius: var(--yy-table-header-border-radius);
+  border-inline-end: var(--yy-line-width) var(--yy-line-type)
+    var(--yy-table-border-color);
+}
+
+/* #endregion */
+
+.AntTable__container.yy-table-wrapper .yy-table .yy-table-title:empty {
+  display: none;
 }
 
 .AntTable__container .AntCell__hasCheckbox {
