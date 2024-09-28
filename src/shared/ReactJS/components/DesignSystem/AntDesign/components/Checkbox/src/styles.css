@@ -1,3 +1,7 @@
+.AntCheckbox__container {
+  align-items: center;
+}
+
 .AntCheckbox__container .yy-checkbox-indeterminate .yy-checkbox-inner::after {
   border-radius: 2px;
 }

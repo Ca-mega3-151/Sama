@@ -17,8 +17,7 @@ export interface Props
 
 /**
  * Checkbox component that extends the functionality of the Ant Design Checkbox component
- * by providing additional customization and support for stricter type safety.
- * It maintains its own state and triggers a callback function when its state changes.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Checkbox component.
  *
  * @param {Props} props - The properties for the Checkbox component.
  * @param {ReactNode} [props.children] - Content to be displayed next to the checkbox.
@@ -59,7 +58,7 @@ export const Checkbox: FC<Props> = ({
 
   const mergedValueState = useDeepCompareMemo(() => {
     if (!isMounted) {
-      return undefined;
+      return false;
     }
     return valueVariant === 'controlled-state' ? checked : checkedState;
   }, [checked, checkedState, isMounted, valueVariant]);

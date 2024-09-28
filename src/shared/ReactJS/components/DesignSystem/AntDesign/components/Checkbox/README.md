@@ -1,6 +1,6 @@
 # Overview
 
-The `Checkbox` component extends the functionality of the Ant Design Checkbox component by providing additional customization and support for stricter type safety. It maintains its own state and triggers a callback function when its state changes.
+The `Checkbox` component extends the functionality of the Ant Design Checkbox component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Checkbox component.
 
 # Props
 
