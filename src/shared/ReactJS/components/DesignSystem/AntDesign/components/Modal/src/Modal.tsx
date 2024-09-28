@@ -75,7 +75,7 @@ export const Modal: FC<Props> = ({
   className,
   closable,
   confirmLoading,
-  maskClosable,
+  maskClosable = false,
   okText = 'OK',
   onCancel,
   onOk,
