@@ -1,4 +1,4 @@
-import { SessionExpiredFullUrl } from '~/packages/common/Auth/constants/SessionExpired';
+import { SessionExpiredFullUrl } from '~/packages/_Common/Auth/constants/SessionExpired';
 import { action } from '~/routes/Auth/src/_auth.refresh-token';
 import { FetchAPI } from '~/shared/Utilities';
 

@@ -1,6 +1,6 @@
 import { useGetAvatarDropdown } from '../hooks/useGetAvatarDropdown';
 import { Image } from '~/overrides/RemixJS/client';
-import { SessionData } from '~/packages/common/Auth/models/SessionData';
+import { SessionData } from '~/packages/_Common/Auth/models/SessionData';
 import { Dropdown } from '~/shared/ReactJS';
 
 interface Props {

@@ -6,7 +6,7 @@ import { error_message } from './locales/error_message';
 import { page403 } from './locales/page403';
 import { page404 } from './locales/page404';
 import { page500 } from './locales/page500';
-import { branding } from '~/packages/specific/Branding/locales/branding';
+import { branding } from '~/packages/Branding/locales/branding';
 import { getPublicEnv } from '~/utils/functions/getPublicEnv';
 
 // This is the list of languages your application supports

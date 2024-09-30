@@ -4,10 +4,10 @@ import { PageErrorBoundary } from '~/components/PageErrorBoundary/PageErrorBound
 import { DashboardLayout } from '~/layouts/DashboardLayout/DashboardLayout';
 import { useLoaderData } from '~/overrides/remix';
 import { json, redirect } from '~/overrides/remix';
-import { SessionExpiredFullUrl } from '~/packages/common/Auth/constants/SessionExpired';
-import { SessionData } from '~/packages/common/Auth/models/SessionData';
-import { getProfile } from '~/packages/common/Auth/services/getProfile';
-import { authSessionStorage } from '~/packages/common/Auth/utils/sessionStorage';
+import { SessionExpiredFullUrl } from '~/packages/_Common/Auth/constants/SessionExpired';
+import { SessionData } from '~/packages/_Common/Auth/models/SessionData';
+import { getProfile } from '~/packages/_Common/Auth/services/getProfile';
+import { authSessionStorage } from '~/packages/_Common/Auth/utils/sessionStorage';
 import { fetchApiClient } from '~/utils/fetchApi/fetchApi.client';
 
 export interface LoaderResponse {

@@ -1,5 +1,5 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from '~/overrides/remix';
-import { Branding } from '~/packages/specific/Branding/models/Branding';
+import { Branding } from '~/packages/Branding/models/Branding';
 import { ResponseDetailSuccess, ResponseFailure } from '~/services/types/Response';
 import { getFetchApiInstance } from '~/services/utils/getFetchApiInstance';
 import { isResponseError } from '~/services/utils/isResponseError';

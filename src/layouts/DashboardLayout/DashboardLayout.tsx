@@ -6,7 +6,7 @@ import { Notification } from './components/Notification';
 import { UserDropdown } from './components/UserDropdown';
 import { useGetNavData } from './hooks/useGetNavData';
 import { Link, Outlet } from '~/overrides/remix';
-import { SessionData } from '~/packages/common/Auth/models/SessionData';
+import { SessionData } from '~/packages/_Common/Auth/models/SessionData';
 import {
   Button,
   LayoutContainer,
