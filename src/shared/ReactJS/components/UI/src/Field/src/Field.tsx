@@ -33,6 +33,7 @@ export interface Props {
 
 let isScrolling = false;
 let timeoutScrolling: number | NodeJS.Timeout | undefined;
+let displayStatusOnInput = true;
 /**
  * Field component to render form field with label, children, and optional error message.
  * @param {object} props - Props for the Field component.
@@ -125,7 +126,7 @@ const FieldComponent: FC<Props> = ({
     tagName,
     {
       ref: containerRef,
-      className: classNames('Field__container', className),
+      className: classNames('Field__container', message && displayStatusOnInput ? 'Field__withError' : '', className),
       onClick: handleFocus,
     },
     <>
@@ -143,6 +144,14 @@ const FieldComponent: FC<Props> = ({
 };
 
 // @ts-ignore
-export const Field: FC<Props> & { Help: typeof Help; Error: typeof Error } = FieldComponent;
+export const Field: FC<Props> & {
+  Help: typeof Help;
+  Error: typeof Error;
+  setDisplayStatusOnInput: (enable: boolean) => void;
+} = FieldComponent;
 Field.Help = Help;
 Field.Error = Error;
+
+Field.setDisplayStatusOnInput = (enable: boolean): void => {
+  displayStatusOnInput = enable;
+};
