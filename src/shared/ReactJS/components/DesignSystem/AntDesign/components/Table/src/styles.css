@@ -138,6 +138,7 @@
   justify-content: center;
 }
 
-.AntTable__container .AntCell__selected {
+.AntTable__container .AntCell__selected,
+.AntTable__container .AntCell__selected ~ .yy-table-cell {
   background-color: var(--yy-color-primary-bg);
 }
