@@ -37,6 +37,7 @@ export * from './Result';
 export * from './Ribbon';
 export * from './Segmented';
 export * from './Select';
+export * from './SelectAsTreeLayout';
 export * from './Slider';
 export * from './Steps';
 export * from './Switch';
