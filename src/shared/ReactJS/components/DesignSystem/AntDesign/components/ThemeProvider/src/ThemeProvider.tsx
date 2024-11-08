@@ -139,8 +139,8 @@ export const ThemeProvider: FC<Props> = ({ children, config = {}, renderEmpty, i
         components: {
           Menu: { itemHeight: mergedConfig.controlHeight },
           Pagination: { controlHeight: (mergedConfig.controlHeight * 5) / 6 },
-          Table: { headerBg: '#FFF' },
-          Layout: { bodyBg: '#FFF' },
+          Table: { headerBg: '#F9FAFB' },
+          Layout: { bodyBg: '#F4F5F6' },
           Select: { zIndexPopup: 100 },
           DatePicker: { zIndexPopup: 100 },
           Dropdown: { zIndexPopup: 100 },

@@ -1,7 +1,5 @@
 /* #region Set every nodes has height full */
 .AntTable__container.yy-table-wrapper,
-.AntTable__container .yy-table-container,
-.AntTable__container .yy-table-content,
 .AntTable__container.yy-table-wrapper .yy-spin-nested-loading {
   height: 100%;
 }
@@ -109,7 +107,7 @@
   .yy-table-cell:first-child {
   border-block-end: var(--yy-line-width) var(--yy-line-type)
     var(--yy-table-border-color);
-  border-bottom-left-radius: var(--yy-table-header-border-radius);
+  /* border-bottom-left-radius: var(--yy-table-header-border-radius); */
   border-inline-start: var(--yy-line-width) var(--yy-line-type)
     var(--yy-table-border-color);
 }
@@ -120,17 +118,18 @@
   .yy-table-cell:last-child {
   border-block-end: var(--yy-line-width) var(--yy-line-type)
     var(--yy-table-border-color);
-  border-bottom-right-radius: var(--yy-table-header-border-radius);
+  /* border-bottom-right-radius: var(--yy-table-header-border-radius); */
   border-inline-end: var(--yy-line-width) var(--yy-line-type)
     var(--yy-table-border-color);
 }
 
 /* #endregion */
-
+.AntTable__container.yy-table-wrapper .yy-table .yy-table-title {
+  background-color: var(--yy-table-header-bg);
+}
 .AntTable__container.yy-table-wrapper .yy-table .yy-table-title:empty {
   display: none;
 }
-
 .AntTable__container .AntCell__hasCheckbox {
   align-items: center;
   display: flex;

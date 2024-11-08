@@ -195,6 +195,10 @@ export const Page = () => {
   }, [editBrandingFetcher.state]);
   //#endregion
 
+  // #region
+  const [selectedRowsState, setSelectedRowsState] = useState<Branding[]>([]);
+  // #endregion
+
   return (
     <div className="flex h-full flex-col">
       <div className="flex h-full flex-col gap-3">
@@ -225,6 +229,8 @@ export const Page = () => {
           }}
         />
         <TableListing
+          selectedRowsState={selectedRowsState}
+          setSelectedRowsState={setSelectedRowsState}
           loading={isFetchingList}
           currentPage={data?.page}
           pageSize={paramsInUrl.pageSize ?? RecordsPerPage}
@@ -287,6 +293,7 @@ export const Page = () => {
       </Modal>
 
       <ModalDelete
+        openVariant="controlled-state"
         open={!!isOpenModalDelete}
         title={t('branding:delete_title').toString()}
         description={t('branding:delete_description').toString()}

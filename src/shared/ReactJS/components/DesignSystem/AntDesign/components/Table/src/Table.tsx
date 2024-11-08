@@ -1,6 +1,6 @@
 import { PaginationProps as AntPaginationProps, Table as AntTable, TableProps as AntTableProps } from 'antd';
 import classNames from 'classnames';
-import { Key, ReactNode, useEffect, useMemo, useState } from 'react';
+import { Dispatch, Key, ReactNode, SetStateAction, useEffect, useMemo, useState } from 'react';
 import Highlighter from 'react-highlight-words';
 import { useInitializeContext } from '../../../base';
 import { Checkbox } from '../../Checkbox';
@@ -79,6 +79,10 @@ export interface Props<RecordType extends AnyRecord, ActionKey extends string = 
       showCurrentState: (params: { selected: number; total: number }) => ReactNode;
     };
   };
+  /** */
+  selectedRowsState?: RecordType[];
+  /** */
+  setSelectedRowsState?: Dispatch<SetStateAction<RecordType[]>>;
 }
 
 /**
@@ -155,11 +159,12 @@ export const Table = <RecordType extends AnyRecord, ActionKey extends string = s
   displayColumnsConfigable,
   title,
   tableLayout = 'auto',
+  selectedRowsState,
+  setSelectedRowsState,
 }: Props<RecordType, ActionKey>): ReactNode => {
   useInitializeContext();
 
   //#region Select records
-  const [selectedRowsState, setSelectedRowsState] = useState<RecordType[]>([]);
 
   const dataInPage = useMemo(() => {
     const startIndex = (currentPage - 1) * pageSize;
@@ -257,7 +262,7 @@ export const Table = <RecordType extends AnyRecord, ActionKey extends string = s
     }, []);
 
     if (autoIndex) {
-      if (renderStickyAction) {
+      if (renderStickyAction && setSelectedRowsState) {
         columns_.unshift({
           id: IdOfAntTableIndexColumn,
           width: 70,
@@ -274,16 +279,18 @@ export const Table = <RecordType extends AnyRecord, ActionKey extends string = s
                 valueVariant="controlled-state"
                 checked={isCheckedAll}
                 onChange={checked => {
-                  let nextState = selectedRowsState;
+                  let nextState = selectedRowsState ?? [];
                   if (checkMode === 'autoClear') {
                     nextState = checked ? (dataInPage as RecordType[]) : [];
                   }
                   if (checkMode === 'keepPagination') {
                     nextState = checked
-                      ? selectedRowsState.concat(...dataInPage)
-                      : selectedRowsState.filter(record => !isRecordSelected({ record, rowKey, selectedRowsState }));
+                      ? (selectedRowsState ?? [])?.concat(...dataInPage)
+                      : (selectedRowsState ?? [])?.filter(record => {
+                          return !isRecordSelected({ record, rowKey, selectedRowsState });
+                        });
                   }
-                  setSelectedRowsState(nextState);
+                  setSelectedRowsState?.(nextState);
                 }}
               >
                 #
@@ -298,9 +305,9 @@ export const Table = <RecordType extends AnyRecord, ActionKey extends string = s
                   checked={!!isRecordSelected({ record, rowKey, selectedRowsState })}
                   onChange={checked => {
                     const nextState = checked
-                      ? selectedRowsState.concat(record)
-                      : selectedRowsState.filter(item => rowKey(item) !== rowKey(record));
-                    setSelectedRowsState(nextState);
+                      ? (selectedRowsState ?? []).concat(record)
+                      : (selectedRowsState ?? []).filter(item => rowKey(item) !== rowKey(record));
+                    setSelectedRowsState?.(nextState);
                   }}
                 >
                   {pageSize * (currentPage - 1) + index + 1}
@@ -482,10 +489,10 @@ export const Table = <RecordType extends AnyRecord, ActionKey extends string = s
         }
       />
       {renderStickyAction && (
-        <StickyAction isVisible={!!selectedRowsState.length}>
+        <StickyAction isVisible={!!selectedRowsState?.length}>
           {renderStickyAction({
-            selectedRows: selectedRowsState,
-            clear: () => setSelectedRowsState([]),
+            selectedRows: selectedRowsState ?? [],
+            clear: () => setSelectedRowsState?.([]),
           })}
         </StickyAction>
       )}

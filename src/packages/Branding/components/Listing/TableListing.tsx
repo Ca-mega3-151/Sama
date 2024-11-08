@@ -15,7 +15,14 @@ export interface SortValues extends FormQueryStateValues<ListingSearchParams, 'b
 interface Props
   extends Pick<
     TableProps<Branding, keyof SortValues>,
-    'onSortChange' | 'totalRecords' | 'currentPage' | 'pageSize' | 'onPaginationChange' | 'loading'
+    | 'onSortChange'
+    | 'totalRecords'
+    | 'currentPage'
+    | 'pageSize'
+    | 'onPaginationChange'
+    | 'loading'
+    | 'selectedRowsState'
+    | 'setSelectedRowsState'
   > {
   sortValues: Exclude<TableProps<Branding, keyof SortValues>['sortValues'], undefined>;
   data: Branding[] | undefined;
@@ -36,6 +43,8 @@ export const TableListing = ({
   onEdit,
   onDelete,
   onCreate,
+  selectedRowsState,
+  setSelectedRowsState,
 }: Props) => {
   const { t } = useTranslation(['common', 'branding'] as const);
 
@@ -130,6 +139,8 @@ export const TableListing = ({
         importBtn={t('branding:import_data')}
       />
       <Table
+        selectedRowsState={selectedRowsState}
+        setSelectedRowsState={setSelectedRowsState}
         offsetHeader={84}
         title={
           <Segmented

@@ -355,6 +355,7 @@ export const Page = () => {
       </Modal>
 
       <ModalDelete
+        openVariant="controlled-state"
         open={!!isOpenModalDelete}
         title={t('branding:delete_title').toString()}
         description={t('branding:delete_description').toString()}
