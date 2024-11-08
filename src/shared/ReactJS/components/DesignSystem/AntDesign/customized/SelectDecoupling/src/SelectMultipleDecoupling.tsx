@@ -4,11 +4,10 @@ import { useDeepCompareEffect, useIsMounted } from '../../../../../../hooks';
 import { SelectMultiple, SelectMultipleProps, SelectOption } from '../../../components';
 import { AnyRecord } from '~/shared/TypescriptUtilities';
 
-interface OnPrepareDoneParameters<ModelId extends string | number> {
-  /**
-   * A flag indicating whether there was a warning. This flag will be `true`
-   * if `itemsState` contains any item with type 'unmatched', and `false` otherwise.
-   */
+interface OnPrepareDoneParameters<ModelId extends string, Model> {
+  /** The transformed options to be displayed in the select dropdown. These options are created from the response data and any additional models. */
+  options: SelectOption<ModelId, Model>[];
+  /** A flag indicating whether there was a warning. This flag will be `true` if `itemsState` contains any item with type 'unmatched', and `false` otherwise. */
   isWarning: boolean;
   /** An array representing the state of items, whether they matched or not. */
   itemsState: Array<{
@@ -19,15 +18,15 @@ interface OnPrepareDoneParameters<ModelId extends string | number> {
   }>;
 }
 
-export interface Props<Model extends AnyRecord, ModelId extends string | number>
+export interface Props<Model extends AnyRecord, ModelId extends string>
   extends Omit<
     SelectMultipleProps<ModelId>,
     'options' | 'onChange' | 'filterOption' | 'onDropdownVisibleChange' | 'open' | 'searchValue' | 'onSearch'
   > {
   /** A function to fetch data from a service. */
   service: () => Promise<Model[]> | Model[];
-  /** A function to transform the fetched model data into options for the Select component. */
-  transformToOption: (model: Model, index?: number) => SelectOption<ModelId, Model>;
+  /** A function that transforms a model object into a selectable option. It may return `undefined` if the model does not meet the criteria for selection. */
+  transformToOption: (model: Model) => SelectOption<ModelId, Model> | undefined;
   /** Callback function triggered when the selected values change. */
   onChange?: (value: ModelId[] | undefined, options: SelectOption<ModelId, Model>[] | undefined) => void;
   /** An array of dependencies to watch for fetching data. */
@@ -38,36 +37,22 @@ export interface Props<Model extends AnyRecord, ModelId extends string | number>
   defaultModels?: Model[];
   /** Used to display additional options. For example, if a model is deleted in the database and the fetch fails to retrieve it from the API, it will not be displayed correctly. */
   additionalModels?: Model[];
-  /**
-   * Callback function triggered when the preparation is done. This function can be used to handle warnings if the value passed to this component is not found in the response of the service.
-   * @param {Object} params - The parameters object.
-   * @param {boolean} params.isWarning - A flag indicating whether there was a warning. This flag will be `true` if `itemsState` contains any item with type 'unmatched', and `false` otherwise.
-   * @param {Array<{ type: 'matched' | 'unmatched', value: ModelId }>} params.itemsState - The data associated with the preparation.
-   */
-  onPrepareDone?: (params: OnPrepareDoneParameters<ModelId>) => void;
-  /**
-   * A text message to display when there is a warning, such as when the `value` passed to the component is not found in the response from the `service`. This can be a static message or a function that returns a message based on the `value` passed.
-   * @param {ModelId} value - The value that was passed to the component and not found in the service response.
-   * @returns {string} - The warning text message.
-   */
+  /** Callback function triggered when the preparation is done. This function can be used to handle warnings if the value passed to this component is not found in the response of the service. */
+  onPrepareDone?: (params: OnPrepareDoneParameters<ModelId, Model>) => void;
+  /** A text message to display when there is a warning, such as when the `value` passed to the component is not found in the response from the `service`. This can be a static message or a function that returns a message based on the `value` passed. */
   warningText?: (value: ModelId) => string;
-  /**
-   * A function to provide a custom loading message while fetching data. This function takes the current `value` and returns a string that represents the loading state.
-   * @param {ModelId} value - The current value being processed or selected. This can be used to tailor the loading message based on the specific value.
-   * @returns {string} - A custom loading message.
-   */
-  loadingText?: (value: ModelId) => string;
+  /** A function to provide a custom loading message while fetching data. This function takes the current `value` and returns a string that represents the loading state. */
+  loadingText?: (value: ModelId | undefined) => string;
 }
 
 /**
- * SelectMultipleDecoupling component provides a more flexible approach for working with Select components,
- * allowing for separate data fetching and option transformation functions.
+ * SelectMultipleDecoupling component provides a more flexible approach for working with Select components, allowing for separate data fetching and option transformation functions.
  * @template Model - The type of the data model.
  * @template ModelId - The type of the selected model IDs.
  * @param {Props<Model, ModelId>} props - The component props.
  * @returns {ReactNode} - The rendered SelectMultipleDecoupling component.
  */
-export const SelectMultipleDecoupling = <Model extends AnyRecord, ModelId extends string | number>({
+export const SelectMultipleDecoupling = <Model extends AnyRecord, ModelId extends string>({
   transformToOption,
   service,
   onChange,
@@ -102,7 +87,13 @@ export const SelectMultipleDecoupling = <Model extends AnyRecord, ModelId extend
     valueState: ModelId[];
     isPreparedDateOnce: boolean;
   }>({
-    options: defaultModels.concat(additionalModels).map(transformToOption),
+    options: defaultModels.concat(additionalModels).reduce<SelectOption<ModelId, Model>[]>((result, item) => {
+      const option = transformToOption(item);
+      if (option) {
+        return result.concat(option);
+      }
+      return result;
+    }, []),
     valueState: value,
     isPreparedDateOnce: false,
   });
@@ -113,7 +104,7 @@ export const SelectMultipleDecoupling = <Model extends AnyRecord, ModelId extend
   };
 
   const handleTransformServiceResponse = (serviceResponse?: Model[]): void => {
-    const prepareDoneParameters: OnPrepareDoneParameters<ModelId> = {
+    const prepareDoneParameters: Omit<OnPrepareDoneParameters<ModelId, Model>, 'options'> = {
       isWarning: false,
       itemsState: value.map(item => {
         return {
@@ -123,12 +114,11 @@ export const SelectMultipleDecoupling = <Model extends AnyRecord, ModelId extend
       }),
     };
     const response = serviceResponse ?? serviceResponseState;
-    const transformData = response.map((item, index) => {
-      const option: SelectOption<ModelId, Model> = {
-        ...transformToOption(item, index),
-        rawData: item,
-      };
-      const indexOfRecordInValue = value.findIndex(record => option.value === record);
+
+    const transformData = response.reduce<SelectOption<ModelId, Model>[]>((result, item) => {
+      const option = transformToOption(item);
+
+      const indexOfRecordInValue = value.findIndex(record => option?.value === record);
       if (indexOfRecordInValue !== -1) {
         prepareDoneParameters.itemsState[indexOfRecordInValue] = {
           ...prepareDoneParameters.itemsState[indexOfRecordInValue],
@@ -137,11 +127,19 @@ export const SelectMultipleDecoupling = <Model extends AnyRecord, ModelId extend
       } else {
         prepareDoneParameters.isWarning = true;
       }
-      return option;
-    });
+
+      if (option) {
+        return result.concat({
+          ...option,
+          rawData: item,
+        });
+      }
+      return result;
+    }, []);
+    const uniqData = uniqBy(prop('value'), transformData);
 
     setState({
-      options: uniqBy(prop('value'), transformData),
+      options: uniqData,
       valueState: prepareDoneParameters.itemsState.map(item => {
         if (item.type === 'unmatched' && warningText) {
           return warningText(item.value) as ModelId;
@@ -150,7 +148,10 @@ export const SelectMultipleDecoupling = <Model extends AnyRecord, ModelId extend
       }),
       isPreparedDateOnce: true,
     });
-    onPrepareDone?.(prepareDoneParameters);
+    onPrepareDone?.({
+      ...prepareDoneParameters,
+      options: uniqData,
+    });
   };
 
   const handleFetch = async (): Promise<void> => {
@@ -160,7 +161,7 @@ export const SelectMultipleDecoupling = <Model extends AnyRecord, ModelId extend
       setServiceResponseState(items.concat(additionalModels));
       handleTransformServiceResponse(items.concat(additionalModels));
     } catch (error) {
-      console.log('SelectMultipleDecoupling:: ', error);
+      console.log(error);
     } finally {
       setIsFetching(false);
     }
@@ -179,7 +180,8 @@ export const SelectMultipleDecoupling = <Model extends AnyRecord, ModelId extend
 
   const mergedValue = useMemo(() => {
     if (loadingText && !state.isPreparedDateOnce) {
-      return value.map(item => loadingText(item));
+      const value_ = value.length ? value : [undefined];
+      return value_.map(item => loadingText(item));
     }
     return state.valueState;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -187,6 +189,7 @@ export const SelectMultipleDecoupling = <Model extends AnyRecord, ModelId extend
 
   return (
     <SelectMultiple
+      key={Number(state.isPreparedDateOnce)}
       options={state.options}
       loading={loading || isFetching}
       allowClear={allowClear}
