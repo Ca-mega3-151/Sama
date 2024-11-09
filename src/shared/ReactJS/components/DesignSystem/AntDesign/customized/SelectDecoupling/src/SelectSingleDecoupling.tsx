@@ -157,9 +157,12 @@ export const SelectSingleDecoupling = <Model extends AnyRecord, ModelId extends 
     if (loadingText && !state.isPreparedDateOnce) {
       return loadingText(value);
     }
+    if (value) {
+      return value;
+    }
     return state.valueState;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.isPreparedDateOnce, state.valueState]);
+  }, [state.isPreparedDateOnce, state.valueState, value]);
 
   return (
     <SelectSingle

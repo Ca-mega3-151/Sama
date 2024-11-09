@@ -67,7 +67,7 @@ export const SelectMultipleDecoupling = <Model extends AnyRecord, ModelId extend
   notFoundContent,
   optionLabelProp,
   placeholder,
-  value = [],
+  value,
   defaultModels = [],
   additionalModels = [],
   onPrepareDone,
@@ -94,7 +94,7 @@ export const SelectMultipleDecoupling = <Model extends AnyRecord, ModelId extend
       }
       return result;
     }, []),
-    valueState: value,
+    valueState: value ?? [],
     isPreparedDateOnce: false,
   });
 
@@ -106,7 +106,7 @@ export const SelectMultipleDecoupling = <Model extends AnyRecord, ModelId extend
   const handleTransformServiceResponse = (serviceResponse?: Model[]): void => {
     const prepareDoneParameters: Omit<OnPrepareDoneParameters<ModelId, Model>, 'options'> = {
       isWarning: false,
-      itemsState: value.map(item => {
+      itemsState: (value ?? []).map(item => {
         return {
           type: 'unmatched',
           value: item,
@@ -118,7 +118,7 @@ export const SelectMultipleDecoupling = <Model extends AnyRecord, ModelId extend
     const transformData = response.reduce<SelectOption<ModelId, Model>[]>((result, item) => {
       const option = transformToOption(item);
 
-      const indexOfRecordInValue = value.findIndex(record => option?.value === record);
+      const indexOfRecordInValue = (value ?? []).findIndex(record => option?.value === record);
       if (indexOfRecordInValue !== -1) {
         prepareDoneParameters.itemsState[indexOfRecordInValue] = {
           ...prepareDoneParameters.itemsState[indexOfRecordInValue],
@@ -180,12 +180,15 @@ export const SelectMultipleDecoupling = <Model extends AnyRecord, ModelId extend
 
   const mergedValue = useMemo(() => {
     if (loadingText && !state.isPreparedDateOnce) {
-      const value_ = value.length ? value : [undefined];
+      const value_ = value && value.length ? value : [undefined];
       return value_.map(item => loadingText(item));
+    }
+    if (value) {
+      return value;
     }
     return state.valueState;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.isPreparedDateOnce, state.valueState]);
+  }, [state.isPreparedDateOnce, state.valueState, value]);
 
   return (
     <SelectMultiple
