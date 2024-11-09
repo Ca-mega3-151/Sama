@@ -21,8 +21,8 @@ interface Props
     | 'pageSize'
     | 'onPaginationChange'
     | 'loading'
-    | 'selectedRowsState'
-    | 'setSelectedRowsState'
+    | 'selectedRecordsState'
+    | 'setSelectedRecordsState'
   > {
   sortValues: Exclude<TableProps<Branding, keyof SortValues>['sortValues'], undefined>;
   data: Branding[] | undefined;
@@ -43,8 +43,8 @@ export const TableListing = ({
   onEdit,
   onDelete,
   onCreate,
-  selectedRowsState,
-  setSelectedRowsState,
+  selectedRecordsState,
+  setSelectedRecordsState,
 }: Props) => {
   const { t } = useTranslation(['common', 'branding'] as const);
 
@@ -139,8 +139,8 @@ export const TableListing = ({
         importBtn={t('branding:import_data')}
       />
       <Table
-        selectedRowsState={selectedRowsState}
-        setSelectedRowsState={setSelectedRowsState}
+        selectedRecordsState={selectedRecordsState}
+        setSelectedRecordsState={setSelectedRecordsState}
         offsetHeader={84}
         title={
           <Segmented
@@ -161,13 +161,13 @@ export const TableListing = ({
             },
           },
         }}
-        renderStickyAction={({ selectedRows }) => {
+        renderStickyAction={({ selectedRecords }) => {
           return (
             <div className="flex h-12 w-[400px] max-w-md items-center gap-4">
               <div className="flex grow items-center justify-between">
                 <div className="font-medium">
                   {t('common:quantity_records_selected', {
-                    quantity: selectedRows.length,
+                    quantity: selectedRecords.length,
                   })}
                 </div>
                 <div className="flex items-center gap-2">
@@ -179,7 +179,7 @@ export const TableListing = ({
             </div>
           );
         }}
-        rowKey={record => record._id}
+        recordKey={record => record._id}
         currentPage={currentPage}
         pageSize={pageSize}
         totalRecords={totalRecords}

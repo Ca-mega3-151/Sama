@@ -3,11 +3,11 @@ import { AnyRecord } from '~/shared/TypescriptUtilities';
 
 interface IsRecordSelected<RecordType extends AnyRecord> {
   /** The current state of selected rows in the table. */
-  selectedRowsState: Props<RecordType>['dataSource'];
+  selectedRecordsState: Props<RecordType>['dataSource'];
   /** The record to check if it is selected or not. */
   record: RecordType;
   /** A function that takes a record and returns its unique key. */
-  rowKey: Props<RecordType>['rowKey'];
+  recordKey: Props<RecordType>['recordKey'];
 }
 
 /**
@@ -15,15 +15,15 @@ interface IsRecordSelected<RecordType extends AnyRecord> {
  *
  * @template RecordType - The type of the record being checked.
  * @param {IsRecordSelected<RecordType>} params - The parameters for the function.
- * @param {Props<RecordType>['dataSource']} params.selectedRowsState - The current state of selected rows.
+ * @param {Props<RecordType>['dataSource']} params.selectedRecordsState - The current state of selected rows.
  * @param {RecordType} params.record - The record to check for selection.
- * @param {Props<RecordType>['rowKey']} params.rowKey - A function that returns the unique key for a record.
+ * @param {Props<RecordType>['recordKey']} params.recordKey - A function that returns the unique key for a record.
  * @returns {boolean} - Returns `true` if the record is selected, `false` otherwise.
  */
 export const isRecordSelected = <RecordType extends AnyRecord>({
-  selectedRowsState = [],
+  selectedRecordsState = [],
   record,
-  rowKey,
+  recordKey,
 }: IsRecordSelected<RecordType>): boolean => {
-  return !!selectedRowsState.find(itemState => rowKey(itemState) === rowKey(record));
+  return !!selectedRecordsState.find(itemState => recordKey(itemState) === recordKey(record));
 };

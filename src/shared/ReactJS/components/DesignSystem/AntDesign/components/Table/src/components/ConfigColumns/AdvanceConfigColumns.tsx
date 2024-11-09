@@ -79,7 +79,7 @@ export const AdvanceConfigColumns: FC<Props> = ({
                       checked={!!selected}
                       onChange={checked => {
                         const nextState = checked
-                          ? columnsStateValues?.concat(item)
+                          ? columnsStateValues?.concat({ ...item, visible: true })
                           : columnsStateValues?.filter(itemState => itemState.id !== item.id);
                         setColumnsStateValues(nextState);
                       }}

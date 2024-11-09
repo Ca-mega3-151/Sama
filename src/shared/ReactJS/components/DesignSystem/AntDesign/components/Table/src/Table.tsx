@@ -62,9 +62,9 @@ export interface Props<RecordType extends AnyRecord, ActionKey extends string = 
   /** Automatically add row indices as the first column of the table. Defaults to false. */
   autoIndex?: boolean;
   /** Function to render a custom sticky action element, based on the selected rows. */
-  renderStickyAction?: (params: { selectedRows: RecordType[]; clear: () => void }) => ReactNode;
+  renderStickyAction?: (params: { selectedRecords: RecordType[]; clear: () => void }) => ReactNode;
   /** Function to generate a unique key for each row in the table. */
-  rowKey: (record: RecordType) => Key;
+  recordKey: (record: RecordType) => Key;
   /** Mode for handling row selection when paginating. Defaults to 'autoClear'. */
   checkMode?: 'autoClear' | 'keepPagination';
   /** The title to be displayed above the table. */
@@ -79,10 +79,12 @@ export interface Props<RecordType extends AnyRecord, ActionKey extends string = 
       showCurrentState: (params: { selected: number; total: number }) => ReactNode;
     };
   };
-  /** */
-  selectedRowsState?: RecordType[];
-  /** */
-  setSelectedRowsState?: Dispatch<SetStateAction<RecordType[]>>;
+  /** The current state of selected rows, used for row selection persistence. */
+  selectedRecordsState?: RecordType[];
+  /** Setter function for updating the selected rows state. */
+  setSelectedRecordsState?: Dispatch<SetStateAction<RecordType[]>>;
+  /** Function to determine if a row is selectable based on the record data. */
+  recordSelectable?: (record: RecordType) => boolean;
 }
 
 /**
@@ -98,7 +100,7 @@ export interface Props<RecordType extends AnyRecord, ActionKey extends string = 
  * @param {('ltr' | 'rtl')} [direction] - Table layout direction ('ltr' or 'rtl').
  * @param {number} [indentSize] - Size of the indent for tree data.
  * @param {boolean} [loading] - Whether the table is in a loading state.
- * @param {string | Function} [rowKey] - Unique key for each row.
+ * @param {string | Function} [recordKey] - Unique key for each row.
  * @param {('small' | 'middle' | 'large')} [size] - Size of the table.
  * @param {number} [currentPage=1] - The current page number.
  * @param {number} pageSize - The number of items per page.
@@ -120,10 +122,13 @@ export interface Props<RecordType extends AnyRecord, ActionKey extends string = 
  * @param {number} [tableHeight] - Fixed height for the table in pixels, used to make the table scrollable.
  * @param {boolean} [autoIndex=false] - Automatically add row indices as the first column of the table.
  * @param {Function} [renderStickyAction] - Function to render a custom sticky action element based on the selected rows.
- * @param {Function} [rowKey] - Function to generate a unique key for each row in the table.
+ * @param {Function} [recordKey] - Function to generate a unique key for each row in the table.
  * @param {('autoClear' | 'keepPagination')} [checkMode='autoClear'] - Mode for handling row selection when paginating.
  * @param {ReactNode} [title] - The title to be displayed above the table.
  * @param {Object} [displayColumnsConfigable] - Configuration for enabling and customizing the display of columns.
+ * @param {Array<RecordType>} [selectedRecordsState] - The current state of selected rows, used for row selection persistence.
+ * @param {Dispatch<SetStateAction<RecordType[]>>} [setSelectedRecordsState] - Setter function for updating the selected rows state.
+ * @param {Function} [recordSelectable] - Function to determine if a row is selectable based on the record data.
  * @returns {ReactNode} The rendered Table component.
  */
 export const Table = <RecordType extends AnyRecord, ActionKey extends string = string>({
@@ -141,7 +146,7 @@ export const Table = <RecordType extends AnyRecord, ActionKey extends string = s
   direction,
   indentSize,
   loading,
-  rowKey,
+  recordKey,
   size,
   showSizeChanger = false,
   paginationClassName,
@@ -159,23 +164,34 @@ export const Table = <RecordType extends AnyRecord, ActionKey extends string = s
   displayColumnsConfigable,
   title,
   tableLayout = 'auto',
-  selectedRowsState,
-  setSelectedRowsState,
+  selectedRecordsState,
+  setSelectedRecordsState,
+  recordSelectable = (): boolean => true,
 }: Props<RecordType, ActionKey>): ReactNode => {
   useInitializeContext();
 
   //#region Select records
-
-  const dataInPage = useMemo(() => {
+  const dataInPageSelectable = useMemo(() => {
     const startIndex = (currentPage - 1) * pageSize;
     const endIndex = startIndex + pageSize;
-    return dataSource.slice(startIndex, endIndex);
+    if (dataSource.length <= pageSize) {
+      return dataSource.filter(item => {
+        return recordSelectable?.(item);
+      });
+    }
+    return dataSource.slice(startIndex, endIndex).filter(recordSelectable);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataSource, pageSize, currentPage]);
 
   const isCheckedAll = useMemo(() => {
-    return !!dataInPage.length && dataInPage.every(record => isRecordSelected({ record, rowKey, selectedRowsState }));
+    return (
+      !!dataInPageSelectable.length &&
+      dataInPageSelectable.every(record => {
+        return isRecordSelected({ record, recordKey, selectedRecordsState });
+      })
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataInPage, selectedRowsState]);
+  }, [dataInPageSelectable, selectedRecordsState]);
   //#endregion
 
   //#region Config view columns
@@ -230,7 +246,7 @@ export const Table = <RecordType extends AnyRecord, ActionKey extends string = s
         ...columnRawData,
         id: columnRawData.id,
         onCell: (record, index) => {
-          const isSelected = isRecordSelected({ record, rowKey, selectedRowsState });
+          const isSelected = isRecordSelected({ record, recordKey, selectedRecordsState });
           const onCellData = columnRawData.onCell?.(record, index);
           return {
             ...onCellData,
@@ -262,58 +278,68 @@ export const Table = <RecordType extends AnyRecord, ActionKey extends string = s
     }, []);
 
     if (autoIndex) {
-      if (renderStickyAction && setSelectedRowsState) {
+      if (renderStickyAction && setSelectedRecordsState) {
+        const hasRecordIsSelectable = !!dataInPageSelectable.find(record => recordSelectable(record));
         columns_.unshift({
           id: IdOfAntTableIndexColumn,
           width: 70,
           align: 'center',
           onCell: record => {
-            const isSelected = isRecordSelected({ record, rowKey, selectedRowsState });
+            const isSelected = isRecordSelected({ record, recordKey, selectedRecordsState });
             return {
               className: classNames(isSelected ? 'AntCell__selected' : ''),
             };
           },
-          title: (
-            <div className="AntCell__hasCheckbox">
+          title: hasRecordIsSelectable ? (
+            <div>
               <Checkbox
+                className="AntCell__checkbox"
                 valueVariant="controlled-state"
                 checked={isCheckedAll}
                 onChange={checked => {
-                  let nextState = selectedRowsState ?? [];
+                  let nextState = selectedRecordsState ?? [];
                   if (checkMode === 'autoClear') {
-                    nextState = checked ? (dataInPage as RecordType[]) : [];
+                    nextState = checked ? (dataInPageSelectable as RecordType[]) : [];
                   }
                   if (checkMode === 'keepPagination') {
                     nextState = checked
-                      ? (selectedRowsState ?? [])?.concat(...dataInPage)
-                      : (selectedRowsState ?? [])?.filter(record => {
-                          return !isRecordSelected({ record, rowKey, selectedRowsState });
+                      ? (selectedRecordsState ?? [])?.concat(...dataInPageSelectable)
+                      : (selectedRecordsState ?? [])?.filter(record => {
+                          return !isRecordSelected({ record, recordKey, selectedRecordsState });
                         });
                   }
-                  setSelectedRowsState?.(nextState);
+                  setSelectedRecordsState?.(nextState);
                 }}
               >
                 #
               </Checkbox>
             </div>
+          ) : (
+            <div>#</div>
           ),
           render: (_value, record, index) => {
-            return (
-              <div className="AntCell__hasCheckbox">
-                <Checkbox
-                  valueVariant="controlled-state"
-                  checked={!!isRecordSelected({ record, rowKey, selectedRowsState })}
-                  onChange={checked => {
-                    const nextState = checked
-                      ? (selectedRowsState ?? []).concat(record)
-                      : (selectedRowsState ?? []).filter(item => rowKey(item) !== rowKey(record));
-                    setSelectedRowsState?.(nextState);
-                  }}
-                >
-                  {pageSize * (currentPage - 1) + index + 1}
-                </Checkbox>
-              </div>
-            );
+            const selectable = recordSelectable?.(record);
+            const recordIndex = pageSize * (currentPage - 1) + index + 1;
+            if (selectable) {
+              return (
+                <div>
+                  <Checkbox
+                    className="AntCell__checkbox"
+                    valueVariant="controlled-state"
+                    checked={!!isRecordSelected({ record, recordKey, selectedRecordsState })}
+                    onChange={checked => {
+                      const nextState = checked
+                        ? (selectedRecordsState ?? []).concat(record)
+                        : (selectedRecordsState ?? []).filter(item => recordKey(item) !== recordKey(record));
+                      setSelectedRecordsState?.(nextState);
+                    }}
+                  >
+                    {recordIndex}
+                  </Checkbox>
+                </div>
+              );
+            }
+            return <div>{recordIndex}</div>;
           },
         });
       } else {
@@ -323,7 +349,7 @@ export const Table = <RecordType extends AnyRecord, ActionKey extends string = s
           width: 48,
           align: 'center',
           onCell: record => {
-            const isSelected = isRecordSelected({ record, rowKey, selectedRowsState });
+            const isSelected = isRecordSelected({ record, recordKey, selectedRecordsState });
             return {
               className: classNames(isSelected ? 'AntCell__selected' : ''),
             };
@@ -343,10 +369,10 @@ export const Table = <RecordType extends AnyRecord, ActionKey extends string = s
     checkMode,
     columns,
     currentPage,
-    dataInPage,
+    dataInPageSelectable,
     isCheckedAll,
     pageSize,
-    selectedRowsState,
+    selectedRecordsState,
     sortValues,
     columnsState,
   ]);
@@ -417,7 +443,7 @@ export const Table = <RecordType extends AnyRecord, ActionKey extends string = s
         title={!title && !displayColumnsConfigable?.enable ? undefined : (): ReactNode => TitleOfAntTable}
         sticky={offsetHeader === undefined ? undefined : { offsetHeader }}
         size={size}
-        rowKey={rowKey}
+        rowKey={recordKey}
         loading={loading}
         indentSize={indentSize}
         direction={direction}
@@ -489,10 +515,10 @@ export const Table = <RecordType extends AnyRecord, ActionKey extends string = s
         }
       />
       {renderStickyAction && (
-        <StickyAction isVisible={!!selectedRowsState?.length}>
+        <StickyAction isVisible={!!selectedRecordsState?.length}>
           {renderStickyAction({
-            selectedRows: selectedRowsState ?? [],
-            clear: () => setSelectedRowsState?.([]),
+            selectedRecords: selectedRecordsState ?? [],
+            clear: () => setSelectedRecordsState?.([]),
           })}
         </StickyAction>
       )}
