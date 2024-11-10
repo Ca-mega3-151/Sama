@@ -50,3 +50,4 @@ export * from './TimePicker';
 export * from './Tooltip';
 export * from './TreeSelect';
 export * from './Upload';
+export { Upload as AntRawUpload } from 'antd';

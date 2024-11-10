@@ -3,8 +3,8 @@ import { nth } from 'ramda';
 let checked = false;
 
 /**
- * Checks if localStorage is available in the current environment.
- * @returns {boolean} True if localStorage is available, false otherwise.
+ * Checks if webLocalStorage is available in the current environment.
+ * @returns {boolean} True if webLocalStorage is available, false otherwise.
  */
 const storageAvailable = (): boolean => {
   if (!checked) {
@@ -28,7 +28,7 @@ const memoryStorage = new Map<string, string>();
  * Implements an in-memory storage similar to the Storage interface.
  * @returns {Storage} A Storage-like object.
  */
-const createLocalStorage = (): Storage => {
+const createWebStorage = (): Storage => {
   if (storageAvailable()) {
     return window.localStorage;
   } else {
@@ -55,8 +55,7 @@ const createLocalStorage = (): Storage => {
 };
 
 /**
- * A Storage-like object that either uses native localStorage or
- * falls back to an in-memory solution.
+ * A Storage-like object that either uses native localStorage or falls back to an in-memory solution.
  * @type {Storage}
  */
-export const localStorage = createLocalStorage();
+export const webLocalStorage = createWebStorage();

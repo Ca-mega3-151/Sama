@@ -3,7 +3,7 @@ import { Modal, ModalProps } from '../../../components';
 import { IconWarning } from './IconWarning';
 import './styles.css';
 
-export type Props = Omit<ModalProps, 'okText' | 'cancelText' | 'children'> & {
+export type Props = Omit<ModalProps, 'children'> & {
   title: ReactNode;
   description: ReactNode;
 };
