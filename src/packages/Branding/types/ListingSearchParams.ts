@@ -1,4 +1,6 @@
-import { lisitngUrlSearchParamsUtils } from '../utils/listingUrlSearchParams';
+import { brandingLisitngUrlSearchParamsUtils } from '../utils/listingUrlSearchParams';
 import { GetTypeOfSearchParamsFromUrlParamsUtils } from '~/overrides/RemixJS/types';
 
-export type ListingSearchParams = GetTypeOfSearchParamsFromUrlParamsUtils<typeof lisitngUrlSearchParamsUtils>;
+export type BrandingListingSearchParams = GetTypeOfSearchParamsFromUrlParamsUtils<
+  typeof brandingLisitngUrlSearchParamsUtils
+>;

@@ -1,12 +1,13 @@
 import { auth } from '../../Auth/locales/auth';
-import { common } from './locales/common';
-import { dashboard } from './locales/dashboard';
-import { dashboard_layout } from './locales/dashboard_layout';
-import { error_message } from './locales/error_message';
-import { page403 } from './locales/page403';
-import { page404 } from './locales/page404';
-import { page500 } from './locales/page500';
-import { branding } from '~/packages/Branding/locales/branding';
+import { CommonLocales } from './locales/common';
+import { ComponentsLocales } from './locales/components';
+import { DashboardLocales } from './locales/dashboard';
+import { DashboardLayoutLocales } from './locales/dashboard_layout';
+import { ErrorMessageLocales } from './locales/error_message';
+import { Page403Locales } from './locales/page403';
+import { Page404Locales } from './locales/page404';
+import { Page500Locales } from './locales/page500';
+import { BrandingLocales } from '~/packages/Branding/locales/branding';
 import { getPublicEnv } from '~/utils/functions/getPublicEnv';
 
 // This is the list of languages your application supports
@@ -22,28 +23,20 @@ const defaultNS = 'translation';
 const resources = {
   en: {
     translation: {},
-    common: common.en,
+    components: ComponentsLocales.en,
+    common: CommonLocales.en,
     auth: auth.en,
-    error_message: error_message.en,
-    page403: page403.en,
-    page404: page404.en,
-    page500: page500.en,
-    branding: branding.en,
-    dashboard_layout: dashboard_layout.en,
-    dashboard: dashboard.en,
-
-    components: {
-      FormMutation: {
-        ok: 'Confirm',
-        save: 'Save',
-        cancel: 'Cancel',
-        confirm_description: 'Confirm to save this record',
-      },
-    },
+    error_message: ErrorMessageLocales.en,
+    page403: Page403Locales.en,
+    page404: Page404Locales.en,
+    page500: Page500Locales.en,
+    branding: BrandingLocales.en,
+    dashboard_layout: DashboardLayoutLocales.en,
+    dashboard: DashboardLocales.en,
   },
   fr: {
     translation: {},
-    common: common.fr,
+    common: CommonLocales.fr,
   },
 };
 

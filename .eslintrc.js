@@ -10,20 +10,13 @@ module.exports = {
       version: 'detect',
     },
   },
-  plugins: [
-    '@typescript-eslint',
-    'import',
-    'prettier',
-    //  'jsx-a11y',
-    'react',
-    'react-hooks',
-  ],
+  plugins: ['@typescript-eslint', 'import', 'prettier', 'jsx-a11y', 'react', 'react-hooks'],
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:prettier/recommended',
     'plugin:@typescript-eslint/recommended',
-    // 'plugin:jsx-a11y/recommended',
+    'plugin:jsx-a11y/recommended',
     'plugin:tailwindcss/recommended',
   ],
   rules: {

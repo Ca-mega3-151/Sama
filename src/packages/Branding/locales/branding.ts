@@ -1,4 +1,4 @@
-export const branding = {
+export const BrandingLocales = {
   en: {
     brandings: 'Brands',
     code: 'Brand Code',

@@ -1,8 +1,8 @@
+import { SimpleActionResponse as BaseSimpleActionResponse } from '~/overrides/RemixJS/types';
 import { StatusCodeMappingToString } from '~/services/constants/StringMappingToStatusCode';
-import { SimpleActionResponse as BaseSimpleResponse } from '~/shared/RemixJS/types';
 import { AnyRecord } from '~/shared/TypescriptUtilities';
 
-export type SimpleActionResponse<Model, FieldsError extends AnyRecord | undefined> = BaseSimpleResponse<
+export type SimpleActionResponse<Model, FieldsError extends AnyRecord | undefined> = BaseSimpleActionResponse<
   Model,
   FieldsError,
   { errorCode?: keyof typeof StatusCodeMappingToString }

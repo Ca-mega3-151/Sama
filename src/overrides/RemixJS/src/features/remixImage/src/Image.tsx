@@ -11,5 +11,6 @@ export const Image = ({
   fallback: _fallback,
   ...props
 }: ImageProps) => {
+  // eslint-disable-next-line jsx-a11y/alt-text
   return <img {...props} />;
 };

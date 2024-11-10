@@ -1,5 +1,5 @@
 import { isEmpty } from 'ramda';
-import { PageErrorBoundary } from '~/components/PageErrorBoundary/PageErrorBoundary';
+import { PageErrorBoundary } from '~/components/PageErrorBoundary';
 import { AuthLayout } from '~/layouts/AuthLayout/AuthLayout';
 import { redirect, type LoaderFunctionArgs } from '~/overrides/remix';
 import { authSessionStorage } from '~/packages/_Common/Auth/utils/sessionStorage';

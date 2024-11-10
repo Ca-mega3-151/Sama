@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import type { LoaderFunctionArgs, TypedResponse } from '~/overrides/remix';
-import { PageErrorBoundary } from '~/components/PageErrorBoundary/PageErrorBoundary';
+import { PageErrorBoundary } from '~/components/PageErrorBoundary';
 import { DashboardLayout } from '~/layouts/DashboardLayout/DashboardLayout';
 import { useLoaderData } from '~/overrides/remix';
 import { json, redirect } from '~/overrides/remix';

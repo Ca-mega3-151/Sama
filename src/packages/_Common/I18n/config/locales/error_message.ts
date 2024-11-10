@@ -1,4 +1,4 @@
-export const error_message = {
+export const ErrorMessageLocales = {
   en: {
     HTTP_SERVER_ERROR: 'The server encountered an internal error',
     HTTP_REQUEST_TIMEOUT: 'Network error',

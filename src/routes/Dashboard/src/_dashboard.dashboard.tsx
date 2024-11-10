@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { BoxFields } from '~/components/BoxFields/BoxFields';
-import { PageErrorBoundary } from '~/components/PageErrorBoundary/PageErrorBoundary';
+import { BoxFields } from '~/components/BoxFields';
+import { PageErrorBoundary } from '~/components/PageErrorBoundary';
 import { BarChart, LineChart, PieChart } from '~/shared/ReactJS';
 
 export const Page = () => {

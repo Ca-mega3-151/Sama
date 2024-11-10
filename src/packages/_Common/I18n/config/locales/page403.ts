@@ -1,4 +1,4 @@
-export const page403 = {
+export const Page403Locales = {
   en: {
     title: 'Forbidden',
     description: 'NOT THIS TIME, ACCESS FORBIDDEN!',

@@ -1,8 +1,8 @@
 import { number, object, string, enum as enum_ } from 'zod';
-import { RecordsPerPage } from '../constants/RecordsPerPage';
+import { RecordsPerPage } from '../../../services/constants/RecordsPerPage';
 import { UrlSearchParamsUtils } from '~/shared/Utilities';
 
-export const lisitngUrlSearchParamsSchema = object({
+export const brandingLisitngUrlSearchParamsSchema = object({
   page: number().optional(),
   search: string().optional(),
   pageSize: number().optional().default(RecordsPerPage),
@@ -10,6 +10,6 @@ export const lisitngUrlSearchParamsSchema = object({
   brandingCode: enum_(['descend', 'ascend']).optional(),
 });
 
-export const lisitngUrlSearchParamsUtils = new UrlSearchParamsUtils({
-  zodSchema: lisitngUrlSearchParamsSchema,
+export const brandingLisitngUrlSearchParamsUtils = new UrlSearchParamsUtils({
+  zodSchema: brandingLisitngUrlSearchParamsSchema,
 });

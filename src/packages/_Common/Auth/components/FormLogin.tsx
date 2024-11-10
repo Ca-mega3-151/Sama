@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { getFormLoginResolver } from '../constants/zodResolver';
 import { Form, Link } from '~/overrides/remix';
 import { useRemixForm } from '~/overrides/remix-hook-form';
-import { Field, useDeepCompareEffect } from '~/shared/ReactJS';
 import { Button, Checkbox, Input, InputPassword } from '~/shared/ReactJS';
+import { Field, useDeepCompareEffect } from '~/shared/ReactJS';
 
 export interface FormLoginValues {
   email: string;

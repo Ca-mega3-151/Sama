@@ -2,6 +2,10 @@ import { HomeOutlined, StarOutlined } from '@ant-design/icons';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from '~/overrides/remix';
+import { BrandingFullFeaturesBaseUrl } from '~/routes/Dashboard/src/BrandingFullFeaturesRoutes/src/constants/BaseUrl';
+import { BrandingStandardWithModalBaseUrl } from '~/routes/Dashboard/src/BrandingStandardWithModal/src/constants/BaseUrl';
+import { BrandingStandardWithPageBaseUrl } from '~/routes/Dashboard/src/BrandingStandardWithPage/src/constants/BaseUrl';
+import { BrandingWithDeferBaseUrl } from '~/routes/Dashboard/src/BrandingWithDeferRoutes/src/constants/BaseUrl';
 import { MenuVerticalProps } from '~/shared/ReactJS';
 
 export const useGetNavData = () => {
@@ -18,10 +22,28 @@ export const useGetNavData = () => {
         onClick: () => navigate('/dashboard'),
       },
       {
-        key: '/branding',
+        key: BrandingFullFeaturesBaseUrl,
         icon: <StarOutlined />,
-        label: t('dashboard_layout:menu.branding'),
-        onClick: () => navigate('/branding'),
+        label: t('dashboard_layout:menu.branding_full_features'),
+        onClick: () => navigate(BrandingFullFeaturesBaseUrl),
+      },
+      {
+        key: BrandingWithDeferBaseUrl,
+        icon: <StarOutlined />,
+        label: t('dashboard_layout:menu.branding_defer'),
+        onClick: () => navigate(BrandingWithDeferBaseUrl),
+      },
+      {
+        key: BrandingStandardWithModalBaseUrl,
+        icon: <StarOutlined />,
+        label: t('dashboard_layout:menu.branding_standard_with_modal'),
+        onClick: () => navigate(BrandingStandardWithModalBaseUrl),
+      },
+      {
+        key: BrandingStandardWithPageBaseUrl,
+        icon: <StarOutlined />,
+        label: t('dashboard_layout:menu.branding_standard_with_page'),
+        onClick: () => navigate(BrandingStandardWithPageBaseUrl),
       },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,4 +1,4 @@
-export const common = {
+export const CommonLocales = {
   en: {
     welcome: 'Hello {{name}}',
     type_required: '{{type}} is required',

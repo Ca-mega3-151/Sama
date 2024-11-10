@@ -1,4 +1,4 @@
-export const dashboard = {
+export const DashboardLocales = {
   en: {
     source: 'Source',
     PNL: 'Profit and loss',

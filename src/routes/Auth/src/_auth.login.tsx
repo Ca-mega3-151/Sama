@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ActionFunctionArgs } from '~/overrides/remix';
-import { PageErrorBoundary } from '~/components/PageErrorBoundary/PageErrorBoundary';
+import { PageErrorBoundary } from '~/components/PageErrorBoundary';
 import { json, useActionData, useNavigation, useSearchParams } from '~/overrides/remix';
 import { getValidatedFormData } from '~/overrides/remix-hook-form';
 import { FormLogin, FormLoginValues } from '~/packages/_Common/Auth/components/FormLogin';
