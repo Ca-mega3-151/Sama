@@ -248,12 +248,12 @@ export default {
     width: true,
     willChange: true,
     zIndex: true,
+    visibility: true,
 
     //
     preflight: false,
     container: false,
     accessibility: false,
-    visibility: false,
     isolation: false,
     float: false,
     clear: false,
