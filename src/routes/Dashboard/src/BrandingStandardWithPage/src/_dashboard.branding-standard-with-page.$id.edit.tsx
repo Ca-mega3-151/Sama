@@ -12,17 +12,17 @@ import { useCallbackPrompt } from '~/overrides/RemixJS/client';
 import { SimpleActionResponse, SimpleLoaderResponse } from '~/overrides/RemixJS/types';
 import { i18nServer } from '~/packages/_Common/I18n/i18n.server';
 import {
-  BrandingFormMutation,
-  BrandingFormMutationActions,
-  BrandingFormMutationProps,
-  BrandingFormMutationValues,
-} from '~/packages/Branding/components/FormMutation/FormMutation';
-import { getFormMutationResolver } from '~/packages/Branding/components/FormMutation/zodResolver';
-import { Branding } from '~/packages/Branding/models/Branding';
-import { getBranding } from '~/packages/Branding/services/getBranding';
-import { updateBranding } from '~/packages/Branding/services/updateBranding';
-import { brandingFormMutationValuesToCreateBrandingService } from '~/packages/Branding/utils/brandingFormMutationValuesToCreateBrandingService';
-import { brandingModelToDefaultValuesOfFormMutation } from '~/packages/Branding/utils/brandingModelToDefaultValuesOfFormMutation';
+  BrandingStandardFormMutation,
+  BrandingStandardFormMutationActions,
+  BrandingStandardFormMutationProps,
+  BrandingStandardFormMutationValues,
+} from '~/packages/BrandingStandard/components/FormMutation/FormMutation';
+import { getFormMutationResolver } from '~/packages/BrandingStandard/components/FormMutation/zodResolver';
+import { BrandingStandard } from '~/packages/BrandingStandard/models/BrandingStandard';
+import { getBrandingStandard } from '~/packages/BrandingStandard/services/getBrandingStandard';
+import { updateBrandingStandard } from '~/packages/BrandingStandard/services/updateBrandingStandard';
+import { brandingStandardFormMutationValuesToCreateBrandingService } from '~/packages/BrandingStandard/utils/brandingFormMutationValuesToCreateBrandingService';
+import { brandingStandardModelToDefaultValuesOfFormMutation } from '~/packages/BrandingStandard/utils/brandingModelToDefaultValuesOfFormMutation';
 import { notification } from '~/shared/ReactJS';
 import { handleCatchClauseAsSimpleResponse } from '~/utils/functions/handleErrors/handleCatchClauseSimple';
 import { handleFormResolverError } from '~/utils/functions/handleErrors/handleFormResolverError';
@@ -30,8 +30,8 @@ import { handleGetMessageToToast } from '~/utils/functions/handleErrors/handleGe
 import { preventRevalidateOnEditPage } from '~/utils/functions/preventRevalidateOnEditPage';
 
 export type EditBrandingActionResponse = SimpleActionResponse<
-  Pick<Branding, '_id'>,
-  BrandingFormMutationProps['fieldsError']
+  Pick<BrandingStandard, '_id'>,
+  BrandingStandardFormMutationProps['fieldsError']
 >;
 export const action = async (remixRequest: ActionFunctionArgs): Promise<TypedResponse<EditBrandingActionResponse>> => {
   const { request, params } = remixRequest;
@@ -39,17 +39,17 @@ export const action = async (remixRequest: ActionFunctionArgs): Promise<TypedRes
     return redirect(BrandingStandardWithPageBaseUrl);
   }
   try {
-    const t = await i18nServer.getFixedT(request, ['common', 'branding'] as const);
-    const { errors, data } = await getValidatedFormData<BrandingFormMutationValues>(
+    const t = await i18nServer.getFixedT(request, ['common', 'branding_standard'] as const);
+    const { errors, data } = await getValidatedFormData<BrandingStandardFormMutationValues>(
       request,
       getFormMutationResolver(t),
     );
     if (data) {
-      await updateBranding({
+      await updateBrandingStandard({
         remixRequest,
         data: {
           _id: params['id'],
-          ...brandingFormMutationValuesToCreateBrandingService(data),
+          ...brandingStandardFormMutationValuesToCreateBrandingService(data),
         },
       });
 
@@ -65,14 +65,14 @@ export const action = async (remixRequest: ActionFunctionArgs): Promise<TypedRes
   }
 };
 
-type LoaderResponse = SimpleLoaderResponse<{ branding: Branding }>;
+type LoaderResponse = SimpleLoaderResponse<{ brandingStandard: BrandingStandard }>;
 export const loader = async (remixRequest: LoaderFunctionArgs): Promise<TypedResponse<LoaderResponse>> => {
   const { params } = remixRequest;
   if (!params['id']) {
     return redirect('/404');
   }
   try {
-    const response = await getBranding({
+    const response = await getBrandingStandard({
       remixRequest,
       data: {
         _id: params['id'],
@@ -80,7 +80,7 @@ export const loader = async (remixRequest: LoaderFunctionArgs): Promise<TypedRes
     });
     return json({
       info: {
-        branding: response.data,
+        brandingStandard: response.data,
       },
       hasError: false,
       message: '',
@@ -97,14 +97,16 @@ export const ErrorBoundary = PageErrorBoundary;
 const FormUpdateUid = 'FormUpdateUid';
 export const Page = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation(['branding']);
+  const { t } = useTranslation(['branding_standard']);
 
   const navigation = useNavigation();
   const loaderData = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
 
   const defaultValues = useMemo(() => {
-    return brandingModelToDefaultValuesOfFormMutation({ branding: loaderData.info?.branding });
+    return brandingStandardModelToDefaultValuesOfFormMutation({
+      brandingStandard: loaderData.info?.brandingStandard,
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -113,7 +115,7 @@ export const Page = () => {
   }, [navigation.state]);
 
   //#region Confirm back when form is dirty
-  const formActionsRef = useRef<BrandingFormMutationActions | null>(null);
+  const formActionsRef = useRef<BrandingStandardFormMutationActions | null>(null);
   const isReadyNavigateAfterSubmit = useRef<boolean>(false);
   const { cancelNavigation, confirmNavigation, showPrompt } = useCallbackPrompt({
     whenEnableForBrowser: () => {
@@ -137,12 +139,12 @@ export const Page = () => {
     if (actionData) {
       if (actionData.hasError) {
         notification.error({
-          message: t('branding:edit_error'),
+          message: t('branding_standard:edit_error'),
           description: handleGetMessageToToast(t, actionData),
         });
       } else {
         isReadyNavigateAfterSubmit.current = true;
-        notification.success({ message: t('branding:edit_success') });
+        notification.success({ message: t('branding_standard:edit_success') });
         navigate(BrandingStandardWithPageBaseUrl);
       }
     }
@@ -151,10 +153,13 @@ export const Page = () => {
 
   return (
     <div className="flex h-full flex-col">
-      <MutationHeader title={t('branding:edit_title')} onBack={() => navigate(BrandingStandardWithPageBaseUrl)} />
+      <MutationHeader
+        title={t('branding_standard:edit_title')}
+        onBack={() => navigate(BrandingStandardWithPageBaseUrl)}
+      />
       <div className="mb-4 flex-1">
         <BoxFields>
-          <BrandingFormMutation
+          <BrandingStandardFormMutation
             ref={formActionsRef}
             isSubmiting={isSubmiting}
             uid={FormUpdateUid}
@@ -169,9 +174,9 @@ export const Page = () => {
       />
       <ModalConfirmNavigate
         confirmLoading={navigation.state === 'loading'}
-        title={t('branding:confirm_unsave_change_title')}
-        subTitle={t('branding:confirm_unsave_change_sub_title')}
-        description={t('branding:confirm_unsave_change_description')}
+        title={t('branding_standard:confirm_unsave_change_title')}
+        subTitle={t('branding_standard:confirm_unsave_change_sub_title')}
+        description={t('branding_standard:confirm_unsave_change_description')}
         open={showPrompt}
         onOk={handleConfirmBack}
         onCancel={handleCancelback}

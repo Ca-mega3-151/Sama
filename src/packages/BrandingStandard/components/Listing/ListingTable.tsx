@@ -1,20 +1,20 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { getStatusMappingToLabels } from '../../constants/StatusMappingToLabels';
+import { StatusMappingToTagColor } from '../../constants/StatusMappingToTagColor';
+import { BrandingStandard } from '../../models/BrandingStandard';
+import { BrandingStandardListingSearchParams } from '../../types/ListingSearchParams';
 import { ListingColumnType, ListingTable, ListingTableProps } from '~/components/Listing';
-import { getStatusMappingToLabels } from '~/packages/Branding/constants/StatusMappingToLabels';
-import { StatusMappingToTagColor } from '~/packages/Branding/constants/StatusMappingToTagColor';
-import { Branding } from '~/packages/Branding/models/Branding';
-import { BrandingListingSearchParams } from '~/packages/Branding/types/ListingSearchParams';
 import { TableActions, Tag } from '~/shared/ReactJS';
 import { FormQueryStateValues } from '~/shared/TypescriptUtilities';
 import { dayjs } from '~/shared/Utilities';
 
-export interface SortValues extends FormQueryStateValues<BrandingListingSearchParams, 'brandingCode'> {}
+export interface SortValues extends FormQueryStateValues<BrandingStandardListingSearchParams, 'brandingCode'> {}
 
 interface Props
   extends Pick<
-    ListingTableProps<Branding>,
+    ListingTableProps<BrandingStandard>,
     | 'currentPage'
     | 'dataSource'
     | 'loading'
@@ -29,11 +29,11 @@ interface Props
     | 'setSelectedRecordsState'
     | 'recordSelectable'
   > {
-  onEdit: (record: Branding) => void;
-  onDelete: (record: Branding) => void;
+  onEdit: (record: BrandingStandard) => void;
+  onDelete: (record: BrandingStandard) => void;
 }
 
-export const BrandingListingTable = ({
+export const BrandingStandardListingTable = ({
   currentPage = 1,
   pageSize,
   totalRecords,
@@ -43,17 +43,17 @@ export const BrandingListingTable = ({
   onDelete,
   ...props
 }: Props) => {
-  const { t } = useTranslation(['common', 'branding'] as const);
+  const { t } = useTranslation(['common', 'branding_standard'] as const);
 
   const StatusMappingToLabels = useMemo(() => {
     return getStatusMappingToLabels(t);
   }, [t]);
 
-  const columns: Array<ListingColumnType<Branding, keyof SortValues>> = useMemo(() => {
+  const columns: Array<ListingColumnType<BrandingStandard, keyof SortValues>> = useMemo(() => {
     return [
       {
         id: 'code',
-        title: t('branding:code'),
+        title: t('branding_standard:code'),
         width: 320,
         actions: {
           key: 'brandingCode',
@@ -65,13 +65,13 @@ export const BrandingListingTable = ({
       },
       {
         id: 'name',
-        title: t('branding:name'),
+        title: t('branding_standard:name'),
         width: 320,
         render: record => record.brandingName,
       },
       {
         id: 'status',
-        title: t('branding:status'),
+        title: t('branding_standard:status'),
         width: 160,
         align: 'center',
         render: record => {
@@ -80,7 +80,7 @@ export const BrandingListingTable = ({
       },
       {
         id: 'updated_by',
-        title: t('branding:updated_by'),
+        title: t('branding_standard:updated_by'),
         width: 320,
         render: record => {
           return record.updatedBy || record.createdBy;
@@ -88,7 +88,7 @@ export const BrandingListingTable = ({
       },
       {
         id: 'updated_at',
-        title: t('branding:updated_at'),
+        title: t('branding_standard:updated_at'),
         width: 160,
         render: record => {
           return dayjs(record.updatedAt).format('DD/MM/YYYY HH:mm');
@@ -96,7 +96,7 @@ export const BrandingListingTable = ({
       },
       {
         id: 'action',
-        title: t('branding:action'),
+        title: t('branding_standard:action'),
         width: 90,
         align: 'center',
         fixed: 'right',
@@ -106,14 +106,14 @@ export const BrandingListingTable = ({
               items={[
                 {
                   key: '1',
-                  label: t('branding:edit'),
+                  label: t('branding_standard:edit'),
                   icon: <EditOutlined />,
                   onClick: () => onEdit?.(record),
                 },
                 {
                   key: '2',
                   danger: true,
-                  label: <div>{t('branding:delete')}</div>,
+                  label: <div>{t('branding_standard:delete')}</div>,
                   icon: <DeleteOutlined />,
                   onClick: () => onDelete?.(record),
                 },
@@ -127,7 +127,7 @@ export const BrandingListingTable = ({
   }, [t]);
 
   return (
-    <ListingTable<Branding>
+    <ListingTable<BrandingStandard>
       {...props}
       dataSource={dataSource}
       columns={columns}

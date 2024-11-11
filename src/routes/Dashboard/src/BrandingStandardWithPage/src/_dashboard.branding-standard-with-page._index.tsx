@@ -12,13 +12,13 @@ import { json, useFetcher, useLoaderData, useNavigate } from '~/overrides/remix'
 import { useListingData } from '~/overrides/RemixJS/client';
 import { SimpleListingResponse } from '~/overrides/RemixJS/types';
 import { i18nServer } from '~/packages/_Common/I18n/i18n.server';
-import { Branding } from '~/packages/Branding/models/Branding';
-import { getBrandings } from '~/packages/Branding/services/getBrandings';
-import { BrandingListingSearchParams } from '~/packages/Branding/types/ListingSearchParams';
-import { brandingLisitngUrlSearchParamsUtils } from '~/packages/Branding/utils/listingUrlSearchParams';
-import { BrandingFormSearchNFilter } from '~/packages/BrandingStandard/components/Listing/FormSearchNFilter';
-import { BrandingListingHeader } from '~/packages/BrandingStandard/components/Listing/ListingHeader';
-import { BrandingListingTable } from '~/packages/BrandingStandard/components/Listing/ListingTable';
+import { BrandingStandardFormSearchNFilter } from '~/packages/BrandingStandard/components/Listing/FormSearchNFilter';
+import { BrandingStandardListingHeader } from '~/packages/BrandingStandard/components/Listing/ListingHeader';
+import { BrandingStandardListingTable } from '~/packages/BrandingStandard/components/Listing/ListingTable';
+import { BrandingStandard } from '~/packages/BrandingStandard/models/BrandingStandard';
+import { getBrandingsStandard } from '~/packages/BrandingStandard/services/getBrandingsStandard';
+import { BrandingStandardListingSearchParams } from '~/packages/BrandingStandard/types/ListingSearchParams';
+import { brandingStandardLisitngUrlSearchParamsUtils } from '~/packages/BrandingStandard/utils/listingUrlSearchParams';
 import { RecordsPerPage } from '~/services/constants/RecordsPerPage';
 import { getTableSortOrderMappingToServiceSort } from '~/services/utils/TableSortOrderMappingToServiceSort';
 import { notification } from '~/shared/ReactJS';
@@ -29,18 +29,18 @@ import { preventRevalidateOnListingPage } from '~/utils/functions/preventRevalid
 
 export const loader = async (
   remixRequest: LoaderFunctionArgs,
-): Promise<TypedResponse<SimpleListingResponse<Branding>>> => {
+): Promise<TypedResponse<SimpleListingResponse<BrandingStandard>>> => {
   const { request } = remixRequest;
-  const t = await i18nServer.getFixedT(request, ['common', 'branding']);
+  const t = await i18nServer.getFixedT(request, ['common', 'branding_standard']);
   const {
     page = 1,
     pageSize = RecordsPerPage,
     search,
     status,
     brandingCode,
-  } = brandingLisitngUrlSearchParamsUtils.decrypt(request);
+  } = brandingStandardLisitngUrlSearchParamsUtils.decrypt(request);
   try {
-    const response = await getBrandings({
+    const response = await getBrandingsStandard({
       remixRequest,
       page,
       pageSize,
@@ -79,17 +79,17 @@ export const loader = async (
 
 export const Page = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation(['branding']);
+  const { t } = useTranslation(['branding_standard']);
 
   //#region Listing
-  const paramsInUrl = brandingLisitngUrlSearchParamsUtils.decrypt(
-    brandingLisitngUrlSearchParamsUtils.getUrlSearchParams().toString(),
+  const paramsInUrl = brandingStandardLisitngUrlSearchParamsUtils.decrypt(
+    brandingStandardLisitngUrlSearchParamsUtils.getUrlSearchParams().toString(),
   );
   const fetcherData = useFetcher<typeof loader>();
   const loaderData = useLoaderData<typeof loader>();
 
-  const handleRequest = (params: BrandingListingSearchParams) => {
-    const searchParamsToLoader = brandingLisitngUrlSearchParamsUtils.encrypt({
+  const handleRequest = (params: BrandingStandardListingSearchParams) => {
+    const searchParamsToLoader = brandingStandardLisitngUrlSearchParamsUtils.encrypt({
       ...paramsInUrl,
       ...params,
     });
@@ -97,7 +97,7 @@ export const Page = () => {
     updateURLSearchParamsOfBrowserWithoutNavigation(searchParamsToLoader);
   };
 
-  const { data, isFetchingList } = useListingData<Branding>({
+  const { data, isFetchingList } = useListingData<BrandingStandard>({
     fetcherData: fetcherData,
     loaderData: loaderData,
     getNearestPageAvailable: page => handleRequest({ page }),
@@ -110,7 +110,7 @@ export const Page = () => {
   const isDeleting = useMemo(() => {
     return deleteBrandingFetcher.state === 'loading' || deleteBrandingFetcher.state === 'submitting';
   }, [deleteBrandingFetcher]);
-  const [isOpenModalDeleteBranding, setIsOpenModalDeleteBranding] = useState<Branding | false>(false);
+  const [isOpenModalDeleteBranding, setIsOpenModalDeleteBranding] = useState<BrandingStandard | false>(false);
 
   const handleDelete = () => {
     if (!isOpenModalDeleteBranding) {
@@ -127,11 +127,11 @@ export const Page = () => {
       const response = deleteBrandingFetcher.data as DeleteBrandingActionResponse;
       if (response.hasError) {
         notification.error({
-          message: t('branding:delete_error'),
+          message: t('branding_standard:delete_error'),
           description: handleGetMessageToToast(t, response),
         });
       } else {
-        notification.success({ message: t('branding:delete_success') });
+        notification.success({ message: t('branding_standard:delete_success') });
         handleRequest({});
         setIsOpenModalDeleteBranding(false);
       }
@@ -141,14 +141,17 @@ export const Page = () => {
   //#endregion
 
   // #region
-  const [selectedRecordsState, setSelectedRecordsState] = useState<Branding[]>([]);
+  const [selectedRecordsState, setSelectedRecordsState] = useState<BrandingStandard[]>([]);
   // #endregion
 
   return (
     <>
       <div className="flex h-full flex-col">
-        <BrandingListingHeader creatable onCreate={() => navigate(`${BrandingStandardWithPageBaseUrl}/create`)} />
-        <BrandingFormSearchNFilter
+        <BrandingStandardListingHeader
+          creatable
+          onCreate={() => navigate(`${BrandingStandardWithPageBaseUrl}/create`)}
+        />
+        <BrandingStandardFormSearchNFilter
           containerClassName="justify-end mb-1"
           searchValue={paramsInUrl.search?.toString()}
           formFilterValues={{
@@ -164,7 +167,7 @@ export const Page = () => {
           }}
           onSearch={value => handleRequest({ page: 1, search: value })}
         />
-        <BrandingListingTable
+        <BrandingStandardListingTable
           offsetHeader={84}
           selectedRecordsState={selectedRecordsState}
           setSelectedRecordsState={setSelectedRecordsState}
@@ -187,8 +190,8 @@ export const Page = () => {
         open={!!isOpenModalDeleteBranding}
         onCancel={() => setIsOpenModalDeleteBranding(false)}
         onOk={handleDelete}
-        title={t('branding:delete_title')}
-        description={t('branding:delete_description')}
+        title={t('branding_standard:delete_title')}
+        description={t('branding_standard:delete_description')}
         loading={isDeleting}
       />
     </>

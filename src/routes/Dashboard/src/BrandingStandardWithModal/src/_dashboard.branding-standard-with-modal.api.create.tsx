@@ -4,21 +4,21 @@ import { json } from '~/overrides/remix';
 import { validateFormData } from '~/overrides/remix-hook-form';
 import { i18nServer } from '~/packages/_Common/I18n/i18n.server';
 import {
-  BrandingFormMutationProps,
-  BrandingFormMutationValues,
-} from '~/packages/Branding/components/FormMutation/FormMutation';
-import { getFormMutationResolver } from '~/packages/Branding/components/FormMutation/zodResolver';
-import { Branding } from '~/packages/Branding/models/Branding';
-import { createBranding } from '~/packages/Branding/services/createBranding';
-import { brandingFormMutationValuesToCreateBrandingService } from '~/packages/Branding/utils/brandingFormMutationValuesToCreateBrandingService';
+  BrandingStandardFormMutationProps,
+  BrandingStandardFormMutationValues,
+} from '~/packages/BrandingStandard/components/FormMutation/FormMutation';
+import { getFormMutationResolver } from '~/packages/BrandingStandard/components/FormMutation/zodResolver';
+import { BrandingStandard } from '~/packages/BrandingStandard/models/BrandingStandard';
+import { createBrandingStandard } from '~/packages/BrandingStandard/services/createBrandingStandard';
+import { brandingStandardFormMutationValuesToCreateBrandingService } from '~/packages/BrandingStandard/utils/brandingFormMutationValuesToCreateBrandingService';
 import { SimpleActionResponse } from '~/types/SimpleActionResponse';
 import { fetcherFormData } from '~/utils/functions/formData/fetcherFormData';
 import { handleCatchClauseAsSimpleResponse } from '~/utils/functions/handleErrors/handleCatchClauseSimple';
 import { handleFormResolverError } from '~/utils/functions/handleErrors/handleFormResolverError';
 
 export type CreateBrandingActionResponse = SimpleActionResponse<
-  Pick<Branding, '_id'>,
-  BrandingFormMutationProps['fieldsError']
+  Pick<BrandingStandard, '_id'>,
+  BrandingStandardFormMutationProps['fieldsError']
 >;
 export const action = async (
   remixRequest: ActionFunctionArgs,
@@ -26,14 +26,14 @@ export const action = async (
   const { request } = remixRequest;
   try {
     const t = await i18nServer.getFixedT(request, ['common', 'branding'] as const);
-    const { errors, data } = await validateFormData<BrandingFormMutationValues>(
+    const { errors, data } = await validateFormData<BrandingStandardFormMutationValues>(
       await fetcherFormData.decrypt(request),
       getFormMutationResolver(t),
     );
     if (data) {
-      await createBranding({
+      await createBrandingStandard({
         remixRequest,
-        data: brandingFormMutationValuesToCreateBrandingService(data),
+        data: brandingStandardFormMutationValuesToCreateBrandingService(data),
       });
 
       return json({

@@ -8,6 +8,7 @@ import { Page403Locales } from './locales/page403';
 import { Page404Locales } from './locales/page404';
 import { Page500Locales } from './locales/page500';
 import { BrandingLocales } from '~/packages/Branding/locales/branding';
+import { BrandingStandardLocales } from '~/packages/BrandingStandard/locales/brandingStandard';
 import { getPublicEnv } from '~/utils/functions/getPublicEnv';
 
 // This is the list of languages your application supports
@@ -31,6 +32,7 @@ const resources = {
     page404: Page404Locales.en,
     page500: Page500Locales.en,
     branding: BrandingLocales.en,
+    branding_standard: BrandingStandardLocales.en,
     dashboard_layout: DashboardLayoutLocales.en,
     dashboard: DashboardLocales.en,
   },

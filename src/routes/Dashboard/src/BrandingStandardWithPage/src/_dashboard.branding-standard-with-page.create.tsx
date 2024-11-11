@@ -11,16 +11,16 @@ import { getValidatedFormData } from '~/overrides/remix-hook-form';
 import { useCallbackPrompt } from '~/overrides/RemixJS/client';
 import { i18nServer } from '~/packages/_Common/I18n/i18n.server';
 import {
-  BrandingFormMutation,
-  BrandingFormMutationActions,
-  BrandingFormMutationProps,
-  BrandingFormMutationValues,
-} from '~/packages/Branding/components/FormMutation/FormMutation';
-import { getFormMutationResolver } from '~/packages/Branding/components/FormMutation/zodResolver';
-import { Branding } from '~/packages/Branding/models/Branding';
-import { createBranding } from '~/packages/Branding/services/createBranding';
-import { brandingFormMutationValuesToCreateBrandingService } from '~/packages/Branding/utils/brandingFormMutationValuesToCreateBrandingService';
-import { brandingModelToDefaultValuesOfFormMutation } from '~/packages/Branding/utils/brandingModelToDefaultValuesOfFormMutation';
+  BrandingStandardFormMutation,
+  BrandingStandardFormMutationActions,
+  BrandingStandardFormMutationProps,
+  BrandingStandardFormMutationValues,
+} from '~/packages/BrandingStandard/components/FormMutation/FormMutation';
+import { getFormMutationResolver } from '~/packages/BrandingStandard/components/FormMutation/zodResolver';
+import { BrandingStandard } from '~/packages/BrandingStandard/models/BrandingStandard';
+import { createBrandingStandard } from '~/packages/BrandingStandard/services/createBrandingStandard';
+import { brandingStandardFormMutationValuesToCreateBrandingService } from '~/packages/BrandingStandard/utils/brandingFormMutationValuesToCreateBrandingService';
+import { brandingStandardModelToDefaultValuesOfFormMutation } from '~/packages/BrandingStandard/utils/brandingModelToDefaultValuesOfFormMutation';
 import { notification } from '~/shared/ReactJS';
 import { SimpleActionResponse } from '~/types/SimpleActionResponse';
 import { handleCatchClauseAsSimpleResponse } from '~/utils/functions/handleErrors/handleCatchClauseSimple';
@@ -28,23 +28,23 @@ import { handleFormResolverError } from '~/utils/functions/handleErrors/handleFo
 import { handleGetMessageToToast } from '~/utils/functions/handleErrors/handleGetMessageToToast';
 
 export type CreateBrandingActionResponse = SimpleActionResponse<
-  Pick<Branding, '_id'>,
-  BrandingFormMutationProps['fieldsError']
+  Pick<BrandingStandard, '_id'>,
+  BrandingStandardFormMutationProps['fieldsError']
 >;
 export const action = async (
   remixRequest: ActionFunctionArgs,
 ): Promise<TypedResponse<CreateBrandingActionResponse>> => {
   const { request } = remixRequest;
   try {
-    const t = await i18nServer.getFixedT(request, ['common', 'branding'] as const);
-    const { errors, data } = await getValidatedFormData<BrandingFormMutationValues>(
+    const t = await i18nServer.getFixedT(request, ['common', 'branding_standard'] as const);
+    const { errors, data } = await getValidatedFormData<BrandingStandardFormMutationValues>(
       request,
       getFormMutationResolver(t),
     );
     if (data) {
-      await createBranding({
+      await createBrandingStandard({
         remixRequest,
-        data: brandingFormMutationValuesToCreateBrandingService(data),
+        data: brandingStandardFormMutationValuesToCreateBrandingService(data),
       });
 
       return json({
@@ -64,20 +64,20 @@ export const ErrorBoundary = PageErrorBoundary;
 const FormCreateUid = 'FormCreateUid';
 export const Page = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation(['branding']);
+  const { t } = useTranslation(['branding_standard']);
 
   const navigation = useNavigation();
   const actionData = useActionData<typeof action>();
 
   const defaultValues = useMemo(() => {
-    return brandingModelToDefaultValuesOfFormMutation({ branding: undefined });
+    return brandingStandardModelToDefaultValuesOfFormMutation({ brandingStandard: undefined });
   }, []);
   const isSubmiting = useMemo(() => {
     return navigation.state === 'loading' || navigation.state === 'submitting';
   }, [navigation.state]);
 
   //#region Confirm back when form is dirty
-  const formActionsRef = useRef<BrandingFormMutationActions | null>(null);
+  const formActionsRef = useRef<BrandingStandardFormMutationActions | null>(null);
   const isReadyNavigateAfterSubmit = useRef<boolean>(false);
   const { cancelNavigation, confirmNavigation, showPrompt } = useCallbackPrompt({
     whenEnableForBrowser: () => {
@@ -101,12 +101,12 @@ export const Page = () => {
     if (actionData) {
       if (actionData.hasError) {
         notification.error({
-          message: t('branding:create_error'),
+          message: t('branding_standard:create_error'),
           description: handleGetMessageToToast(t, actionData),
         });
       } else {
         isReadyNavigateAfterSubmit.current = true;
-        notification.success({ message: t('branding:create_success') });
+        notification.success({ message: t('branding_standard:create_success') });
         navigate(BrandingStandardWithPageBaseUrl);
       }
     }
@@ -115,10 +115,13 @@ export const Page = () => {
 
   return (
     <div className="flex h-full flex-col">
-      <MutationHeader title={t('branding:create_title')} onBack={() => navigate(BrandingStandardWithPageBaseUrl)} />
+      <MutationHeader
+        title={t('branding_standard:create_title')}
+        onBack={() => navigate(BrandingStandardWithPageBaseUrl)}
+      />
       <div className="mb-4 flex-1">
         <BoxFields>
-          <BrandingFormMutation
+          <BrandingStandardFormMutation
             ref={formActionsRef}
             isSubmiting={isSubmiting}
             uid={FormCreateUid}
@@ -133,9 +136,9 @@ export const Page = () => {
       />
       <ModalConfirmNavigate
         confirmLoading={navigation.state === 'loading'}
-        title={t('branding:confirm_unsave_change_title')}
-        subTitle={t('branding:confirm_unsave_change_sub_title')}
-        description={t('branding:confirm_unsave_change_description')}
+        title={t('branding_standard:confirm_unsave_change_title')}
+        subTitle={t('branding_standard:confirm_unsave_change_sub_title')}
+        description={t('branding_standard:confirm_unsave_change_description')}
         open={showPrompt}
         onOk={handleConfirmBack}
         onCancel={handleCancelback}

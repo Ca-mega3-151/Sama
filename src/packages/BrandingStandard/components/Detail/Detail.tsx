@@ -1,16 +1,16 @@
 import { useMemo } from 'react';
-import { BrandingFormMutation } from '~/packages/Branding/components/FormMutation/FormMutation';
-import { Branding } from '~/packages/Branding/models/Branding';
-import { brandingModelToDefaultValuesOfFormMutation } from '~/packages/Branding/utils/brandingModelToDefaultValuesOfFormMutation';
+import { BrandingStandard } from '../../models/BrandingStandard';
+import { brandingStandardModelToDefaultValuesOfFormMutation } from '../../utils/brandingModelToDefaultValuesOfFormMutation';
+import { BrandingStandardFormMutation } from '../FormMutation/FormMutation';
 
 interface Props {
-  branding: Branding;
+  brandingStandard: BrandingStandard;
 }
 
-export const BrandingDetail = ({ branding }: Props) => {
+export const BrandingStandardDetail = ({ brandingStandard }: Props) => {
   const defaultValues = useMemo(() => {
-    return brandingModelToDefaultValuesOfFormMutation({ branding });
-  }, [branding]);
+    return brandingStandardModelToDefaultValuesOfFormMutation({ brandingStandard });
+  }, [brandingStandard]);
 
-  return <BrandingFormMutation isSubmiting={false} uid="" disabled defaultValues={defaultValues} />;
+  return <BrandingStandardFormMutation isSubmiting={false} uid="" disabled defaultValues={defaultValues} />;
 };

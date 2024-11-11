@@ -6,8 +6,8 @@ interface Props {
   creatable?: boolean;
 }
 
-export const BrandingListingHeader = ({ onCreate, creatable }: Props) => {
-  const { t } = useTranslation(['branding']);
+export const BrandingStandardListingHeader = ({ onCreate, creatable }: Props) => {
+  const { t } = useTranslation(['branding_standard']);
 
   return (
     <ListingHeader
@@ -15,10 +15,10 @@ export const BrandingListingHeader = ({ onCreate, creatable }: Props) => {
       importable={false}
       creatable={creatable}
       onCreate={onCreate}
-      title={t('branding:brandings')}
-      createBtn={t('branding:create')}
-      exportBtn={t('branding:export_data')}
-      importBtn={t('branding:import_data')}
+      title={t('branding_standard:brandings')}
+      createBtn={t('branding_standard:create')}
+      exportBtn={t('branding_standard:export_data')}
+      importBtn={t('branding_standard:import_data')}
     />
   );
 };

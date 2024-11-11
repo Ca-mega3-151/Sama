@@ -5,13 +5,13 @@ import { json, redirect } from '~/overrides/remix';
 import { validateFormData } from '~/overrides/remix-hook-form';
 import { i18nServer } from '~/packages/_Common/I18n/i18n.server';
 import {
-  BrandingFormMutationProps,
-  BrandingFormMutationValues,
-} from '~/packages/Branding/components/FormMutation/FormMutation';
-import { getFormMutationResolver } from '~/packages/Branding/components/FormMutation/zodResolver';
-import { Branding } from '~/packages/Branding/models/Branding';
-import { updateBranding } from '~/packages/Branding/services/updateBranding';
-import { brandingFormMutationValuesToCreateBrandingService } from '~/packages/Branding/utils/brandingFormMutationValuesToCreateBrandingService';
+  BrandingStandardFormMutationProps,
+  BrandingStandardFormMutationValues,
+} from '~/packages/BrandingStandard/components/FormMutation/FormMutation';
+import { getFormMutationResolver } from '~/packages/BrandingStandard/components/FormMutation/zodResolver';
+import { BrandingStandard } from '~/packages/BrandingStandard/models/BrandingStandard';
+import { updateBrandingStandard } from '~/packages/BrandingStandard/services/updateBrandingStandard';
+import { brandingStandardFormMutationValuesToCreateBrandingService } from '~/packages/BrandingStandard/utils/brandingFormMutationValuesToCreateBrandingService';
 import { SimpleActionResponse } from '~/types/SimpleActionResponse';
 import { fetcherFormData } from '~/utils/functions/formData/fetcherFormData';
 import { handleCatchClauseAsSimpleResponse } from '~/utils/functions/handleErrors/handleCatchClauseSimple';
@@ -19,8 +19,8 @@ import { handleFormResolverError } from '~/utils/functions/handleErrors/handleFo
 import { preventRevalidateOnEditPage } from '~/utils/functions/preventRevalidateOnEditPage';
 
 export type EditBrandingActionResponse = SimpleActionResponse<
-  Pick<Branding, '_id'>,
-  BrandingFormMutationProps['fieldsError']
+  Pick<BrandingStandard, '_id'>,
+  BrandingStandardFormMutationProps['fieldsError']
 >;
 export const action = async (remixRequest: ActionFunctionArgs): Promise<TypedResponse<EditBrandingActionResponse>> => {
   const { request, params } = remixRequest;
@@ -28,17 +28,17 @@ export const action = async (remixRequest: ActionFunctionArgs): Promise<TypedRes
     return redirect(BrandingStandardWithModalBaseUrl);
   }
   try {
-    const t = await i18nServer.getFixedT(request, ['common', 'branding'] as const);
-    const { errors, data } = await validateFormData<BrandingFormMutationValues>(
+    const t = await i18nServer.getFixedT(request, ['common', 'branding_standard'] as const);
+    const { errors, data } = await validateFormData<BrandingStandardFormMutationValues>(
       await fetcherFormData.decrypt(request),
       getFormMutationResolver(t),
     );
     if (data) {
-      await updateBranding({
+      await updateBrandingStandard({
         remixRequest,
         data: {
           _id: params['id'],
-          ...brandingFormMutationValuesToCreateBrandingService(data),
+          ...brandingStandardFormMutationValuesToCreateBrandingService(data),
         },
       });
 

@@ -1,7 +1,7 @@
 import { BrandingStandardWithPageBaseUrl } from './constants/BaseUrl';
 import type { ActionFunctionArgs, TypedResponse } from '~/overrides/remix';
 import { json, redirect } from '~/overrides/remix';
-import { deleteBranding } from '~/packages/Branding/services/deleteBranding';
+import { deleteBrandingStandard } from '~/packages/BrandingStandard/services/deleteBrandingStandard';
 import { SimpleActionResponse } from '~/types/SimpleActionResponse';
 import { handleCatchClauseAsSimpleResponse } from '~/utils/functions/handleErrors/handleCatchClauseSimple';
 
@@ -12,7 +12,7 @@ export const action = async (
   const { params } = remixRequest;
   try {
     if (params['id']) {
-      await deleteBranding({ _id: params['id'] });
+      await deleteBrandingStandard({ _id: params['id'] });
       return json({
         hasError: false,
         message: 'Removed',
