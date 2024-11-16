@@ -29,11 +29,13 @@ import { handleFormResolverError } from '~/utils/functions/handleErrors/handleFo
 import { handleGetMessageToToast } from '~/utils/functions/handleErrors/handleGetMessageToToast';
 import { preventRevalidateOnEditPage } from '~/utils/functions/preventRevalidateOnEditPage';
 
-export type EditBrandingActionResponse = SimpleActionResponse<
+export type EditBrandingStandardActionResponse = SimpleActionResponse<
   Pick<BrandingStandard, '_id'>,
   BrandingStandardFormMutationProps['fieldsError']
 >;
-export const action = async (remixRequest: ActionFunctionArgs): Promise<TypedResponse<EditBrandingActionResponse>> => {
+export const action = async (
+  remixRequest: ActionFunctionArgs,
+): Promise<TypedResponse<EditBrandingStandardActionResponse>> => {
   const { request, params } = remixRequest;
   if (!params['id']) {
     return redirect(BrandingStandardWithPageBaseUrl);

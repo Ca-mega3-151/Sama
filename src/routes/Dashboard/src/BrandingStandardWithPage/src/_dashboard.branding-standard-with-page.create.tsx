@@ -27,13 +27,13 @@ import { handleCatchClauseAsSimpleResponse } from '~/utils/functions/handleError
 import { handleFormResolverError } from '~/utils/functions/handleErrors/handleFormResolverError';
 import { handleGetMessageToToast } from '~/utils/functions/handleErrors/handleGetMessageToToast';
 
-export type CreateBrandingActionResponse = SimpleActionResponse<
+export type CreateBrandingStandardActionResponse = SimpleActionResponse<
   Pick<BrandingStandard, '_id'>,
   BrandingStandardFormMutationProps['fieldsError']
 >;
 export const action = async (
   remixRequest: ActionFunctionArgs,
-): Promise<TypedResponse<CreateBrandingActionResponse>> => {
+): Promise<TypedResponse<CreateBrandingStandardActionResponse>> => {
   const { request } = remixRequest;
   try {
     const t = await i18nServer.getFixedT(request, ['common', 'branding_standard'] as const);

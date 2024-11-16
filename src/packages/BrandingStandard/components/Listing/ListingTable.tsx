@@ -4,13 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { getStatusMappingToLabels } from '../../constants/StatusMappingToLabels';
 import { StatusMappingToTagColor } from '../../constants/StatusMappingToTagColor';
 import { BrandingStandard } from '../../models/BrandingStandard';
-import { BrandingStandardListingSearchParams } from '../../types/ListingSearchParams';
 import { ListingColumnType, ListingTable, ListingTableProps } from '~/components/Listing';
 import { TableActions, Tag } from '~/shared/ReactJS';
-import { FormQueryStateValues } from '~/shared/TypescriptUtilities';
 import { dayjs } from '~/shared/Utilities';
-
-export interface SortValues extends FormQueryStateValues<BrandingStandardListingSearchParams, 'brandingCode'> {}
 
 interface Props
   extends Pick<
@@ -20,10 +16,8 @@ interface Props
     | 'loading'
     | 'offsetHeader'
     | 'onPaginationChange'
-    | 'onSortChange'
     | 'pageSize'
     | 'paginationMode'
-    | 'sortValues'
     | 'totalRecords'
     | 'selectedRecordsState'
     | 'setSelectedRecordsState'
@@ -49,7 +43,7 @@ export const BrandingStandardListingTable = ({
     return getStatusMappingToLabels(t);
   }, [t]);
 
-  const columns: Array<ListingColumnType<BrandingStandard, keyof SortValues>> = useMemo(() => {
+  const columns: Array<ListingColumnType<BrandingStandard>> = useMemo(() => {
     return [
       {
         id: 'code',

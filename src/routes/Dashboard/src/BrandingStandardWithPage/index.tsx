@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { RouteObject } from 'react-router-dom';
-import * as DeleteBrandingStandardWithPage from './src/_dashboard.branding-standard-with-page.$id.delete';
 import * as EditBrandingStandardWithPage from './src/_dashboard.branding-standard-with-page.$id.edit';
+import * as DeleteBrandingStandardWithPage from './src/_dashboard.branding-standard-with-page.api.$id.delete';
 import * as CreateBrandingStandardWithPage from './src/_dashboard.branding-standard-with-page.create';
 import { BrandingStandardWithPageBaseUrl } from './src/constants/BaseUrl';
 

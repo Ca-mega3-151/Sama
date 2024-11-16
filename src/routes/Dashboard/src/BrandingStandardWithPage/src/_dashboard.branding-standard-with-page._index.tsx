@@ -2,13 +2,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   action as actionDeleteBranding,
-  DeleteBrandingActionResponse,
-} from './_dashboard.branding-standard-with-page.$id.delete';
+  DeleteBrandingStandardActionResponse,
+} from './_dashboard.branding-standard-with-page.api.$id.delete';
 import { BrandingStandardWithPageBaseUrl } from './constants/BaseUrl';
 import { ModalConfirmDelete } from '~/components/ModalConfirmDelete';
 import { PageErrorBoundary } from '~/components/PageErrorBoundary';
-import { TypedResponse, LoaderFunctionArgs } from '~/overrides/remix';
-import { json, useFetcher, useLoaderData, useNavigate } from '~/overrides/remix';
+import { json, LoaderFunctionArgs, TypedResponse, useFetcher, useLoaderData, useNavigate } from '~/overrides/remix';
 import { useListingData } from '~/overrides/RemixJS/client';
 import { SimpleListingResponse } from '~/overrides/RemixJS/types';
 import { i18nServer } from '~/packages/_Common/I18n/i18n.server';
@@ -20,7 +19,6 @@ import { getBrandingsStandard } from '~/packages/BrandingStandard/services/getBr
 import { BrandingStandardListingSearchParams } from '~/packages/BrandingStandard/types/ListingSearchParams';
 import { brandingStandardLisitngUrlSearchParamsUtils } from '~/packages/BrandingStandard/utils/listingUrlSearchParams';
 import { RecordsPerPage } from '~/services/constants/RecordsPerPage';
-import { getTableSortOrderMappingToServiceSort } from '~/services/utils/TableSortOrderMappingToServiceSort';
 import { notification } from '~/shared/ReactJS';
 import { updateURLSearchParamsOfBrowserWithoutNavigation } from '~/shared/Utilities';
 import { handleCatchClauseAsMessage } from '~/utils/functions/handleErrors/handleCatchClauseSimple';
@@ -37,7 +35,6 @@ export const loader = async (
     pageSize = RecordsPerPage,
     search,
     status,
-    brandingCode,
   } = brandingStandardLisitngUrlSearchParamsUtils.decrypt(request);
   try {
     const response = await getBrandingsStandard({
@@ -46,13 +43,11 @@ export const loader = async (
       pageSize,
       searcher: {
         status: { operator: 'eq', value: status },
-        BrandingCode: { operator: 'contains', value: search },
-        BrandingName: { operator: 'contains', value: search },
+        brandingCode: { operator: 'contains', value: search },
+        brandingName: { operator: 'contains', value: search },
         updatedBy: { operator: 'contains', value: search },
       },
-      sorter: {
-        brandingCode: getTableSortOrderMappingToServiceSort(brandingCode),
-      },
+      sorter: {},
     });
 
     return json({
@@ -93,7 +88,7 @@ export const Page = () => {
       ...paramsInUrl,
       ...params,
     });
-    fetcherData.load('/branding-standard-with-page' + searchParamsToLoader);
+    fetcherData.load(BrandingStandardWithPageBaseUrl + searchParamsToLoader);
     updateURLSearchParamsOfBrowserWithoutNavigation(searchParamsToLoader);
   };
 
@@ -105,26 +100,31 @@ export const Page = () => {
   //#endregion
 
   //#region Delete
-  const deleteBrandingFetcher = useFetcher<typeof actionDeleteBranding>();
+  const deleteBrandingStandardFetcher = useFetcher<typeof actionDeleteBranding>();
 
   const isDeleting = useMemo(() => {
-    return deleteBrandingFetcher.state === 'loading' || deleteBrandingFetcher.state === 'submitting';
-  }, [deleteBrandingFetcher]);
-  const [isOpenModalDeleteBranding, setIsOpenModalDeleteBranding] = useState<BrandingStandard | false>(false);
+    return deleteBrandingStandardFetcher.state === 'loading' || deleteBrandingStandardFetcher.state === 'submitting';
+  }, [deleteBrandingStandardFetcher]);
+  const [isOpenModalDeleteBrandingStandard, setIsOpenModalDeleteBrandingStandard] = useState<BrandingStandard | false>(
+    false,
+  );
 
   const handleDelete = () => {
-    if (!isOpenModalDeleteBranding) {
+    if (!isOpenModalDeleteBrandingStandard) {
       return;
     }
-    deleteBrandingFetcher.submit(
+    deleteBrandingStandardFetcher.submit(
       {},
-      { method: 'DELETE', action: `/branding-standard-with-page/${isOpenModalDeleteBranding._id}/delete` },
+      {
+        method: 'DELETE',
+        action: `${BrandingStandardWithPageBaseUrl}/api/${isOpenModalDeleteBrandingStandard._id}/delete`,
+      },
     );
   };
 
   useEffect(() => {
-    if (deleteBrandingFetcher.data && deleteBrandingFetcher.state === 'idle') {
-      const response = deleteBrandingFetcher.data as DeleteBrandingActionResponse;
+    if (deleteBrandingStandardFetcher.data && deleteBrandingStandardFetcher.state === 'idle') {
+      const response = deleteBrandingStandardFetcher.data as DeleteBrandingStandardActionResponse;
       if (response.hasError) {
         notification.error({
           message: t('branding_standard:delete_error'),
@@ -133,11 +133,11 @@ export const Page = () => {
       } else {
         notification.success({ message: t('branding_standard:delete_success') });
         handleRequest({});
-        setIsOpenModalDeleteBranding(false);
+        setIsOpenModalDeleteBrandingStandard(false);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deleteBrandingFetcher.state]);
+  }, [deleteBrandingStandardFetcher.state]);
   //#endregion
 
   // #region
@@ -177,18 +177,14 @@ export const Page = () => {
           totalRecords={data?.info.pagination.totalRecords}
           dataSource={data?.info.hits}
           onPaginationChange={({ page }) => handleRequest({ page })}
-          sortValues={{
-            brandingCode: { order: paramsInUrl.brandingCode, priority: undefined },
-          }}
-          onSortChange={({ brandingCode }) => handleRequest({ brandingCode: brandingCode?.order })}
-          onDelete={data => setIsOpenModalDeleteBranding(data)}
+          onDelete={data => setIsOpenModalDeleteBrandingStandard(data)}
           onEdit={record => navigate(`${BrandingStandardWithPageBaseUrl}/${record._id}/edit`)}
         />
       </div>
       <ModalConfirmDelete
         openVariant="controlled-state"
-        open={!!isOpenModalDeleteBranding}
-        onCancel={() => setIsOpenModalDeleteBranding(false)}
+        open={!!isOpenModalDeleteBrandingStandard}
+        onCancel={() => setIsOpenModalDeleteBrandingStandard(false)}
         onOk={handleDelete}
         title={t('branding_standard:delete_title')}
         description={t('branding_standard:delete_description')}

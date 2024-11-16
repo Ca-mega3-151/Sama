@@ -16,16 +16,16 @@ import { fetcherFormData } from '~/utils/functions/formData/fetcherFormData';
 import { handleCatchClauseAsSimpleResponse } from '~/utils/functions/handleErrors/handleCatchClauseSimple';
 import { handleFormResolverError } from '~/utils/functions/handleErrors/handleFormResolverError';
 
-export type CreateBrandingActionResponse = SimpleActionResponse<
+export type CreateBrandingStandardActionResponse = SimpleActionResponse<
   Pick<BrandingStandard, '_id'>,
   BrandingStandardFormMutationProps['fieldsError']
 >;
 export const action = async (
   remixRequest: ActionFunctionArgs,
-): Promise<TypedResponse<CreateBrandingActionResponse>> => {
+): Promise<TypedResponse<CreateBrandingStandardActionResponse>> => {
   const { request } = remixRequest;
   try {
-    const t = await i18nServer.getFixedT(request, ['common', 'branding'] as const);
+    const t = await i18nServer.getFixedT(request, ['common', 'branding_standard'] as const);
     const { errors, data } = await validateFormData<BrandingStandardFormMutationValues>(
       await fetcherFormData.decrypt(request),
       getFormMutationResolver(t),

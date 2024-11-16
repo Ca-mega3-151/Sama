@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { RouteObject } from 'react-router-dom';
-import * as DeleteBrandingStandardWithModal from './src/_dashboard.branding-standard-with-modal.$id.delete';
+import * as DeleteBrandingStandardWithModal from './src/_dashboard.branding-standard-with-modal.api.$id.delete';
 import * as EditBrandingStandardWithModal from './src/_dashboard.branding-standard-with-modal.api.$id.edit';
 import * as CreateBrandingStandardWithModal from './src/_dashboard.branding-standard-with-modal.api.create';
 import { BrandingStandardWithModalBaseUrl } from './src/constants/BaseUrl';
@@ -33,7 +33,7 @@ const BrandingStandardWithModalRoutes: RouteObject[] = [
     errorElement: <CreateBrandingStandardWithModal.ErrorBoundary />,
   },
   {
-    path: `${BrandingStandardWithModalBaseUrl}/:id/delete`,
+    path: `${BrandingStandardWithModalBaseUrl}/api/:id/delete`,
     action: DeleteBrandingStandardWithModal.action,
   },
 ];

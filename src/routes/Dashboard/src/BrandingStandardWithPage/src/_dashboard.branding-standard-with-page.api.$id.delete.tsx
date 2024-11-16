@@ -1,14 +1,14 @@
-import { BrandingStandardWithModalBaseUrl } from './constants/BaseUrl';
+import { BrandingStandardWithPageBaseUrl } from './constants/BaseUrl';
 import type { ActionFunctionArgs, TypedResponse } from '~/overrides/remix';
 import { json, redirect } from '~/overrides/remix';
 import { deleteBrandingStandard } from '~/packages/BrandingStandard/services/deleteBrandingStandard';
 import { SimpleActionResponse } from '~/types/SimpleActionResponse';
 import { handleCatchClauseAsSimpleResponse } from '~/utils/functions/handleErrors/handleCatchClauseSimple';
 
-export type DeleteBrandingActionResponse = SimpleActionResponse<undefined, undefined>;
+export type DeleteBrandingStandardActionResponse = SimpleActionResponse<undefined, undefined>;
 export const action = async (
   remixRequest: ActionFunctionArgs,
-): Promise<TypedResponse<DeleteBrandingActionResponse>> => {
+): Promise<TypedResponse<DeleteBrandingStandardActionResponse>> => {
   const { params } = remixRequest;
   try {
     if (params['id']) {
@@ -19,7 +19,7 @@ export const action = async (
         info: undefined,
       });
     }
-    return redirect(BrandingStandardWithModalBaseUrl);
+    return redirect(BrandingStandardWithPageBaseUrl);
   } catch (error) {
     return handleCatchClauseAsSimpleResponse(error);
   }

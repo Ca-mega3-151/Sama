@@ -7,7 +7,6 @@ export const brandingStandardLisitngUrlSearchParamsSchema = object({
   search: string().optional(),
   pageSize: number().optional().default(RecordsPerPage),
   status: enum_(['ACTIVE', 'DEACTIVE']).optional(),
-  brandingCode: enum_(['descend', 'ascend']).optional(),
 });
 
 export const brandingStandardLisitngUrlSearchParamsUtils = new UrlSearchParamsUtils({
