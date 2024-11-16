@@ -10,5 +10,6 @@ export const DashboardLayoutLocales = {
     logout: 'Logout',
     profile: 'Profile',
     mark_all_as_read: 'Mark all as read',
+    have_new_notification: 'You have new notification!',
   },
 } as const;

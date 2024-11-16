@@ -249,6 +249,7 @@ export default {
     willChange: true,
     zIndex: true,
     visibility: true,
+    whitespace: true,
 
     //
     preflight: false,
@@ -290,7 +291,6 @@ export default {
     overscrollBehavior: false,
     scrollBehavior: false,
     hyphens: false,
-    whitespace: false,
     wordBreak: false,
     borderOpacity: false,
     backgroundOpacity: false,

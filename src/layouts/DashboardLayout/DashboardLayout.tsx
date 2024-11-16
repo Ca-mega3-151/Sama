@@ -64,7 +64,7 @@ export const DashboardLayout = ({ sessionData }: Props) => {
               className={classNames(isMobile ? 'invisible' : 'visible')}
             />
             <div className="Dashboard__headerRight">
-              <Notification />
+              <Notification sessionData={sessionData} />
               <UserDropdown sessionData={sessionData} />
             </div>
           </div>
