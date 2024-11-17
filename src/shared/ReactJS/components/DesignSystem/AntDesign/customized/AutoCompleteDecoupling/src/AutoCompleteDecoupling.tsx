@@ -64,6 +64,7 @@ export const AutoCompleteDecoupling = <Model extends AnyRecord, ModelId extends 
   readOnly,
   valueVariant,
   size,
+  footer,
 }: Props<Model, ModelId>): ReactNode => {
   const [isFetching, setIsFetching] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -96,7 +97,7 @@ export const AutoCompleteDecoupling = <Model extends AnyRecord, ModelId extends 
         const items = await service(searchValue);
         setResponse(items);
       } catch (error) {
-        console.log('AutoCompleteDecoupling:: ', error);
+        console.log(error);
       } finally {
         setIsFetching(false);
       }
@@ -205,6 +206,7 @@ export const AutoCompleteDecoupling = <Model extends AnyRecord, ModelId extends 
       notFoundContent={notFoundContent}
       placeholder={placeholder}
       size={size}
+      footer={footer}
     />
   );
 };

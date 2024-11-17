@@ -1,6 +1,6 @@
 # Overview
 
-The `Notification` component extends the functionality of the Ant Design notification component by providing additional customization and support for stricter type safety. It ensures that all props are type-checked more rigorously compared to the standard Ant Design notification component.
+The `Notification` component extends the functionality of the Ant Design notification component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design notification component.
 
 # Props
 

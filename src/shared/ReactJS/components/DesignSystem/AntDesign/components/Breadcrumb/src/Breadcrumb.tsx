@@ -13,8 +13,8 @@ export interface Props extends Pick<AntBreadcrumbProps, 'separator' | 'className
 }
 
 /**
- * Breadcrumb component that extends the functionality of the Ant Design Breadcrumb component
- * by providing support type safety. It enforces  stricter type checks compared to the standard Ant Design Breadcrumb component.
+ * Breadcrumb component extends the functionality of the Ant Design Breadcrumb component.
+ * It allows for the rendering of breadcrumb items with stricter type checks compared to the standard Ant Design Breadcrumb component.
  *
  * @param {Props} props - The properties for the Breadcrumb component.
  * @param {Array<{ title: ReactNode; onClick?: () => void; className?: string; }>} props.items - An array of breadcrumb items.

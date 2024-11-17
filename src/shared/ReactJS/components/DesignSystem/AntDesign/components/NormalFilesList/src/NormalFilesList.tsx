@@ -16,7 +16,7 @@ export interface Props<FileResponse> {
 }
 
 /**
- * NormalFilesList component renders a list of files and provides functionality to download and delete files.
+ * NormalFilesList component is designed to display and manage a list of normal files within upload components.
  *
  * @param {Object} props - The properties for the NormalFilesList component.
  * @param {FileState<any>[]} props.filesState - The current state of the files being managed.

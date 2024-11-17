@@ -1,6 +1,6 @@
 # Overview
 
-The `Rate` component extends the functionality of the Ant Design Rate component by providing additional customization and support for stricter type safety. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Rate component.
+The `Rate` component extends the functionality of the Ant Design Rate component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Rate component.
 
 # Props
 

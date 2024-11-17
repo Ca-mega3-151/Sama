@@ -20,9 +20,10 @@ The `AutoComplete` component extends the functionality of the Ant Design AutoCom
 | open                    | `boolean`                                                                          | -                      | Whether the dropdown menu is open.                                                     |
 | onDropdownVisibleChange | `Function`                                                                         | -                      | Callback function that is triggered when the dropdown visibility changes.              |
 | onSearch                | `Function`                                                                         | -                      | Callback function that is triggered when the search input value changes.               |
-| readOnly                | `boolean`                                                                          | `false`                | If true, the select is read-only and cannot be changed by the user.                    |
-| valueVariant            | `'controlled-state' \| 'uncontrolled-state'`                                       | `'uncontrolled-state'` | Determines if the select is controlled or uncontrolled state.                          |
+| readOnly                | `boolean`                                                                          | `false`                | If true, the auto-complete is read-only and cannot be changed by the user.             |
+| valueVariant            | `'controlled-state' \| 'uncontrolled-state'`                                       | `'uncontrolled-state'` | Determines if the auto-complete is controlled or uncontrolled state.                   |
 | size                    | `string`                                                                           | -                      | The size of the search input.                                                          |
+| footer                  | `ReactNode`                                                                        | `true`                 | The footer to be displayed at the bottom of the auto-complete's dropdown.              |
 
 # Usage
 

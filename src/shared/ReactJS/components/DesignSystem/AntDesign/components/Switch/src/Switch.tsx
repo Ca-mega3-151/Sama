@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { FC, useState } from 'react';
 import { useDeepCompareEffect, useDeepCompareMemo, useIsMounted } from '../../../../../../hooks';
 import { useInitializeContext } from '../../../base';
+import './styles.css';
 
 export interface Props
   extends Pick<
@@ -18,8 +19,8 @@ export interface Props
 }
 
 /**
- * Switch component that extends the functionality of the Ant Design Switch component
- * by providing additional customization and support for stricter type safety.
+ * Switch component extends the functionality of the Ant Design Switch component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Switch component.
  *
  * @param {Props} props - The properties for the Switch component.
  * @param {boolean} [props.checked] - The checked state of the switch.
@@ -46,7 +47,7 @@ export const Switch: FC<Props> = ({
   valueVariant = 'uncontrolled-state',
   size,
 }) => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
   const [checkedState, setCheckedState] = useState(checked);
 
@@ -63,8 +64,8 @@ export const Switch: FC<Props> = ({
   }, [checked]);
 
   const mergedValueState = useDeepCompareMemo(() => {
-    if (!isMounted) {
-      return undefined;
+    if (initializeContext?.isSSR && !isMounted) {
+      return false;
     }
     return valueVariant === 'controlled-state' ? checked : checkedState;
   }, [checked, checkedState, isMounted, valueVariant]);
@@ -73,7 +74,7 @@ export const Switch: FC<Props> = ({
     <AntSwitch
       size={size}
       checkedChildren={checkedChildren}
-      className={classNames('AntSwitch__container', className)}
+      className={classNames('AntSwitch__container', readOnly ? 'AntSwitch__readOnly' : '', className)}
       disabled={disabled}
       loading={loading}
       unCheckedChildren={unCheckedChildren}

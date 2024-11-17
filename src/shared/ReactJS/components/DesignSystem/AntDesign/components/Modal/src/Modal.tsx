@@ -92,7 +92,7 @@ export const Modal: FC<Props> = ({
   afterClose,
   openVariant = 'uncontrolled-state',
 }) => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
   const [openState, setOpenState] = useState(open);
 
@@ -114,7 +114,7 @@ export const Modal: FC<Props> = ({
   }, [open]);
 
   const mergedOpenState = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return false;
     }
     return openVariant === 'controlled-state' ? open : openState;

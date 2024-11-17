@@ -1,8 +1,10 @@
 import { isEmpty, prop, uniqBy } from 'ramda';
-import { DependencyList, ReactNode, useMemo, useState } from 'react';
-import { useDeepCompareEffect, useIsMounted } from '../../../../../../hooks';
+import { DependencyList, ReactNode, useState } from 'react';
+import { useDeepCompareEffect, useDeepCompareMemo, useIsMounted } from '../../../../../../hooks';
 import { SelectOption, SelectSingle, SelectSingleProps } from '../../../components/Select';
 import { AnyRecord } from '~/shared/TypescriptUtilities';
+
+const LOADING_FOR_EMPTY_VALUE = 'UNDEFINED';
 
 interface OnPrepareDoneParameters<ModelId extends string, Model> {
   /** The transformed options to be displayed in the select dropdown. These options are created from the response data and any additional models. */
@@ -34,8 +36,8 @@ export interface Props<Model extends AnyRecord, ModelId extends string>
   onPrepareDone?: (params: OnPrepareDoneParameters<ModelId, Model>) => void;
   /** A text message to display when there is a warning, such as when the `value` passed to the component is not found in the response from the `service`. This can be a static message or a function that returns a message based on the `value` passed. */
   warningText?: (value: ModelId) => string;
-  /** A function to provide a custom loading message while fetching data. This function takes the current `value` and returns a string that represents the loading state. */
-  loadingText?: (value: ModelId | undefined) => string;
+  /** A function to provide a custom initializing message. This function takes the current `value` and returns a string that represents the initializing state. */
+  initializingText?: (value: ModelId | undefined) => string;
 }
 
 /**
@@ -65,11 +67,12 @@ export const SelectSingleDecoupling = <Model extends AnyRecord, ModelId extends 
   additionalModels = [],
   onPrepareDone,
   warningText,
-  loadingText,
+  initializingText,
   readOnly,
   valueVariant,
   showSearch,
   size,
+  footer,
 }: Props<Model, ModelId>): ReactNode => {
   const isMounted = useIsMounted();
   const [isFetching, setIsFetching] = useState(false);
@@ -79,6 +82,7 @@ export const SelectSingleDecoupling = <Model extends AnyRecord, ModelId extends 
     options: SelectOption<ModelId, Model>[];
     valueState: ModelId | undefined;
     isPreparedDateOnce: boolean;
+    warningValues: ModelId[];
   }>({
     options: defaultModels.concat(additionalModels).reduce<SelectOption<ModelId, Model>[]>((result, item) => {
       const option = transformToOption(item);
@@ -88,12 +92,17 @@ export const SelectSingleDecoupling = <Model extends AnyRecord, ModelId extends 
       return result;
     }, []),
     valueState: value,
+    warningValues: [],
     isPreparedDateOnce: false,
   });
 
   const handleSelect: SelectSingleProps<ModelId, Model>['onChange'] = (values, options) => {
     const isUndefined = isEmpty(values) || null;
     onChange?.(isUndefined ? undefined : values, isUndefined ? undefined : options);
+    setState(state => ({
+      ...state,
+      valueState: values,
+    }));
   };
 
   const handleTransformServiceResponse = (serviceResponse?: Model[]): void => {
@@ -118,11 +127,12 @@ export const SelectSingleDecoupling = <Model extends AnyRecord, ModelId extends 
     }, []);
     const uniqData = uniqBy(prop('value'), transformData);
 
-    setState({
+    setState(state => ({
+      ...state,
       options: uniqData,
-      valueState: prepareDoneParameters.isWarning && value && warningText ? (warningText(value) as ModelId) : value,
+      warningValues: value && prepareDoneParameters.isWarning ? [value] : [],
       isPreparedDateOnce: true,
-    });
+    }));
     onPrepareDone?.({
       ...prepareDoneParameters,
       options: uniqData,
@@ -151,23 +161,68 @@ export const SelectSingleDecoupling = <Model extends AnyRecord, ModelId extends 
       return;
     }
     handleTransformServiceResponse();
-  }, [value, ...depsTransformOption]);
+  }, [...depsTransformOption]);
 
-  const mergedValue = useMemo(() => {
-    if (loadingText && !state.isPreparedDateOnce) {
-      return loadingText(value);
+  useDeepCompareEffect(() => {
+    setState(state => ({
+      ...state,
+      valueState: value,
+    }));
+  }, [value]);
+
+  /** Placeholder for display initializing */
+  const initializingOption: Pick<SelectOption<ModelId, Model>, 'label' | 'value' | 'hidden' | 'displayLabel'>[] =
+    useDeepCompareMemo(() => {
+      if (!initializingText) {
+        return [];
+      }
+      return [
+        {
+          hidden: true,
+          label: initializingText(value),
+          displayLabel: initializingText(value),
+          value: value ? value : (LOADING_FOR_EMPTY_VALUE as ModelId),
+        },
+      ];
+    }, [value]);
+  /** Placeholder for display options weren't matched with service response */
+  const warningOption: Pick<SelectOption<ModelId, Model>, 'label' | 'value' | 'hidden' | 'displayLabel'>[] =
+    useDeepCompareMemo(() => {
+      if (state.warningValues && warningText) {
+        return state.warningValues.map(warningValue => {
+          return {
+            hidden: true,
+            label: warningText(warningValue),
+            displayLabel: warningText(warningValue),
+            value: warningValue,
+          };
+        });
+      }
+      return [];
+    }, [value, state.warningValues]);
+  const mergedOptions: SelectOption<ModelId, Model>[] = useDeepCompareMemo(() => {
+    // If component wasn't initialized => Select will display placeholder option for initializing
+    if (!state.isPreparedDateOnce) {
+      return state.options.concat(initializingOption as SelectOption<ModelId, Model>[]);
     }
-    if (value) {
+    // If component was initialized => Display all options from service response & "Placeholder for display options weren't matched with service response"
+    return state.options.concat(warningOption as SelectOption<ModelId, Model>[]);
+  }, [state.isPreparedDateOnce, state.options]);
+
+  const mergedValue = useDeepCompareMemo(() => {
+    if (!state.isPreparedDateOnce && initializingText) {
+      return value ? value : LOADING_FOR_EMPTY_VALUE;
+    }
+    if (valueVariant === 'controlled-state') {
       return value;
     }
     return state.valueState;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.isPreparedDateOnce, state.valueState, value]);
+  }, [state.isPreparedDateOnce, valueVariant, state.valueState, value]);
 
   return (
     <SelectSingle
       key={Number(state.isPreparedDateOnce)}
-      options={state.options}
+      options={mergedOptions}
       loading={loading || isFetching}
       allowClear={allowClear}
       autoClearSearchValue={autoClearSearchValue}
@@ -183,6 +238,7 @@ export const SelectSingleDecoupling = <Model extends AnyRecord, ModelId extends 
       size={size}
       onChange={handleSelect}
       value={mergedValue as ModelId}
+      footer={footer}
     />
   );
 };

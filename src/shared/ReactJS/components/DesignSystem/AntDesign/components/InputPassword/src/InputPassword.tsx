@@ -38,8 +38,8 @@ export interface Props
 }
 
 /**
- * InputPassword component extends the functionality of the Ant Design Password component
- * by providing additional customization and support for stricter type safety.
+ * InputPassword component extends the functionality of the Ant Design Password component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Password component.
  *
  * @param {Props} props - The properties for the InputPassword component.
  * @param {ReactNode} [props.addonAfter] - The element to display on the right side of the input field.
@@ -78,7 +78,7 @@ export const InputPassword: FC<Props> = ({
   valueVariant = 'uncontrolled-state',
   size,
 }) => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
   const [valueState, setValueState] = useState(value);
 
@@ -97,7 +97,7 @@ export const InputPassword: FC<Props> = ({
   }, [value]);
 
   const mergedValueState = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return undefined;
     }
     return valueVariant === 'controlled-state' ? value : valueState;

@@ -97,7 +97,7 @@ export const SelectSingleAsTreeLayout = <Model,>({
   filterTreeNode = baseFilterOption,
   showCheckedStrategy = 'SHOW_PARENT',
 }: Props<Model>): ReactNode => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
   const [valueState, setValueState] = useState(value === '' ? undefined : value);
 
@@ -131,13 +131,13 @@ export const SelectSingleAsTreeLayout = <Model,>({
   }, [data]);
 
   const mergedValueState = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return undefined;
     }
     return valueVariant === 'controlled-state' ? value : valueState;
   }, [value, valueState, isMounted, valueVariant]);
-  const mergedOpenState = useMemo(() => {
-    if (!isMounted) {
+  const mergedOpenState = useDeepCompareMemo(() => {
+    if (initializeContext?.isSSR && !isMounted) {
       return false;
     }
     return open;

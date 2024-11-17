@@ -7,8 +7,8 @@ import './styles.css';
 export interface Props extends Pick<AntTagProps, 'children' | 'className' | 'color' | 'bordered' | 'icon'> {}
 
 /**
- * Tag component that extends the functionality of the Ant Design Tag component
- * by providing additional customization options and support for stricter type safety.
+ * Tag component extends the functionality of the Ant Design Tag component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Tag component.
  *
  * @param {Props} props - The properties for the Tag component.
  * @param {ReactNode} [props.children] - The content of the tag.

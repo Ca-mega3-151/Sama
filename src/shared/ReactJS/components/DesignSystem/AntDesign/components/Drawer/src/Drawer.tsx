@@ -1,7 +1,7 @@
 import { Drawer as AntDrawer, DrawerProps as AntDrawerProps } from 'antd';
 import classNames from 'classnames';
-import { FC, useMemo } from 'react';
-import { useIsMounted } from '../../../../../../hooks';
+import { FC } from 'react';
+import { useDeepCompareMemo, useIsMounted } from '../../../../../../hooks';
 import { useInitializeContext } from '../../../base';
 
 export interface Props
@@ -46,11 +46,11 @@ export const Drawer: FC<Props> = ({
   children,
   loading,
 }) => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
 
-  const mergedOpenState = useMemo(() => {
-    return !isMounted ? false : open;
+  const mergedOpenState = useDeepCompareMemo(() => {
+    return initializeContext?.isSSR && !isMounted ? false : open;
   }, [isMounted, open]);
 
   return (

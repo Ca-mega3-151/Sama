@@ -1,6 +1,6 @@
 # Overview
 
-The `NormalFilesList` component renders a list of files and provides functionality to download and delete files. This component is useful for managing a collection of files, allowing users to perform actions like downloading and deleting individual files.
+The `NormalFilesList` component is designed to display and manage a list of normal files within upload components.
 
 # Props
 

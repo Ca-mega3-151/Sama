@@ -9,8 +9,8 @@ export interface Props
 }
 
 /**
- * Badge component that extends the Ant Design Badge component.
- * It provides additional customization and support for stricter type safety.
+ * Badge component extends the functionality of the Ant Design Badge component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Badge component.
  *
  * @param {Props} props - The properties for the Badge component.
  * @param {ReactNode} [props.children] - The content to be rendered inside the badge.

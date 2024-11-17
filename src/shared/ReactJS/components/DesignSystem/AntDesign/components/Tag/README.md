@@ -1,6 +1,6 @@
 # Overview
 
-The Tag component extends the functionality of the Ant Design Tag component by providing additional customization options and support for stricter type safety.
+The `Tag` component extends the functionality of the Ant Design Tag component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Tag component.
 
 # Props
 

@@ -1,6 +1,6 @@
 # Overview
 
-The `Input` component extends the functionality of the Ant Design Input component by providing additional customization and support for stricter type safety.
+The `Input` component extends the functionality of the Ant Design Input component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Input component.
 
 # Props
 

@@ -1,6 +1,6 @@
 # Overview
 
-The `Divider` component extends the functionality of the Ant Design Divider component by providing additional customization and support for stricter type safety.
+The `Divider` component extends the functionality of the Ant Design Divider component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Divider component.
 
 # Props
 

@@ -1,6 +1,6 @@
 # Overview
 
-The `NormalFile` component renders a single file and provides functionality to delete and download the file. This component is useful for managing individual files, allowing users to perform actions like deleting or downloading the file.
+The `NormalFile` component is designed to display and manage an individual normal file within upload components.
 
 # Props
 

@@ -23,8 +23,8 @@ export interface Props extends Pick<AntFloatButtonProps, 'onClick' | 'shape' | '
 }
 
 /**
- * FloatButton component that renders a floating button with optional grouped items.
- * It extends the Ant Design FloatButton component with additional properties for items and close icon.
+ * FloatButton component extends the functionality of the Ant Design FloatButton component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design FloatButton component.
  *
  * @param {Props} props - The properties for the FloatButton component.
  * @param {function} [props.onClick] - The click handler for the main float button.

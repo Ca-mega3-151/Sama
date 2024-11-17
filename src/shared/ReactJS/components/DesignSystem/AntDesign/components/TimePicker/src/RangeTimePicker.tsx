@@ -38,9 +38,8 @@ export interface Props
 }
 
 /**
- * RangeTimePicker is a functional component that renders a time range picker
- * with additional configurations for disabling specific hours, minutes, and seconds,
- * as well as custom time formats.
+ * RangeTimePicker component extends the functionality of the Ant Design DatePicker component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design DatePicker component.
  *
  * @param {Props} props - The properties for the RangeTimePicker component.
  * @param {string} [props.className] - Custom CSS class for the date picker.
@@ -81,7 +80,7 @@ export const RangeTimePicker: FC<Props> = ({
   valueVariant = 'uncontrolled-state',
   size,
 }: Props) => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const [valueState, setValueState] = useState(value ? value.map(item => dayjs(item)) : undefined);
   const isMounted = useIsMounted();
 
@@ -124,7 +123,7 @@ export const RangeTimePicker: FC<Props> = ({
   }, [value?.[0].valueOf(), value?.[1].valueOf()]);
 
   const mergedValueState: AntRangePickerProps['value'] = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return undefined;
     }
     if (valueVariant === 'controlled-state') {

@@ -3,7 +3,7 @@ import { CollapsibleType } from 'antd/es/collapse/CollapsePanel';
 import classNames from 'classnames';
 import { isEmpty } from 'ramda';
 import { ReactNode, useMemo, useState } from 'react';
-import { useDeepCompareEffect, useIsMounted } from '../../../../../../hooks';
+import { useDeepCompareEffect, useDeepCompareMemo, useIsMounted } from '../../../../../../hooks';
 import { useInitializeContext } from '../../../base';
 import './styles.css';
 
@@ -32,12 +32,13 @@ export interface Props<Key extends string, Accordion extends boolean = false>
     /** Specify if the panel can be collapsed. Can be 'header', 'disabled', or undefined. */
     collapsible?: CollapsibleType;
   }>;
+  /** Determines if the tree is in a controlled or uncontrolled state. */
+  valueVariant?: 'controlled-state' | 'uncontrolled-state';
 }
 
 /**
- * Collapse component that extends the functionality of the Ant Design Collapse component
- * by providing additional customization and support for stricter type safety.
- * It allows for controlled or uncontrolled states and provides a flexible API for handling multiple panels.
+ * Collapse component extends the functionality of the Ant Design Collapse component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Collapse component.
  *
  * @param {Props} props - The properties for the Collapse component.
  * @param {string} [props.className] - Custom CSS class for styling the collapse component.
@@ -59,8 +60,9 @@ export const Collapse = <Key extends string, Accordion extends boolean = false>(
   value,
   onChange,
   size,
+  valueVariant = 'uncontrolled-state',
 }: Props<Key, Accordion>): ReactNode => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
   const [activeKeyState, setActiveKeyState] = useState(value);
 
@@ -75,6 +77,13 @@ export const Collapse = <Key extends string, Accordion extends boolean = false>(
     setActiveKeyState(value);
   }, [value]);
 
+  const mergedActiveKeyState = useDeepCompareMemo(() => {
+    if (initializeContext?.isSSR && !isMounted) {
+      return undefined;
+    }
+    return valueVariant === 'controlled-state' ? value : activeKeyState;
+  }, [value, activeKeyState, isMounted, valueVariant]);
+
   const items_ = useMemo(() => {
     return items.filter(item => !item.hidden);
   }, [items]);
@@ -87,7 +96,7 @@ export const Collapse = <Key extends string, Accordion extends boolean = false>(
       accordion={accordion}
       className={classNames('AntCollapse__container', className)}
       items={items_}
-      activeKey={isMounted ? activeKeyState : undefined}
+      activeKey={mergedActiveKeyState}
       onChange={handleChange}
     />
   );

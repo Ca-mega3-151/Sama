@@ -35,8 +35,8 @@ export interface Props<Response extends AnyRecord>
 }
 
 /**
- * UploadMultiple component extends the functionality of the Ant Design Upload component by providing
- * additional customization and support for multiple file uploads with stricter type safety.
+ * UploadMultiple component extends the functionality of the Ant Design Upload component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Upload component.
  *
  * @param {Object} props - The properties for the UploadMultiple component.
  * @param {string} [props.className] - Custom CSS class for styling the upload component.

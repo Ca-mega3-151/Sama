@@ -1,6 +1,6 @@
 # Overview
 
-The `Ribbon` component extends the functionality of the Ant Design Badge.Ribbon component. It provides additional customization and support for stricter type safety. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Badge.Ribbon component.
+The `Ribbon` component extends the functionality of the Ant Design Badge Ribbon component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Badge Ribbon component.
 
 # Props
 

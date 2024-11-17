@@ -38,8 +38,8 @@ export interface Props
 }
 
 /**
- * `SingleTimePicker` is a component that allows users to select a single time, with optional time components.
- * It provides various customization options such as disabling specific hours, minutes, and seconds.
+ * SingleTimePicker component extends the functionality of the Ant Design DatePicker component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design DatePicker component.
  *
  * @param {Props} props - The properties for the RangeTimePicker component.
  * @param {string} [props.className] - Custom CSS class for the date picker.
@@ -80,7 +80,7 @@ export const SingleTimePicker: FC<Props> = ({
   valueVariant = 'uncontrolled-state',
   size,
 }: Props) => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const [valueState, setValueState] = useState(value ? dayjs(value) : undefined);
   const isMounted = useIsMounted();
 
@@ -119,7 +119,7 @@ export const SingleTimePicker: FC<Props> = ({
   }, [value?.valueOf()]);
 
   const mergedValueState = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return undefined;
     }
     if (valueVariant === 'controlled-state') {

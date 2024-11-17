@@ -58,7 +58,7 @@ export const Popconfirm: FC<Props> = ({
   onConfirm,
   openVariant = 'uncontrolled-state',
 }) => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
   const [openState, setOpenState] = useState(!isBrowser() ? false : open);
 
@@ -80,7 +80,7 @@ export const Popconfirm: FC<Props> = ({
   }, [open]);
 
   const mergedOpenState = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return false;
     }
     return openVariant === 'controlled-state' ? open : openState;

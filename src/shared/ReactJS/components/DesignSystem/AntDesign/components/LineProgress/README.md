@@ -1,6 +1,6 @@
 # Overview
 
-The `LineProgress` component extends the functionality of the Ant Design Progress component by providing additional customization options for size, color, and format. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Progress component.
+The `LineProgress` component extends the functionality of the Ant Design Progress component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Progress component.
 
 # Props
 

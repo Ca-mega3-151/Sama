@@ -6,8 +6,8 @@ import { useInitializeContext } from '../../../base';
 
 export interface HeaderProps extends Pick<AntLayoutProps, 'children' | 'className'> {}
 /**
- * Header component that extends the functionality of the Ant Design Layout.Header component
- * by providing additional customization and support for stricter type safety.
+ * LayoutHeader component extends the functionality of the Ant Design Layout Header component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Layout Header component.
  *
  * @param {HeaderProps} props - The properties for the LayoutHeader component.
  * @param {React.ReactNode} [props.children] - The content to be displayed inside the header.
@@ -22,8 +22,8 @@ export const LayoutHeader: FC<HeaderProps> = ({ children, className }) => {
 
 export interface SiderProps extends Pick<AntSiderProps, 'children' | 'className' | 'width' | 'collapsed'> {}
 /**
- * Sider component that extends the functionality of the Ant Design Layout.Sider component
- * by providing additional customization and support for stricter type safety.
+ * LayoutSider component extends the functionality of the Ant Design Layout Sider component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Layout Sider component.
  *
  * @param {SiderProps} props - The properties for the LayoutSider component.
  * @param {React.ReactNode} [props.children] - The content to be displayed inside the sider.
@@ -50,8 +50,8 @@ export const LayoutSider: FC<SiderProps> = ({ children, className, width, collap
 
 export interface ContentProps extends Pick<AntLayoutProps, 'children' | 'className'> {}
 /**
- * Content component that extends the functionality of the Ant Design Layout.Content component
- * by providing additional customization and support for stricter type safety.
+ * LayoutContent component extends the functionality of the Ant Design Layout Content component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Layout Content component.
  *
  * @param {ContentProps} props - The properties for the LayoutContent component.
  * @param {React.ReactNode} [props.children] - The content to be displayed inside the content area.
@@ -64,17 +64,17 @@ export const LayoutContent: FC<ContentProps> = ({ children, className }) => {
   return <AntLayout.Content children={children} className={classNames('AntLayout__content', className)} />;
 };
 
-export interface LayoutProps extends Pick<AntLayoutProps, 'children' | 'className' | 'hasSider'> {}
+export interface ContainerProps extends Pick<AntLayoutProps, 'children' | 'className' | 'hasSider'> {}
 /**
- * Container component that extends the functionality of the Ant Design Layout component
- * by providing additional customization and support for stricter type safety.
+ * LayoutContainer component extends the functionality of the Ant Design Layout Container component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Layout Container component.
  *
- * @param {LayoutProps} props - The properties for the LayoutContainer component.
+ * @param {ContainerProps} props - The properties for the LayoutContainer component.
  * @param {React.ReactNode} [props.children] - The content to be displayed inside the container.
  * @param {string} [props.className] - Custom CSS class for styling the container.
  * @returns {React.ReactElement} The rendered LayoutContainer component.
  */
-export const LayoutContainer: FC<LayoutProps> = ({ children, className }) => {
+export const LayoutContainer: FC<ContainerProps> = ({ children, className }) => {
   useInitializeContext();
 
   return <AntLayout children={children} className={classNames('AntLayout__container', className)} />;

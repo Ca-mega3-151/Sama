@@ -1,6 +1,6 @@
 # Overview
 
-The `CheckboxTree` component that extends the functionality of the Ant Design Tree component by providing additional customization and support for stricter type safety.
+The `CheckboxTree` component extends the functionality of the Ant Design Tree component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Tree component.
 
 # Props
 

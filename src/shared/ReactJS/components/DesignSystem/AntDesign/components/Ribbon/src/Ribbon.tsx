@@ -10,8 +10,8 @@ export interface Props extends Pick<AntRibbonProps, 'children' | 'className' | '
 }
 
 /**
- * Ribbon component that extends the Ant Design Badge.Ribbon component.
- * It provides additional customization and support for stricter type safety.
+ * Ribbon component extends the functionality of the Ant Design Badge Ribbon component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Badge Ribbon component.
  *
  * @param {Props} props - The properties for the Ribbon component.
  * @param {ReactNode} [props.children] - The content to be rendered inside the ribbon.

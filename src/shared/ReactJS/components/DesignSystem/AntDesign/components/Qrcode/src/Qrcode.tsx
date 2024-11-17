@@ -9,8 +9,8 @@ export interface Props extends Pick<AntQrcodeProps, 'className' | 'size' | 'valu
 }
 
 /**
- * Qrcode component that extends the functionality of the Ant Design QRCode component
- * by providing additional customization and support for stricter type safety.
+ * Qrcode component extends the functionality of the Ant Design Qrcode component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Qrcode component.
  *
  * @param {Props} props - The properties for the Qrcode component.
  * @param {string} [props.className] - Custom CSS class for styling the QR code.

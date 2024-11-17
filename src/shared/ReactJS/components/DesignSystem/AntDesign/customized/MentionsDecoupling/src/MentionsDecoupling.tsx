@@ -48,7 +48,7 @@ export const MentionsDecoupling = <Model extends AnyRecord>({
         const response = await service(text);
         setServiceResponseState(response);
       } catch (error) {
-        console.log('MentionsDecoupling:: ', error);
+        console.log('[MentionsDecoupling]: ', error);
       } finally {
         setIsFetching(false);
         clearTimeout(timeoutRef.current);

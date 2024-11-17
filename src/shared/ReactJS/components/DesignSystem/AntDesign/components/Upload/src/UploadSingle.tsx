@@ -33,8 +33,8 @@ export interface Props<Response extends AnyRecord>
 }
 
 /**
- * UploadSingle component that extends the functionality of the Ant Design Upload component
- * by providing support for single file uploads with additional customization and type safety.
+ * UploadSingle component extends the functionality of the Ant Design Upload component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Upload component.
  *
  * @param {Props<Response>} props - The properties for the UploadSingle component.
  * @param {string} [props.className] - Custom CSS class for styling the upload container.

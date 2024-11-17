@@ -16,8 +16,8 @@ export interface Props
 }
 
 /**
- * Image component that extends the functionality of the Ant Design Image component
- * by providing additional customization options and support for stricter type safety.
+ * Image component extends the functionality of the Ant Design Image component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Image component.
  *
  * @param {Props} props - The properties for the Image component.
  * @param {string} [props.className] - Custom CSS class for styling the image.

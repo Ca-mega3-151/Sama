@@ -1,6 +1,6 @@
 # Overview
 
-The `Breadcrumb` component extends the functionality of the Ant Design Breadcrumb component by providing support for type safety and additional customization options. It allows for the rendering of breadcrumb items with stricter type checks compared to the standard Ant Design component.
+The `Breadcrumb` component extends the functionality of the Ant Design Breadcrumb component. It allows for the rendering of breadcrumb items with stricter type checks compared to the standard Ant Design Breadcrumb component.
 
 # Props
 

@@ -7,8 +7,8 @@ export interface Props
   extends Pick<AntDividerProps, 'className' | 'orientation' | 'orientationMargin' | 'dashed' | 'type' | 'children'> {}
 
 /**
- * Divider component that extends the functionality of the Ant Design Divider component
- * by providing additional customization and support for stricter type safety.
+ * Divider component extends the functionality of the Ant Design Divider component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Divider component.
  *
  * @param {Props} props - The properties for the Divider component.
  * @param {ReactNode} [props.children] - Content to be displayed inside the divider.

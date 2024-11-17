@@ -19,8 +19,8 @@ export interface Props
 }
 
 /**
- * Pagination component that extends the functionality of the Ant Design Pagination component
- * by providing additional customization and support for stricter type safety.
+ * Pagination component extends the functionality of the Ant Design Pagination component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Pagination component.
  *
  * @param {Props} props - The properties for the Pagination component.
  * @param {string} [props.className] - Custom CSS class for styling the pagination component.

@@ -1,6 +1,6 @@
 # Overview
 
-This package provides custom React components that extend the functionality of the Ant Design Layout components, offering additional customization and support for stricter type safety.
+This package provides custom React components that extend the functionality of the Ant Design Layout components.It ensures that all props are type-checked more rigorously compared to the standard Ant Design Layout components.
 
 ## Components
 
@@ -11,7 +11,7 @@ This package provides custom React components that extend the functionality of t
 
 # LayoutHeader
 
-The `LayoutHeader` component extends the `AntLayout.Header` component from Ant Design by providing additional customization and support for stricter type safety.
+The `LayoutHeader` component extends the functionality of the Ant Design Layout Header component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Layout Header component.
 
 ## Props
 
@@ -22,7 +22,7 @@ The `LayoutHeader` component extends the `AntLayout.Header` component from Ant D
 
 # LayoutSider
 
-The `LayoutSider` component extends the `AntLayout.Sider` component from Ant Design by providing additional customization and support for stricter type safety.
+The `LayoutSider` component extends the functionality of the Ant Design Layout Sider component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Layout Sider component.
 
 ## Props
 
@@ -35,7 +35,7 @@ The `LayoutSider` component extends the `AntLayout.Sider` component from Ant Des
 
 # LayoutContent
 
-The `LayoutContent` component extends the `AntLayout.Content` component from Ant Design by providing additional customization and support for stricter type safety.
+The `LayoutContent` component extends the functionality of the Ant Design Layout Content component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Layout Content component.
 
 ## Props
 
@@ -46,7 +46,7 @@ The `LayoutContent` component extends the `AntLayout.Content` component from Ant
 
 # LayoutContainer
 
-The `LayoutContainer` component extends the `AntLayout` component from Ant Design by providing additional customization and support for stricter type safety.
+The `LayoutContainer` component extends the functionality of the Ant Design Layout Container component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Layout Container component.
 
 ## Props
 

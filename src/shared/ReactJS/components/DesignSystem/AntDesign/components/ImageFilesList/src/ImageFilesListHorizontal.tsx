@@ -7,9 +7,7 @@ import './css/ImageFilesListHorizontal.css';
 import { Props } from './types/Props';
 
 /**
- * ImageFilesListHorizontal component renders a horizontal list of image files and provides functionality
- * to download and delete files. This component also supports fallback URLs and custom placeholders
- * for images that might not be available.
+ * ImageFilesListHorizontal component is designed to display and manage a list of image files within upload components.
  *
  * @param {Object} props - The properties for the ImageFilesListHorizontal component.
  * @param {FileState<{ src: string }>[]]} props.filesState - The current state of the image files being managed.

@@ -28,8 +28,8 @@ export interface Props<Key extends string> extends Pick<AntTabsProps, 'className
 }
 
 /**
- * Tabs component that extends the functionality of the Ant Design Tabs component
- * by providing additional customization and support for stricter type safety.
+ * Tabs component extends the functionality of the Ant Design Tabs component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Tabs component.
  *
  * @param {Props} props - The properties for the Tabs component.
  * @param {string} [props.className] - Custom CSS class for styling the tabs.
@@ -50,7 +50,7 @@ export const Tabs = <Key extends string>({
   tabPosition = 'top',
   autoFit,
 }: Props<Key>): ReactNode => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
   const [valueState, setValueState] = useState(tabActive);
 
@@ -81,7 +81,7 @@ export const Tabs = <Key extends string>({
       items={tabs_}
       moreIcon={moreIcon}
       tabPosition={tabPosition}
-      activeKey={isMounted ? valueState : undefined}
+      activeKey={initializeContext?.isSSR && isMounted ? valueState : undefined}
       onChange={handleChange}
     />
   );

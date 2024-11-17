@@ -38,8 +38,7 @@ export interface Props
 }
 
 /**
- * Button component that extends the functionality of the Ant Design Button component
- * by providing additional customization and support for stricter type safety.
+ * Button component that extends the functionality of the Ant Design Button component.
  * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Button component.
  *
  * @param {Props} props - The properties for the Button component.

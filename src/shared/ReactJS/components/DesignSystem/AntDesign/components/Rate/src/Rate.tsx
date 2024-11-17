@@ -20,6 +20,8 @@ export interface Props
 }
 
 /**
+ * Rate component extends the functionality of the Ant Design Rate component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Rate component.
  * Rate component that extends the functionality of the Ant Design Rate component
  * by providing additional customization and support for stricter type safety.
  * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Rate component.
@@ -51,7 +53,7 @@ export const Rate: FC<Props> = ({
   readOnly = false,
   valueVariant = 'uncontrolled-state',
 }) => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
   const [valueState, setValueState] = useState(value);
 
@@ -69,7 +71,7 @@ export const Rate: FC<Props> = ({
   }, [value]);
 
   const mergedValueState = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return undefined;
     }
     return valueVariant === 'controlled-state' ? value : valueState;

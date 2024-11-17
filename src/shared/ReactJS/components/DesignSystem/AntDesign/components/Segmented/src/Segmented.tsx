@@ -50,7 +50,7 @@ export const Segmented = <Value extends string>({
   value,
   size,
 }: Props<Value>): ReactNode => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
   const [valueState, setValueState] = useState(value);
 
@@ -77,7 +77,7 @@ export const Segmented = <Value extends string>({
       disabled={disabled}
       options={items_ as AntSegmentedProps<string>['options']}
       onChange={handleChange}
-      value={isMounted ? valueState : undefined}
+      value={initializeContext?.isSSR && isMounted ? valueState : undefined}
     />
   );
 };

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `SingleTimePicker` component allows users to select a single time, with optional time components. It provides various customization options such as disabling specific hours, minutes, and seconds.
+The `SingleTimePicker` component extends the functionality of the Ant Design DatePicker component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design DatePicker component.
 
 ## Props
 
@@ -86,7 +86,7 @@ import { SingleTimePicker } from "...";
 
 ## Overview
 
-The `RangeTimePicker` component extends the functionality of the Ant Design DatePicker component by providing support for selecting a time range with additional configurations for disabling specific hours, minutes, and seconds. It enforces stricter type checks compared to the standard Ant Design DatePicker component.
+The `RangeTimePicker` component extends the functionality of the Ant Design DatePicker component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design DatePicker component.
 
 ## Props
 

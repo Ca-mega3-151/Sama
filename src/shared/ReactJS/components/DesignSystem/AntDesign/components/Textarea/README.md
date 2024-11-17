@@ -1,6 +1,6 @@
 # Overview
 
-The `Textarea` component extends the functionality of the Ant Design TextArea component by providing additional customization and support for stricter type safety.
+The `Textarea` component extends the functionality of the Ant Design Textarea component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Textarea component.
 
 # Props
 

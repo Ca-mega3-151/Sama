@@ -33,8 +33,8 @@ export interface Props<Model> extends Pick<AntTreeProps, 'className' | 'disabled
 }
 
 /**
- * TreeSelectMultiple component that extends the functionality of the Ant Design Tree component
- * by providing additional customization and support for stricter type safety.
+ * TreeSelectMultiple component extends the functionality of the Ant Design Tree component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Tree component.
  *
  * @template Model - The type of the raw data associated with each leaf.
  * @param {Props<Model>} props - The props for the TreeSelectMultiple component.
@@ -66,7 +66,7 @@ export const TreeSelectMultiple = <Model,>({
   readOnly = false,
   valueVariant = 'uncontrolled-state',
 }: Props<Model>): ReactNode => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
   const [valueState, setValueState] = useState(value);
 
@@ -103,7 +103,7 @@ export const TreeSelectMultiple = <Model,>({
   }, [value]);
 
   const mergedValueState = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return undefined;
     }
     return valueVariant === 'controlled-state' ? value : valueState;

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The SingleSlider component extends the functionality of the Ant Design Slider component by providing additional customization and support for stricter type safety.
+The `SingleSlider` component extends the functionality of the Ant Design Slider component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Slider component.
 
 ## Props
 
@@ -36,7 +36,7 @@ import { SingleSlider } from "path/to/SingleSlider";
 
 # Overview
 
-The RangeSlider component extends the functionality of the Ant Design Slider component by providing additional customization and support for stricter type safety.
+The `RangeSlider` component extends the functionality of the Ant Design Slider component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Slider component.
 
 ## Props
 

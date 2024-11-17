@@ -2,7 +2,7 @@
 
 ## Overview
 
-`UploadSingle` is a custom React component that extends the functionality of the Ant Design `Upload` component. It provides additional customization and stricter type safety, making it easier to handle single file uploads in your React application.
+The `UploadSingle` component extends the functionality of the Ant Design Upload component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Upload component.
 
 ## Props
 
@@ -61,7 +61,7 @@ export default App;
 
 ## Overview
 
-`UploadMultiple` is a custom React component that extends the functionality of the Ant Design `Upload` component. It provides additional customization and stricter type safety, making it easier to handle multiple file uploads in your React application.
+The `UploadMultiple` component extends the functionality of the Ant Design Upload component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Upload component.
 
 ## Props
 

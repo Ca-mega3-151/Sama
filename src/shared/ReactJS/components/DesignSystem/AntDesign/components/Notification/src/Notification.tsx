@@ -43,7 +43,8 @@ const defaultNotification: NoticeMethods = {
 export let notification: NoticeMethods = defaultNotification;
 
 /**
- * Notification component that extends the functionality of the Ant Design notification component by providing additional customization for variant styles. It ensures that all props are type-checked more rigorously compared to the standard Ant Design notification component.
+ * Notification component extends the functionality of the Ant Design notification component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design notification component.
  *
  * @param {Props} props - The properties for the Notification component.
  * @param {number} [props.duration] - Duration for which the notification will be displayed.

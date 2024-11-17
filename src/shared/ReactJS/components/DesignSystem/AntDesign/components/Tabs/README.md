@@ -1,6 +1,6 @@
 # Overview
 
-The Tabs component extends the functionality of the Ant Design Tabs component by providing additional customization and support for stricter type safety.
+The `Tabs` component extends the functionality of the Ant Design Tabs component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Tabs component.
 
 # Props
 

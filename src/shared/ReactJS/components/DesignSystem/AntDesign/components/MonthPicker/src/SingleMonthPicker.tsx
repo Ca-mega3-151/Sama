@@ -5,9 +5,9 @@ import { FC, ReactNode, useState } from 'react';
 import { useDeepCompareEffect, useDeepCompareMemo, useIsMounted } from '../../../../../../hooks';
 import { useInitializeContext } from '../../../base';
 import { AntDatePicker, AntDatePickerProps } from '../../../base/AntDatePicker';
+import './css/SingleMonthPicker.css';
 import { Format } from './types/Format';
 import { Dayjs, dayjs } from '~/shared/Utilities';
-import './css/SingleMonthPicker.css';
 
 export interface Props
   extends Pick<AntDatePickerProps, 'className' | 'allowClear' | 'disabled' | 'showNow' | 'suffixIcon' | 'locale'> {
@@ -32,7 +32,8 @@ export interface Props
 }
 
 /**
- * `SingleMonthPicker` is a component that allows users to select a single month.
+ * SingleMonthPicker component extends the functionality of the Ant Design DatePicker component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design DatePicker component.
  *
  * @param {Props} props - The properties for the RangeMonthPicker component.
  * @param {string} [props.className] - Custom CSS class for the month picker.
@@ -69,7 +70,7 @@ export const SingleMonthPicker: FC<Props> = ({
   valueVariant = 'uncontrolled-state',
   size,
 }: Props) => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const [valueState, setValueState] = useState(value ? dayjs(value) : undefined);
   const isMounted = useIsMounted();
 
@@ -95,7 +96,7 @@ export const SingleMonthPicker: FC<Props> = ({
   }, [value?.valueOf()]);
 
   const mergedValueState: Dayjs | undefined = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return undefined;
     }
     if (valueVariant === 'controlled-state') {

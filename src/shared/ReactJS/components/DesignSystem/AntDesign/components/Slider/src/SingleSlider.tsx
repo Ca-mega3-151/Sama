@@ -26,8 +26,8 @@ export interface Props
 }
 
 /**
- * SingleSlider component that extends the functionality of the Ant Design Slider component
- * by providing additional customization and support for stricter type safety.
+ * SingleSlider component extends the functionality of the Ant Design Slider component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Slider component.
  *
  * @param {Props} props - The properties for the SingleSlider component.
  * @param {string} [props.className] - Custom CSS class for styling the slider.
@@ -62,7 +62,7 @@ export const SingleSlider: FC<Props> = ({
   readOnly = false,
   valueVariant = 'uncontrolled-state',
 }) => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
   const [valueState, setValueState] = useState(value);
 
@@ -99,7 +99,7 @@ export const SingleSlider: FC<Props> = ({
   }, [value]);
 
   const mergedValueState = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return undefined;
     }
     return valueVariant === 'controlled-state' ? value : valueState;

@@ -29,6 +29,7 @@ The `SelectSingle` component extends the functionality of the Ant Design Select 
 | onSearch                | `Function`                                                                         | -                      | Callback function that is triggered when the search input value changes.                                     |
 | size                    | `string`                                                                           | -                      | The size of select.                                                                                          |
 | showSearch              | `boolean`                                                                          | `true`                 | Whether select is searchable.                                                                                |
+| footer                  | `ReactNode`                                                                        | `true`                 | The footer to be displayed at the bottom of the select's dropdown.                                           |
 
 ## Usage
 
@@ -74,6 +75,7 @@ The `SelectMultiple` component extends the functionality of the Ant Design Selec
 | onSearch                | `Function`                                                                                 | -                      | Callback function that is triggered when the search input value changes.                                     |
 | size                    | `string`                                                                                   | -                      | The size of select.                                                                                          |
 | showSearch              | `boolean`                                                                                  | `true`                 | Whether select is searchable.                                                                                |
+| footer                  | `ReactNode`                                                                                | `true`                 | The footer to be displayed at the bottom of the select's dropdown.                                           |
 
 ## Usage
 
@@ -119,6 +121,7 @@ The `SelectTag` component extends the functionality of the Ant Design Select com
 | open                    | `boolean`                                    | -                      | Whether the dropdown menu is open.                                              |
 | onDropdownVisibleChange | `Function`                                   | -                      | Callback function that is triggered when the dropdown visibility changes.       |
 | size                    | `string`                                     | -                      | The size of select.                                                             |
+| footer                  | `ReactNode`                                  | `true`                 | The footer to be displayed at the bottom of the select's dropdown.              |
 
 ## Usage
 

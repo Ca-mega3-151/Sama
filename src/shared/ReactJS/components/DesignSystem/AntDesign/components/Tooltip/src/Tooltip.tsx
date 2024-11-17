@@ -62,7 +62,7 @@ export const Tooltip = ({
   getPopupContainer,
   placement,
 }: Props): ReactNode => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
   const [openState, setOpenState] = useState(open);
 
@@ -78,7 +78,7 @@ export const Tooltip = ({
   }, [open]);
 
   const mergedOpenState = useDeepCompareMemo(() => {
-    if (!isMounted || disabled) {
+    if ((initializeContext?.isSSR && !isMounted) || disabled) {
       return false;
     }
     return openVariant === 'controlled-state' ? open : openState;

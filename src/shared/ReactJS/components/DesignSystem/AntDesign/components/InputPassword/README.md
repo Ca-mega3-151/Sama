@@ -1,6 +1,6 @@
 # Overview
 
-The `InputPassword` component extends the functionality of the Ant Design Password component by providing additional customization and support for stricter type safety.
+The `InputPassword` component extends the functionality of the Ant Design Password component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Password component.
 
 # Props
 

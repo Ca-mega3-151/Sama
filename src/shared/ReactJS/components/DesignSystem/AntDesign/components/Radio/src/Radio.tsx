@@ -35,8 +35,8 @@ export interface Props<Value extends string>
 }
 
 /**
- * Radio component that extends the functionality of the Ant Design Radio component
- * by providing additional customization and support for stricter type safety.
+ * Radio component extends the functionality of the Ant Design Radio component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Radio component.
  *
  * @param {Props<Value>} props - The properties for the Radio component.
  * @param {string} [props.className] - Custom CSS class for styling the radio group.
@@ -61,7 +61,7 @@ export const Radio = <Value extends string>({
   valueVariant,
   size,
 }: Props<Value>): ReactNode => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
   const [valueState, setValueState] = useState(value);
 
@@ -90,8 +90,8 @@ export const Radio = <Value extends string>({
   }, [items]);
 
   const mergedValueState = useDeepCompareMemo(() => {
-    if (!isMounted) {
-      return undefined;
+    if (initializeContext?.isSSR && !isMounted) {
+      return '';
     }
     return valueVariant === 'controlled-state' ? value : valueState;
   }, [value, valueState, isMounted, valueVariant]);

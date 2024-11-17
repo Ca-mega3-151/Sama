@@ -8,9 +8,7 @@ import './css/ImageFilesListVertical.css';
 import { Props } from './types/Props';
 
 /**
- * ImageFilesListVertical component renders a vertical list of image files and provides functionality
- * to download and delete files. This component also supports fallback URLs and custom placeholders
- * for images that might not be available.
+ * ImageFilesListVertical component is designed to display and manage a list of image files within upload components.
  *
  * @param {Object} props - The properties for the ImageFilesListVertical component.
  * @param {FileState<{ src: string }>[]]} props.filesState - The current state of the image files being managed.

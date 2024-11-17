@@ -1,6 +1,6 @@
 # Overview
 
-The `ImageFilesList` component renders a list of image files and provides functionality to download and delete files. This component also supports fallback URLs and custom placeholders for images that might not be available.
+The `ImageFilesList` component is designed to display and manage a list of image files within upload components.
 
 # Props
 

@@ -1,6 +1,6 @@
 # Overview
 
-The `Mentions` component extends the functionality of the Ant Design Mentions component by providing additional customization and support for stricter type safety. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Mentions component.
+The `Mentions` component extends the functionality of the Ant Design Mentions component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Mentions component.
 
 # Props
 

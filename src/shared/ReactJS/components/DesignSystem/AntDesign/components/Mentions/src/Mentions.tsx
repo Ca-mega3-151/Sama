@@ -1,7 +1,7 @@
 import { MentionProps as AntMentionProps, Mentions as AntMentions } from 'antd';
 import classNames from 'classnames';
 import { isEmpty } from 'ramda';
-import { ReactNode, useMemo, useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { useDeepCompareEffect, useDeepCompareMemo, useIsMounted } from '../../../../../../hooks';
 import { useInitializeContext } from '../../../base';
 import './styles.css';
@@ -39,8 +39,7 @@ export interface Props<RawData>
 }
 
 /**
- * Mentions component that extends the functionality of the Ant Design Mentions component
- * by providing additional customization and support for stricter type safety.
+ * Mentions component extends the functionality of the Ant Design Mentions component.
  * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Mentions component.
  *
  * @param {Props<RawData>} props - The properties for the Mentions component.
@@ -84,7 +83,7 @@ export const Mentions = <RawData,>({
   value = '',
   valueVariant = 'uncontrolled-state',
 }: Props<RawData>): ReactNode => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
   const [valueState, setValueState] = useState(value);
 
@@ -102,12 +101,8 @@ export const Mentions = <RawData,>({
     setValueState(value);
   }, [value]);
 
-  const options_ = useMemo(() => {
-    return options.filter(item => !item.hidden);
-  }, [options]);
-
   const mergedValueState = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return undefined;
     }
     return valueVariant === 'controlled-state' ? value : valueState;
@@ -123,7 +118,7 @@ export const Mentions = <RawData,>({
       loading={loading}
       maxLength={maxLength}
       notFoundContent={notFoundContent}
-      options={options_}
+      options={options}
       placeholder={placeholder}
       popupClassName="AntMentions__popup"
       prefix={prefix}

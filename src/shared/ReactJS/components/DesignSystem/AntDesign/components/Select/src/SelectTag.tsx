@@ -1,10 +1,11 @@
 import { SelectProps as AntSelectProps, Select } from 'antd';
 import classNames from 'classnames';
 import { isEmpty } from 'ramda';
-import { FC, MouseEvent, useMemo, useState } from 'react';
+import { FC, MouseEvent, ReactNode, useState } from 'react';
 import { useDeepCompareEffect, useDeepCompareMemo, useIsMounted } from '../../../../../../hooks';
 import { Loading } from '../../../../../UI';
 import { useInitializeContext } from '../../../base';
+import { Divider } from '../../Divider';
 import './css/SelectTag.css';
 
 export interface Props
@@ -30,6 +31,8 @@ export interface Props
   readOnly?: boolean;
   /** Determines if the select is controlled or uncontrolled state. */
   valueVariant?: 'controlled-state' | 'uncontrolled-state';
+  /** The footer to be displayed at the bottom of the select's dropdown. */
+  footer?: ReactNode;
 }
 
 /**
@@ -56,7 +59,7 @@ export interface Props
  * @param {boolean} [props.open] - Whether the dropdown menu is open.
  * @param {Function} [props.onDropdownVisibleChange] - Callback function that is triggered when the dropdown visibility changes.
  * @param {string} [props.size] - The size of input.
-
+ * @param {ReactNode} [props.footer] - The footer to be displayed at the bottom of the select's dropdown.
  * @returns {ReactNode} The rendered SelectTag component.
  */
 export const SelectTag: FC<Props> = ({
@@ -75,8 +78,9 @@ export const SelectTag: FC<Props> = ({
   readOnly = false,
   valueVariant = 'uncontrolled-state',
   size,
+  footer,
 }) => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const [valueState, setValueState] = useState(value);
   const isMounted = useIsMounted();
 
@@ -107,13 +111,13 @@ export const SelectTag: FC<Props> = ({
   };
 
   const mergedValueState = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return undefined;
     }
     return valueVariant === 'controlled-state' ? value : valueState;
   }, [value, valueState, isMounted, valueVariant]);
-  const mergedOpenState = useMemo(() => {
-    if (!isMounted) {
+  const mergedOpenState = useDeepCompareMemo(() => {
+    if (initializeContext?.isSSR && !isMounted) {
       return false;
     }
     return open;
@@ -138,6 +142,22 @@ export const SelectTag: FC<Props> = ({
       tabIndex={readOnly ? -1 : undefined}
       onChange={handleChange as AntSelectProps<string[]>['onChange']}
       value={mergedValueState}
+      dropdownRender={menu => {
+        if (loading) {
+          return <>{renderLoadingAtDropdown({})}</>;
+        }
+        return (
+          <>
+            {menu}
+            {footer && (
+              <div className="AntSelectTag__footerContainer">
+                <Divider className="AntSelectTag__footerDivider" />
+                <div className="AntSelectTag__footerContent">{footer}</div>
+              </div>
+            )}
+          </>
+        );
+      }}
     />
   );
 };

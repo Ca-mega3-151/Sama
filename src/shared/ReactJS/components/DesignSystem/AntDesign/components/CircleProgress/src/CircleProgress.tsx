@@ -29,8 +29,8 @@ export interface Props extends Pick<AntProgressProps, 'className' | 'showInfo' |
 }
 
 /**
- * CircleProgress component that renders a progress circle with customizable size, color, and format.
- * It extends the Ant Design Progress component with additional properties for size and stroke color.
+ * CircleProgress component extends the functionality of the Ant Design Progress component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Progress component.
  *
  * @param {Props} props - The properties for the CircleProgress component.
  * @param {string} [props.className] - Custom CSS class for styling the progress circle container.

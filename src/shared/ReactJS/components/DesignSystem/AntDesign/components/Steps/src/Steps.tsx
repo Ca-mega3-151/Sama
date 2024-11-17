@@ -28,7 +28,8 @@ export interface Props
 }
 
 /**
- * Steps component extends the functionality of the Ant Design Steps component by providing additional customization and support for displaying steps with stricter type safety.
+ * Steps component extends the functionality of the Ant Design Steps component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Steps component.
  *
  * @param {Object} props - The properties for the Steps component.
  * @param {string} [props.className] - Custom CSS class for styling the steps component.

@@ -1,6 +1,6 @@
 # Overview
 
-The `InputOTP` component extends the functionality of the Ant Design OTP Input component by providing additional customization and support for stricter type safety.
+The `InputOTP` component extends the functionality of the Ant Design OTP component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design OTP component.
 
 # Props
 

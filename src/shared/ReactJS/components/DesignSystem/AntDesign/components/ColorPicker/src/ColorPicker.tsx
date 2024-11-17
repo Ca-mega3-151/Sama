@@ -2,7 +2,7 @@ import { ColorPicker as AntColorPicker, ColorPickerProps as AntColorPickerProps 
 import { ColorFactory } from 'antd/lib/color-picker/color';
 import classNames from 'classnames';
 import { isEmpty } from 'ramda';
-import { FC, ReactNode, useMemo, useState } from 'react';
+import { FC, ReactNode, useState } from 'react';
 import { useDeepCompareEffect, useDeepCompareMemo, useIsMounted } from '../../../../../../hooks';
 import { useInitializeContext } from '../../../base';
 import './styles.css';
@@ -76,7 +76,7 @@ export const ColorPicker: FC<Props> = ({
   readOnly = false,
   valueVariant,
 }) => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
   const [valueState, setValueState] = useState(value);
 
@@ -95,13 +95,13 @@ export const ColorPicker: FC<Props> = ({
   }, [value]);
 
   const mergedValueState = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return undefined;
     }
     return valueVariant === 'controlled-state' ? value : valueState;
   }, [value, valueState, isMounted, valueVariant]);
-  const mergedOpenState = useMemo(() => {
-    return readOnly || disabled || !isMounted ? false : open;
+  const mergedOpenState = useDeepCompareMemo(() => {
+    return readOnly || disabled || (initializeContext?.isSSR && !isMounted) ? false : open;
   }, [disabled, isMounted, open, readOnly]);
 
   return (

@@ -1,6 +1,6 @@
 # Overview
 
-The `ImageFile` component renders a single image file and provides functionality to delete the file. This component is useful for managing individual image files, allowing users to perform actions like deleting the file.
+The `ImageFile` component is designed to display and manage an individual image file within upload components.
 
 # Props
 

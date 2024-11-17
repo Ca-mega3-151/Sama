@@ -1,6 +1,6 @@
 # Overview
 
-The `FloatButton` component extends the functionality of the Ant Design FloatButton component by providing additional customization options for grouped items and a close icon. It ensures that all props are type-checked more rigorously compared to the standard Ant Design FloatButton component.
+The `FloatButton` component extends the functionality of the Ant Design FloatButton component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design FloatButton component.
 
 # Props
 

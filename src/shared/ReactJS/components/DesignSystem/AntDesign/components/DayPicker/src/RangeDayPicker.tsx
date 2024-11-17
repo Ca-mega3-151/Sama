@@ -39,7 +39,8 @@ export interface Props
 }
 
 /**
- * RangeDayPicker is a functional component that renders a date range picker
+ * RangeDayPicker component extends the functionality of the Ant Design DatePicker component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design DatePicker component.
  *
  * @param {Props} props - The properties for the RangeDayPicker component.
  * @param {string} [props.className] - Custom CSS class for the date picker.
@@ -82,7 +83,7 @@ export const RangeDayPicker: FC<Props> = ({
   valueVariant = 'uncontrolled-state',
   size,
 }: Props) => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const [valueState, setValueState] = useState(value ? value.map(item => dayjs(item)) : undefined);
   const isMounted = useIsMounted();
 
@@ -125,7 +126,7 @@ export const RangeDayPicker: FC<Props> = ({
   }, [value?.[0].valueOf(), value?.[1].valueOf()]);
 
   const mergedValueState: AntRangePickerProps['value'] = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return undefined;
     }
     if (valueVariant === 'controlled-state') {

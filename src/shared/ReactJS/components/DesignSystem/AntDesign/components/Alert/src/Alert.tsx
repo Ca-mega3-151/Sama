@@ -8,7 +8,7 @@ import { variants } from './constants/variants';
 import { Color } from './types/Color';
 import { Variant } from './types/Variant';
 
-export interface Props extends Pick<AntAlertProps, 'className'> {
+export interface Props extends Pick<AntAlertProps, 'className' | 'action'> {
   /** Custom color for the alert. */
   color?: Color;
   /** Variant style of the alert. */
@@ -22,7 +22,8 @@ export interface Props extends Pick<AntAlertProps, 'className'> {
 }
 
 /**
- * Alert component that extends the functionality of the Ant Design Alert component by providing additional customization for color, variant, and icon. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Alert component.
+ * Alert component that extends the functionality of the Ant Design Alert component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Alert component.
  *
  * @param {Props} props - The properties for the Alert component.
  * @param {string} [props.className] - Custom CSS class for styling the alert.
@@ -31,15 +32,25 @@ export interface Props extends Pick<AntAlertProps, 'className'> {
  * @param {ReactNode} props.message - Main message content of the alert.
  * @param {ReactNode} props.description - Additional description content of the alert.
  * @param {ReactNode} [props.icon] - Custom icon for the alert.
+ * @param {ReactNode} [props.action] - The action of Alert.
  * @returns {ReactNode} The rendered Alert component.
  */
-export const Alert: FC<Props> = ({ className, color = 'primary', variant = 'bold', message, description, icon }) => {
+export const Alert: FC<Props> = ({
+  className,
+  color = 'primary',
+  variant = 'bold',
+  message,
+  description,
+  icon,
+  action,
+}) => {
   useInitializeContext();
 
   return (
     <AntAlert
       className={classNames('AntAlert__container', colors[color], variants[variant], className)}
       icon={icon}
+      action={action}
       message={message}
       description={description}
       type={color === 'primary' ? undefined : color}

@@ -48,8 +48,8 @@ export interface Props<Key extends string> extends Pick<AntMenuProps, 'className
 }
 
 /**
- * MenuHorizontal component that extends the functionality of the Ant Design Menu component
- * by providing additional customization and support for stricter type safety.
+ * MenuHorizontal component extends the functionality of the Ant Design Menu component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Menu component.
  *
  * @param {ReactNode} [props.expandIcon] - The icon for expanding the menu items.
  * @param {MenuItem<Key>[]} [props.items=[]] - The menu items to be displayed.

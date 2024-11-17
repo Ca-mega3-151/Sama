@@ -107,7 +107,8 @@ const defaultConfig: SeedToken = {
 const prefix = 'yy';
 
 /**
- * ThemeProvider component that provides theme configuration and other settings to Ant Design components.
+ * ThemeProvider component extends the functionality of the Ant Design ThemeProvider component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design ThemeProvider component.
  *
  * @param props - The props for the ThemeProvider component.
  * @param props.config - Theme configuration object for customizing the theme.

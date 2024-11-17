@@ -35,8 +35,8 @@ export interface Props
 }
 
 /**
- * InputNumber component that extends the functionality of the Ant Design InputNumber component
- * by providing additional customization and support for stricter type safety.
+ * InputNumber component that extends the functionality of the Ant Design InputNumber component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design InputNumber component.
  *
  * @param {Props} props - The properties for the InputNumber component.
  * @param {ReactNode} [props.addonAfter] - The element to display on the right side of the input number field.
@@ -79,7 +79,7 @@ export const InputNumber: FC<Props> = ({
   valueVariant = 'uncontrolled-state',
   size,
 }) => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
   const [valueState, setValueState] = useState(value);
 
@@ -117,7 +117,7 @@ export const InputNumber: FC<Props> = ({
   }, [value]);
 
   const mergedValueState = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return undefined;
     }
     return valueVariant === 'controlled-state' ? value : valueState;

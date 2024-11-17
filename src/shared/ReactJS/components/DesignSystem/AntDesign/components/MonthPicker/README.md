@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `SingleMonthPicker` component allows users to select a single month
+The `SingleMonthPicker` component extends the functionality of the Ant Design DatePicker component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design DatePicker component.
 
 ## Props
 
@@ -101,7 +101,7 @@ import { SingleMonthPicker } from "...";
 
 ## Overview
 
-The `RangeMonthPicker` component extends the functionality of the Ant Design DatePicker component by providing support for selecting a month range
+The `RangeMonthPicker` component extends the functionality of the Ant Design DatePicker component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design DatePicker component.
 
 ## Props
 

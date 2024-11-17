@@ -16,7 +16,7 @@ export interface Props<FileResponse> {
 }
 
 /**
- * NormalFile component renders a single file and provides functionality to delete and download the file.
+ * NormalFile component is designed to display and manage an individual normal file within upload components.
  *
  * @param {Object} props - The properties for the NormalFile component.
  * @param {UploadFileState<FileResponse>} props.fileState - The state of the file being managed.

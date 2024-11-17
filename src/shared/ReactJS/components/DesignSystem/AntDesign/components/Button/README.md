@@ -1,6 +1,6 @@
 # Overview
 
-The `Button` component extends the functionality of the Ant Design Button component by providing additional customization and support for stricter type safety. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Button component.
+The `Button` component extends the functionality of the Ant Design Button component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Button component.
 
 # Props
 

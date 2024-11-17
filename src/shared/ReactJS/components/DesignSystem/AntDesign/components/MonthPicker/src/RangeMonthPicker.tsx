@@ -5,9 +5,9 @@ import { FC, ReactNode, useState } from 'react';
 import { useDeepCompareEffect, useDeepCompareMemo, useIsMounted } from '../../../../../../hooks';
 import { useInitializeContext } from '../../../base';
 import { AntDatePicker, AntRangePickerProps } from '../../../base/AntDatePicker';
+import './css/RangeMonthPicker.css';
 import { Format } from './types/Format';
 import { Dayjs, dayjs } from '~/shared/Utilities';
-import './css/RangeMonthPicker.css';
 
 export interface Props
   extends Pick<AntRangePickerProps, 'className' | 'allowClear' | 'disabled' | 'showNow' | 'suffixIcon' | 'locale'> {
@@ -32,7 +32,8 @@ export interface Props
 }
 
 /**
- * RangeMonthPicker is a functional component that renders a month range picker.
+ * RangeMonthPicker component extends the functionality of the Ant Design DatePicker component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design DatePicker component.
  *
  * @param {Props} props - The properties for the RangeMonthPicker component.
  * @param {string} [props.className] - Custom CSS class for the month picker.
@@ -69,7 +70,7 @@ export const RangeMonthPicker: FC<Props> = ({
   valueVariant = 'uncontrolled-state',
   size,
 }: Props) => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const [valueState, setValueState] = useState(value ? value.map(item => dayjs(item)) : undefined);
   const isMounted = useIsMounted();
 
@@ -102,7 +103,7 @@ export const RangeMonthPicker: FC<Props> = ({
   }, [value?.[0].valueOf(), value?.[1].valueOf()]);
 
   const mergedValueState: AntRangePickerProps['value'] = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return undefined;
     }
     if (valueVariant === 'controlled-state') {

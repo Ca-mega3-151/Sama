@@ -40,7 +40,7 @@ export const Checkbox: FC<Props> = ({
   readOnly = false,
   valueVariant = 'uncontrolled-state',
 }) => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
   const [checkedState, setCheckedState] = useState(checked);
 
@@ -57,7 +57,7 @@ export const Checkbox: FC<Props> = ({
   }, [checked]);
 
   const mergedValueState = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return false;
     }
     return valueVariant === 'controlled-state' ? checked : checkedState;

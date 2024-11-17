@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `SingleDayPicker` component allows users to select a single day, with optional time components.
+The `SingleDayPicker` component extends the functionality of the Ant Design DatePicker component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design DatePicker component.
 
 ## Props
 
@@ -104,7 +104,7 @@ import { SingleDayPicker } from "...";
 
 ## Overview
 
-The `RangeDayPicker` component extends the functionality of the Ant Design DatePicker component by providing support for selecting a date range.
+The `RangeDayPicker` component extends the functionality of the Ant Design DatePicker component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design DatePicker component.
 
 ## Props
 

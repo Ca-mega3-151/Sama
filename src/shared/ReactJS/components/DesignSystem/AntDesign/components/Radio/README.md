@@ -1,6 +1,6 @@
 # Overview
 
-The `Radio` component extends the functionality of the Ant Design Radio component by providing additional customization and support for stricter type safety.
+The `Radio` component extends the functionality of the Ant Design Radio component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Radio component.
 
 # Props
 

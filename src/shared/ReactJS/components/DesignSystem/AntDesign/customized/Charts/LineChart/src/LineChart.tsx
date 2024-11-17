@@ -55,7 +55,6 @@ export interface Props<Label extends string, DataSetRawData, PointRawData> {
  *
  * @param labels - The labels for the points in the line chart.
  * @param datasets - The datasets containing points to be displayed in the chart.
- * @param formatter - A function to format the numerical values displayed on the points.
  * @param onClickPoint - A callback function triggered when a point is clicked.
  * @param onHoverPoint - A callback function triggered when a point is hovered over.
  * @param className - An optional CSS class for custom styling of the chart.

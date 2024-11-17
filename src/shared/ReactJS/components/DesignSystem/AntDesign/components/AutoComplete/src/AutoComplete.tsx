@@ -1,10 +1,11 @@
 import { AutoComplete as AntAutoComplete, AutoCompleteProps as AntAutoCompleteProps } from 'antd';
 import classNames from 'classnames';
 import { isEmpty } from 'ramda';
-import { FC, ReactNode, useMemo, useState } from 'react';
+import { FC, ReactNode, useState } from 'react';
 import { useDeepCompareEffect, useDeepCompareMemo, useIsMounted } from '../../../../../../hooks';
 import { Loading } from '../../../../../UI';
 import { useInitializeContext } from '../../../base';
+import { Divider } from '../../Divider';
 import './styles.css';
 import { Option } from './types/Option';
 import { OptionValueType } from './types/OptionValueType';
@@ -33,10 +34,12 @@ export interface Props<ValueType extends OptionValueType, RawData = any>
   loading?: boolean;
   /** Array of options to be displayed in the dropdown menu. */
   options?: Option<ValueType, RawData>[];
-  /** If true, the select is read-only and cannot be changed by the user. */
+  /** If true, the auto-complete is read-only and cannot be changed by the user. */
   readOnly?: boolean;
-  /** Determines if the select is controlled or uncontrolled state. */
+  /** Determines if the auto-complete is controlled or uncontrolled state. */
   valueVariant?: 'controlled-state' | 'uncontrolled-state';
+  /** The footer to be displayed at the bottom of the auto-complete's dropdown. */
+  footer?: ReactNode;
 }
 
 /**
@@ -61,9 +64,10 @@ export interface Props<ValueType extends OptionValueType, RawData = any>
  * @param {string} [props.searchValue] - The value of the search input.
  * @param {Function} [props.onDropdownVisibleChange] - Callback function that is triggered when the dropdown visibility changes.
  * @param {Function} [props.onSearch] - Callback function that is triggered when the search input value changes.
- * @param {boolean} props.readOnly - If true, the select is read-only and cannot be changed by the user.
- * @param {'controlled-state' | 'uncontrolled-state'} [props.valueVariant] - Determines if the select is controlled or uncontrolled state.
+ * @param {boolean} props.readOnly - If true, the auto-complete is read-only and cannot be changed by the user.
+ * @param {'controlled-state' | 'uncontrolled-state'} [props.valueVariant] - Determines if the auto-complete is controlled or uncontrolled state.
  * @param {string} [props.size] - The size of the search input.
+ * @param {ReactNode} [props.footer] - The footer to be displayed at the bottom of the auto-complete's dropdown.
  * @returns {ReactNode} The rendered AutoComplete component.
  */
 export const AutoComplete = <ValueType extends OptionValueType, RawData = any>({
@@ -84,8 +88,9 @@ export const AutoComplete = <ValueType extends OptionValueType, RawData = any>({
   readOnly = false,
   valueVariant = 'uncontrolled-state',
   size,
+  footer,
 }: Props<ValueType, RawData>): ReactNode => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
 
   const [valueState, setValueState] = useState(value);
@@ -103,10 +108,6 @@ export const AutoComplete = <ValueType extends OptionValueType, RawData = any>({
     setValueState(value);
   }, [value]);
 
-  const options_ = useMemo(() => {
-    return options.filter(item => !item.hidden);
-  }, [options]);
-
   const renderLoadingAtDropdown: FC = () => {
     return (
       <div className="AntAutoComplete__loading">
@@ -116,7 +117,7 @@ export const AutoComplete = <ValueType extends OptionValueType, RawData = any>({
   };
 
   const mergedValueState = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return undefined;
     }
     if (valueVariant === 'controlled-state') {
@@ -124,8 +125,8 @@ export const AutoComplete = <ValueType extends OptionValueType, RawData = any>({
     }
     return valueState;
   }, [value, valueState, isMounted, valueVariant]);
-  const mergedOpenState = useMemo(() => {
-    if (!isMounted) {
+  const mergedOpenState = useDeepCompareMemo(() => {
+    if (initializeContext?.isSSR && !isMounted) {
       return false;
     }
     return open;
@@ -145,9 +146,25 @@ export const AutoComplete = <ValueType extends OptionValueType, RawData = any>({
       notFoundContent={loading ? renderLoadingAtDropdown({}) : notFoundContent}
       className={classNames('AntAutoComplete__container', readOnly ? 'AntAutoComplete__readOnly' : '', className)}
       tabIndex={readOnly ? -1 : undefined}
-      options={options_}
+      options={options}
       value={mergedValueState}
       onChange={handleChange as AntAutoCompleteProps<ValueType, Option<ValueType, RawData>>['onChange']}
+      dropdownRender={menu => {
+        if (loading) {
+          return <>{renderLoadingAtDropdown({})}</>;
+        }
+        return (
+          <>
+            {menu}
+            {footer && (
+              <div className="AntAutoComplete__footerContainer">
+                <Divider className="AntAutoComplete__footerDivider" />
+                <div className="AntAutoComplete__footerContent">{footer}</div>
+              </div>
+            )}
+          </>
+        );
+      }}
     />
   );
 };

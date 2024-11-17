@@ -59,8 +59,8 @@ export interface Props<Key extends string>
 }
 
 /**
- * MenuVertical component that extends the functionality of the Ant Design Menu component
- * by providing additional customization and support for stricter type safety.
+ * MenuVertical component extends the functionality of the Ant Design Menu component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Menu component.
  *
  * @param {Props<Key>} props - The properties for the Menu component.
  * @param {string} [props.className] - Custom CSS class for styling the menu.

@@ -132,7 +132,7 @@ const parseLocale = (locale: string): string => {
 
 const parseNoMatchNotice = (): void => {
   /* istanbul ignore next */
-  console.log('Ant Config:: Not match any format. Please help to fire a issue about this.');
+  console.log('Not match any format. Please help to fire a issue about this.');
 };
 
 export const generateConfig: GenerateConfig<Dayjs> = {

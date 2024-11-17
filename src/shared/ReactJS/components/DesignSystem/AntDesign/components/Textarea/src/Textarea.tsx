@@ -6,11 +6,11 @@ import { useDebouncedValue, useDeepCompareEffect, useDeepCompareMemo, useIsMount
 import { useInitializeContext } from '../../../base';
 import './styles.css';
 
-type AntInputProps = ComponentProps<typeof AntInput.TextArea>;
+type AntTextareaProps = ComponentProps<typeof AntInput.TextArea>;
 
 export interface Props
   extends Pick<
-    AntInputProps,
+    AntTextareaProps,
     'className' | 'disabled' | 'maxLength' | 'placeholder' | 'prefix' | 'showCount' | 'rows' | 'readOnly'
   > {
   /** The value of the input. */
@@ -27,8 +27,8 @@ export interface Props
 }
 
 /**
- * Textarea component that extends the functionality of the Ant Design TextArea component
- * by providing additional customization and support for stricter type safety.
+ * Textarea component extends the functionality of the Ant Design Textarea component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Textarea component.
  *
  * @param {Props} props - The properties for the Textarea component.
  * @param {string} [props.className] - Custom CSS class for styling the text area.
@@ -59,12 +59,12 @@ export const Textarea: FC<Props> = ({
   onDebounceChange,
   valueVariant = 'uncontrolled-state',
 }) => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
   const [valueState, setValueState] = useState(value);
   const { value: valueStateDebounced, clearTimeout } = useDebouncedValue(valueState, { timeoutMs: 300 });
 
-  const handleChange: AntInputProps['onChange'] = event => {
+  const handleChange: AntTextareaProps['onChange'] = event => {
     if (readOnly) {
       return;
     }
@@ -74,7 +74,7 @@ export const Textarea: FC<Props> = ({
     onChange?.(value);
   };
 
-  const handleBlur: AntInputProps['onBlur'] = event => {
+  const handleBlur: AntTextareaProps['onBlur'] = event => {
     if (readOnly) {
       return;
     }
@@ -97,7 +97,7 @@ export const Textarea: FC<Props> = ({
   }, [valueStateDebounced]);
 
   const mergedValueState = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return undefined;
     }
     return valueVariant === 'controlled-state' ? value : valueState;

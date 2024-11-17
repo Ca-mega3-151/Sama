@@ -39,7 +39,8 @@ export interface Props
 }
 
 /**
- * `SingleDayPicker` is a component that allows users to select a single day, with optional time components.
+ * SingleDayPicker component extends the functionality of the Ant Design DatePicker component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design DatePicker component.
  *
  * @param {Props} props - The properties for the RangeDayPicker component.
  * @param {string} [props.className] - Custom CSS class for the date picker.
@@ -82,7 +83,7 @@ export const SingleDayPicker: FC<Props> = ({
   valueVariant = 'uncontrolled-state',
   size,
 }: Props) => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const [valueState, setValueState] = useState(value ? dayjs(value) : undefined);
   const isMounted = useIsMounted();
 
@@ -121,7 +122,7 @@ export const SingleDayPicker: FC<Props> = ({
   }, [value?.valueOf()]);
 
   const mergedValueState: Dayjs | undefined = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return undefined;
     }
     if (valueVariant === 'controlled-state') {

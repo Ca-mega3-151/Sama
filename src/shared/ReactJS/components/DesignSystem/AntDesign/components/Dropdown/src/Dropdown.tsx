@@ -40,7 +40,8 @@ export interface Divider {
   type: 'divider';
 }
 
-export interface Props extends Pick<AntDropdownProps, 'children' | 'className' | 'trigger' | 'arrow'> {
+export interface Props
+  extends Pick<AntDropdownProps, 'children' | 'className' | 'trigger' | 'arrow' | 'open' | 'onOpenChange'> {
   /** The menu items to be displayed. */
   items?: Item[];
   /** The icon for expanding the menu items. */
@@ -67,6 +68,8 @@ export interface Props extends Pick<AntDropdownProps, 'children' | 'className' |
  * @param {string[]} [props.trigger] - The trigger mode of the dropdown.
  * @param {string | number} [props.menuMaxHeight] - The maximum height for the dropdown menu; makes the menu scrollable if content exceeds this height.
  * @param {UIEventHandler<HTMLDivElement>} [props.onMenuScroll] - Function that gets called when the dropdown menu is scrolled.
+ * @param {Function} [props.onOpenChange] - Function that gets called when the dropdown's open state is changed.
+ * @param {boolean} [props.open] - Whether the dropdown menu is currently open.
  * @returns {ReactNode} The rendered Dropdown component.
  */
 export const Dropdown = ({
@@ -79,6 +82,8 @@ export const Dropdown = ({
   footer,
   menuMaxHeight,
   onMenuScroll,
+  onOpenChange,
+  open,
 }: Props): ReactNode => {
   useInitializeContext();
   const { token } = theme.useToken();
@@ -117,6 +122,8 @@ export const Dropdown = ({
 
   return (
     <AntDropdown
+      onOpenChange={onOpenChange}
+      open={open}
       children={children}
       destroyPopupOnHide
       arrow={arrow}

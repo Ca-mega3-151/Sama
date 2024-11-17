@@ -1,6 +1,6 @@
 # Overview
 
-A customizable switch component that extends the functionality of the Ant Design Switch component by providing additional customization options and support for stricter type safety.
+The `Switch` component extends the functionality of the Ant Design Switch component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Switch component.
 
 # Props
 

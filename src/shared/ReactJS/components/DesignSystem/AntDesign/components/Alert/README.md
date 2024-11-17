@@ -1,6 +1,6 @@
 # Overview
 
-The `Alert` component extends the functionality of the Ant Design Alert component by providing additional customization and support for stricter type safety. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Alert component.
+The `Alert` component extends the functionality of the Ant Design Alert component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Alert component.
 
 # Props
 
@@ -12,6 +12,7 @@ The `Alert` component extends the functionality of the Ant Design Alert componen
 | message     | `ReactNode` | -         | Main message content of the alert.           |
 | description | `ReactNode` | -         | Additional description content of the alert. |
 | icon        | `ReactNode` | -         | Custom icon for the alert.                   |
+| action      | `ReactNode` | -         | The action of Alert.                         |
 
 # Usage
 

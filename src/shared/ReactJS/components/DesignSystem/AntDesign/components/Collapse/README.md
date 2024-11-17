@@ -1,6 +1,6 @@
 # Overview
 
-The `Collapse` component extends the functionality of the Ant Design Collapse component by providing additional customization and support for stricter type safety. It allows for controlled or uncontrolled states and provides a flexible API for handling multiple panels.
+The `Collapse` component extends the functionality of the Ant Design Collapse component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Collapse component.
 
 # Props
 

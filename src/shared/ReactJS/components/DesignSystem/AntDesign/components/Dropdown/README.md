@@ -15,6 +15,8 @@ The `Dropdown` component extends the functionality of the Ant Design Dropdown co
 | trigger       | `string[]`                       | -       | The trigger mode of the dropdown.                                                                  |
 | menuMaxHeight | `string \| number`               | -       | The maximum height of the dropdown menu. Makes the menu scrollable if content exceeds this height. |
 | onMenuScroll  | `UIEventHandler<HTMLDivElement>` | -       | Callback function that is triggered when the menu is scrolled.                                     |
+| onOpenChange  | `Function`                       | -       | Callback function that is triggered when the dropdown's open state is changed.                     |
+| open          | `boolean`                        | -       | Whether the dropdown menu is currently open.                                                       |
 
 # Usage
 

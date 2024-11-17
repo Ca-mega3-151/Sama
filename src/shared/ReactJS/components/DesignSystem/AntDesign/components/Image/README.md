@@ -1,6 +1,6 @@
 # Overview
 
-The `Image` component extends the functionality of the Ant Design Image component by providing additional customization options and support for stricter type safety.
+The `Image` component extends the functionality of the Ant Design Image component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Image component.
 
 # Props
 

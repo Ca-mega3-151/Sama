@@ -1,6 +1,6 @@
 # Overview
 
-The `Carousel` component extends the functionality of the Ant Design Carousel component by providing additional customization and support for stricter type safety. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Carousel component.
+The `Carousel` component extends the functionality of the Ant Design Carousel component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Carousel component.
 
 # Props
 

@@ -1,6 +1,6 @@
 # Overview
 
-The Pagination component extends the functionality of the Ant Design Pagination component by providing additional customization and support for stricter type safety.
+The `Pagination` component extends the functionality of the Ant Design Pagination component. It ensures that all props are type-checked more rigorously compared to the standard Ant Design Pagination component.
 
 # Props
 

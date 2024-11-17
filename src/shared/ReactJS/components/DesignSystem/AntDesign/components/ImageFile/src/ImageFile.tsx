@@ -13,7 +13,7 @@ export interface Props<FileResponse extends { src: string }> {
 }
 
 /**
- * ImageFile component renders a single image file and provides functionality to delete the file.
+ * ImageFile component is designed to display and manage an individual image file within upload components.
  *
  * @param {Object} props - The properties for the ImageFile component.
  * @param {UploadFileState<{ src: string }>} props.fileState - The state of the image file being managed.

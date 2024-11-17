@@ -1,10 +1,11 @@
 import { SelectProps as AntSelectProps, Select } from 'antd';
 import classNames from 'classnames';
 import { isEmpty } from 'ramda';
-import { FC, MouseEvent, ReactNode, useMemo, useState } from 'react';
+import { FC, MouseEvent, ReactNode, useState } from 'react';
 import { useDeepCompareEffect, useDeepCompareMemo, useIsMounted } from '../../../../../../hooks';
 import { Loading } from '../../../../../UI';
 import { useInitializeContext } from '../../../base';
+import { Divider } from '../../Divider';
 import './css/SelectMultiple.css';
 import { Option } from './types/Option';
 import { OptionValueType } from './types/OptionValueType';
@@ -48,6 +49,8 @@ export interface Props<ValueType extends OptionValueType, RawData = any>
   readOnly?: boolean;
   /** Determines if the select is controlled or uncontrolled state. */
   valueVariant?: 'controlled-state' | 'uncontrolled-state';
+  /** The footer to be displayed at the bottom of the select's dropdown. */
+  footer?: ReactNode;
 }
 
 /**
@@ -79,7 +82,7 @@ export interface Props<ValueType extends OptionValueType, RawData = any>
  * @param {Function} [props.onSearch] - Callback function that is triggered when the search input value changes.
  * @param {string} [props.size] - The size of input.
  * @param {string} [props.showSearch] - Whether select is searchable.
-
+ * @param {ReactNode} [props.footer] - The footer to be displayed at the bottom of the select's dropdown.
  * @returns {ReactNode} The rendered SelectMultiple component.
  */
 export const SelectMultiple = <ValueType extends OptionValueType = OptionValueType, RawData = any>({
@@ -104,8 +107,9 @@ export const SelectMultiple = <ValueType extends OptionValueType = OptionValueTy
   valueVariant = 'uncontrolled-state',
   size,
   showSearch = true,
+  footer,
 }: Props<ValueType, RawData>): ReactNode => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const [valueState, setValueState] = useState(value);
   const isMounted = useIsMounted();
 
@@ -134,18 +138,14 @@ export const SelectMultiple = <ValueType extends OptionValueType = OptionValueTy
     );
   };
 
-  const options_ = useMemo(() => {
-    return options.filter(item => !item.hidden);
-  }, [options]);
-
   const mergedValueState = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return undefined;
     }
     return valueVariant === 'controlled-state' ? value : valueState;
   }, [value, valueState, isMounted, valueVariant]);
-  const mergedOpenState = useMemo(() => {
-    if (!isMounted) {
+  const mergedOpenState = useDeepCompareMemo(() => {
+    if (initializeContext?.isSSR && !isMounted) {
       return false;
     }
     return open;
@@ -173,9 +173,25 @@ export const SelectMultiple = <ValueType extends OptionValueType = OptionValueTy
       searchValue={searchValue}
       loading={loading}
       tabIndex={readOnly ? -1 : undefined}
+      options={options}
       onChange={handleChange as AntSelectProps<ValueType[], Option<ValueType, RawData>>['onChange']}
       value={mergedValueState}
-      options={loading ? [] : options_}
+      dropdownRender={menu => {
+        if (loading) {
+          return <>{renderLoadingAtDropdown({})}</>;
+        }
+        return (
+          <>
+            {menu}
+            {footer && (
+              <div className="AntSelectMultiple__footerContainer">
+                <Divider className="AntSelectMultiple__footerDivider" />
+                <div className="AntSelectMultiple__footerContent">{footer}</div>
+              </div>
+            )}
+          </>
+        );
+      }}
     />
   );
 };

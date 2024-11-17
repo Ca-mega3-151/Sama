@@ -39,8 +39,8 @@ export interface Props
 }
 
 /**
- * Input component that extends the functionality of the Ant Design Input component
- * by providing additional customization and support for stricter type safety.
+ * Input component that extends the functionality of the Ant Design Input component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Input component.
  *
  * @param {Props} props - The properties for the Input component.
  * @param {ReactNode} [props.addonAfter] - The element to display on the right side of the input field.
@@ -81,7 +81,7 @@ export const Input: FC<Props> = ({
   showCount = false,
   mode = 'takeAll',
 }) => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
   const [valueState, setValueState] = useState(value);
   const { value: valueStateDebounced, clearTimeout } = useDebouncedValue(valueState, { timeoutMs: 300 });
@@ -130,8 +130,8 @@ export const Input: FC<Props> = ({
   }, [valueStateDebounced]);
 
   const mergedValueState = useDeepCompareMemo(() => {
-    if (!isMounted) {
-      return undefined;
+    if (initializeContext?.isSSR && !isMounted) {
+      return '';
     }
     return valueVariant === 'controlled-state' ? value : valueState;
   }, [value, valueState, isMounted, valueVariant]);

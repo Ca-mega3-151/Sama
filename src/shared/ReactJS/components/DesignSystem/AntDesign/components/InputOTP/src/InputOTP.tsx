@@ -26,8 +26,8 @@ export interface Props extends Pick<AntInputProps, 'disabled' | 'formatter' | 'm
 }
 
 /**
- * InputOTP component extends the functionality of the Ant Design OTP Input component
- * by providing additional customization and support for stricter type safety.
+ * InputOTP component extends the functionality of the Ant Design OTP component.
+ * It ensures that all props are type-checked more rigorously compared to the standard Ant Design OTP component.
  *
  * @param {Props} props - The properties for the InputOTP component.
  * @param {string} [props.className] - Custom CSS class for styling the input field.
@@ -54,7 +54,7 @@ export const InputOTP: FC<Props> = ({
   valueVariant = 'uncontrolled-state',
   size,
 }) => {
-  useInitializeContext();
+  const initializeContext = useInitializeContext();
   const isMounted = useIsMounted();
   const [valueState, setValueState] = useState<string | undefined>(value);
 
@@ -80,7 +80,7 @@ export const InputOTP: FC<Props> = ({
   }, [value]);
 
   const mergedValueState = useDeepCompareMemo(() => {
-    if (!isMounted) {
+    if (initializeContext?.isSSR && !isMounted) {
       return undefined;
     }
     return valueVariant === 'controlled-state' ? value : valueState;

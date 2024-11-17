@@ -39,8 +39,7 @@ export interface Props
 }
 
 /**
- * Carousel component that extends the functionality of the Ant Design Carousel component
- * by providing additional customization and support for stricter type safety.
+ * Carousel component extends the functionality of the Ant Design Carousel component.
  * It ensures that all props are type-checked more rigorously compared to the standard Ant Design Carousel component.
  *
  * @param {Props} props - The properties for the Carousel component.
