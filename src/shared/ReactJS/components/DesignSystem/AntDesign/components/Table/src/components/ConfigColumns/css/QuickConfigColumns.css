@@ -1,0 +1,63 @@
+.AntTableQuickConfigColumns__container {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.AntTableQuickConfigColumns__settingsViewTrigger {
+  cursor: pointer;
+  font-size: var(--yy-font-size-xl);
+}
+
+.AntTableQuickConfigColumns__settingsViewContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.AntTableQuickConfigColumns__settingsViewContentHeader {
+  align-items: center;
+  display: flex;
+  gap: 4px;
+  justify-content: space-between;
+  padding: var(--yy-popover-inner-padding);
+  padding-bottom: 0px;
+}
+
+.AntTableQuickConfigColumns__listColumns {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 196px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.AntTableQuickConfigColumns__columnItem {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  min-width: 180px;
+}
+
+.AntTableQuickConfigColumns__columnItem--invisible {
+  opacity: 0.3;
+}
+
+.AntTableQuickConfigColumns__columnInfo {
+  align-items: center;
+  display: flex;
+  flex-basis: auto;
+  flex-grow: 1;
+  flex-shrink: 1;
+  gap: 4px;
+}
+
+.AntTableQuickConfigColumns__columnName {
+  margin-bottom: 2px;
+}
+
+.AntTableQuickConfigColumns__popover .yy-popover-inner {
+  overflow: hidden;
+  padding: 0px !important;
+}
