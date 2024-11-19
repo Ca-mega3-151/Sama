@@ -1,29 +1,27 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { DeleteClassesActionResponse, action as actionDeleteClasses } from './_dashboard.classes.$id.delete';
 
-import { EditClassesActionResponse, action as actionEditClasses } from './_dashboard.classes.api.$id.edit';
+import { DeleteServiceActionResponse, action as actionDeleteService } from './_dashboard.service.$id.delete';
+import { EditServiceActionResponse, action as actionEditService } from './_dashboard.service.api.$id.edit';
+import { CreateServiceActionResponse, action as actionCreateService } from './_dashboard.service.api.create';
 
-import { CreateClassesActionResponse, action as actionCreateClasses } from './_dashboard.classes.api.create';
-
-import { ClassesWithModalBaseUrl } from './constants/BaseUrl';
+import { ServiceWithModalBaseUrl } from './constants/BaseUrl';
 import { ModalConfirmDelete } from '~/components/ModalConfirmDelete';
 import { ModalWithI18n } from '~/components/ModalWithI18n';
 import { PageErrorBoundary } from '~/components/PageErrorBoundary';
-import { TypedResponse } from '~/overrides/remix';
-import { json, useFetcher, useLoaderData, LoaderFunctionArgs } from '~/overrides/remix';
+import { LoaderFunctionArgs, TypedResponse, json, useFetcher, useLoaderData } from '~/overrides/remix';
 import { useListingData } from '~/overrides/RemixJS/client';
 import { SimpleListingResponse } from '~/overrides/RemixJS/types';
 import { i18nServer } from '~/packages/_Common/I18n/i18n.server';
-import { ClassesFormMutation } from '~/packages/Classes/components/FormMutation/FormMutation';
-import { ClassesFormSearchNFilter } from '~/packages/Classes/components/Listing/FormSearchNFilter';
-import { ClassesListingHeader } from '~/packages/Classes/components/Listing/ListingHeader';
-import { ClassesListingTable } from '~/packages/Classes/components/Listing/ListingTable';
-import { Classes } from '~/packages/Classes/models/Classes';
-import { getClasses } from '~/packages/Classes/services/getClasses';
-import { ClassesListingSearchParams } from '~/packages/Classes/types/ListingSearchParams';
-import { ClassesModelToDefaultValuesOfFormMutation } from '~/packages/Classes/utils/ClassesModelToDefaultValuesOfFormMutation';
-import { classesLisitngUrlSearchParamsUtils } from '~/packages/Classes/utils/listingUrlSearchParams';
+import { ServiceFormMutation } from '~/packages/Services/components/FormMutation/FormMutation';
+import { ServiceFormSearchNFilter } from '~/packages/Services/components/Listing/FormSearchNFilter';
+import { ServiceListingHeader } from '~/packages/Services/components/Listing/ListingHeader';
+import { ServiceListingTable } from '~/packages/Services/components/Listing/ListingTable';
+import { Services } from '~/packages/Services/models/Services';
+import { getService } from '~/packages/Services/services/getServices';
+import { ServiceListingSearchParams } from '~/packages/Services/types/ListingSearchParams';
+import { serviceLisitngUrlSearchParamsUtils } from '~/packages/Services/utils/listingUrlSearchParams';
+import { ServicesModelToDefaultValuesOfFormMutation } from '~/packages/Services/utils/ServiceModelToDefaultValuesOfFormMutation';
 import { RecordsPerPage } from '~/services/constants/RecordsPerPage';
 import { getTableSortOrderMappingToServiceSort } from '~/services/utils/TableSortOrderMappingToServiceSort';
 import { notification } from '~/shared/ReactJS';
@@ -35,12 +33,12 @@ import { preventRevalidateOnListingPage } from '~/utils/functions/preventRevalid
 
 export const loader = async (
   remixRequest: LoaderFunctionArgs,
-): Promise<TypedResponse<SimpleListingResponse<Classes>>> => {
+): Promise<TypedResponse<SimpleListingResponse<Services>>> => {
   const { request } = remixRequest;
-  const t = await i18nServer.getFixedT(request, ['common', 'classes']);
-  const { page = 1, pageSize = RecordsPerPage, search, name } = classesLisitngUrlSearchParamsUtils.decrypt(request);
+  const t = await i18nServer.getFixedT(request, ['common', 'service']);
+  const { page = 1, pageSize = RecordsPerPage, search, name } = serviceLisitngUrlSearchParamsUtils.decrypt(request);
   try {
-    const response = await getClasses({
+    const response = await getService({
       remixRequest,
       page,
       pageSize,
@@ -75,28 +73,28 @@ export const loader = async (
   }
 };
 
-const FormCreate = 'FormCreateClasses';
-const FormUpdate = 'FormUpdateClasses';
+const FormCreate = 'FormCreateService';
+const FormUpdate = 'FormUpdateService';
 export const Page = () => {
-  const { t } = useTranslation(['classes']);
+  const { t } = useTranslation(['service']);
 
   //#region Listing
-  const paramsInUrl = classesLisitngUrlSearchParamsUtils.decrypt(
-    classesLisitngUrlSearchParamsUtils.getUrlSearchParams().toString(),
+  const paramsInUrl = serviceLisitngUrlSearchParamsUtils.decrypt(
+    serviceLisitngUrlSearchParamsUtils.getUrlSearchParams().toString(),
   );
   const fetcherData = useFetcher<typeof loader>();
   const loaderData = useLoaderData<typeof loader>();
 
-  const handleRequest = (params: ClassesListingSearchParams) => {
-    const searchParamsToLoader = classesLisitngUrlSearchParamsUtils.encrypt({
+  const handleRequest = (params: ServiceListingSearchParams) => {
+    const searchParamsToLoader = serviceLisitngUrlSearchParamsUtils.encrypt({
       ...paramsInUrl,
       ...params,
     });
-    fetcherData.load('/classes' + searchParamsToLoader);
+    fetcherData.load('/service' + searchParamsToLoader);
     updateURLSearchParamsOfBrowserWithoutNavigation(searchParamsToLoader);
   };
 
-  const { data, isFetchingList } = useListingData<Classes>({
+  const { data, isFetchingList } = useListingData<Services>({
     fetcherData: fetcherData,
     loaderData: loaderData,
     getNearestPageAvailable: page => handleRequest({ page }),
@@ -104,42 +102,42 @@ export const Page = () => {
   //#endregion
 
   //#region Delete
-  const deleteClassesFetcher = useFetcher<typeof actionDeleteClasses>();
+  const deleteServiceFetcher = useFetcher<typeof actionDeleteService>();
 
   const isDeleting = useMemo(() => {
-    return deleteClassesFetcher.state === 'loading' || deleteClassesFetcher.state === 'submitting';
-  }, [deleteClassesFetcher]);
-  const [isOpenModalDeleteClasses, setIsOpenModalDeleteClasses] = useState<Classes | false>(false);
+    return deleteServiceFetcher.state === 'loading' || deleteServiceFetcher.state === 'submitting';
+  }, [deleteServiceFetcher]);
+  const [isOpenModalDeleteService, setIsOpenModalDeleteService] = useState<Services | false>(false);
 
   const handleDelete = () => {
-    if (!isOpenModalDeleteClasses) {
+    if (!isOpenModalDeleteService) {
       return;
     }
-    deleteClassesFetcher.submit({}, { method: 'DELETE', action: `/classes/${isOpenModalDeleteClasses._id}/delete` });
+    deleteServiceFetcher.submit({}, { method: 'DELETE', action: `/service/${isOpenModalDeleteService._id}/delete` });
   };
 
   useEffect(() => {
-    if (deleteClassesFetcher.data && deleteClassesFetcher.state === 'idle') {
-      const response = deleteClassesFetcher.data as DeleteClassesActionResponse;
+    if (deleteServiceFetcher.data && deleteServiceFetcher.state === 'idle') {
+      const response = deleteServiceFetcher.data as DeleteServiceActionResponse;
       if (response.hasError) {
         notification.error({
-          message: t('classes:delete_error'),
+          message: t('service:delete_error'),
           description: handleGetMessageToToast(t, response),
         });
       } else {
-        notification.success({ message: t('classes:delete_success') });
+        notification.success({ message: t('service:delete_success') });
         handleRequest({});
-        setIsOpenModalDeleteClasses(false);
+        setIsOpenModalDeleteService(false);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deleteClassesFetcher.state]);
+  }, [deleteServiceFetcher.state]);
   //#endregion
 
   //#region Create
-  const createServiceFetcher = useFetcher<typeof actionCreateClasses>();
+  const createServiceFetcher = useFetcher<typeof actionCreateService>();
 
-  const [isOpenModalCreateCLasses, setIsOpenModalCreateClasses] = useState(false);
+  const [isOpenModalCreateService, setIsOpenModalCreateService] = useState(false);
 
   const isCreating = useMemo(() => {
     return createServiceFetcher.state === 'loading' || createServiceFetcher.state === 'submitting';
@@ -147,19 +145,19 @@ export const Page = () => {
 
   useEffect(() => {
     if (createServiceFetcher.data && createServiceFetcher.state === 'idle') {
-      const response = createServiceFetcher.data as CreateClassesActionResponse;
+      const response = createServiceFetcher.data as CreateServiceActionResponse;
       if (response.hasError) {
         notification.error({
-          message: t('classes:create_error').toString(),
+          message: t('service:create_error').toString(),
           description: handleGetMessageToToast(t, response),
         });
       } else {
         notification.success({
-          message: t('classes:create_success').toString(),
+          message: t('service:create_success').toString(),
           description: '',
         });
         handleRequest({});
-        setIsOpenModalCreateClasses(false);
+        setIsOpenModalCreateService(false);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -168,45 +166,45 @@ export const Page = () => {
   //#endregion
 
   //#region Edit
-  const editClassesFetcher = useFetcher<typeof actionEditClasses>();
+  const editServiceFetcher = useFetcher<typeof actionEditService>();
 
-  const [isOpenModalEditClasses, setIsOpenModalEditClasses] = useState<Classes | null>(null);
+  const [isOpenModalEditService, setIsOpenModalEditService] = useState<Services | null>(null);
 
   const isEdting = useMemo(() => {
-    return editClassesFetcher.state === 'loading' || editClassesFetcher.state === 'submitting';
+    return editServiceFetcher.state === 'loading' || editServiceFetcher.state === 'submitting';
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editClassesFetcher]);
+  }, [editServiceFetcher]);
 
   useEffect(() => {
-    if (editClassesFetcher.data && editClassesFetcher.state === 'idle') {
-      const response = editClassesFetcher.data as EditClassesActionResponse;
+    if (editServiceFetcher.data && editServiceFetcher.state === 'idle') {
+      const response = editServiceFetcher.data as EditServiceActionResponse;
       if (response.hasError) {
         notification.error({
-          message: t('classes:edit_error').toString(),
+          message: t('service:edit_error').toString(),
           description: handleGetMessageToToast(t, response),
         });
       } else {
         notification.success({
-          message: t('classes:edit_success').toString(),
+          message: t('service:edit_success').toString(),
           description: '',
         });
         handleRequest({});
-        setIsOpenModalEditClasses(null);
+        setIsOpenModalEditService(null);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editClassesFetcher.state]);
+  }, [editServiceFetcher.state]);
   //#endregion
 
   // #region
-  const [selectedRecordsState, setSelectedRecordsState] = useState<Classes[]>([]);
+  const [selectedRecordsState, setSelectedRecordsState] = useState<Services[]>([]);
   // #endregion
 
   return (
     <>
       <div className="flex h-full flex-col">
-        <ClassesListingHeader creatable onCreate={() => setIsOpenModalCreateClasses(true)} />
-        <ClassesFormSearchNFilter
+        <ServiceListingHeader creatable onCreate={() => setIsOpenModalCreateService(true)} />
+        <ServiceFormSearchNFilter
           containerClassName="justify-end mb-1"
           searchValue={paramsInUrl.search?.toString()}
           formFilterValues={{
@@ -222,7 +220,7 @@ export const Page = () => {
           }}
           onSearch={value => handleRequest({ page: 1, search: value })}
         />
-        <ClassesListingTable
+        <ServiceListingTable
           offsetHeader={84}
           selectedRecordsState={selectedRecordsState}
           setSelectedRecordsState={setSelectedRecordsState}
@@ -232,28 +230,28 @@ export const Page = () => {
           totalRecords={data?.info.pagination.totalRecords}
           dataSource={data?.info.hits}
           onPaginationChange={({ page }) => handleRequest({ page })}
-          onDelete={data => setIsOpenModalDeleteClasses(data)}
-          onEdit={record => setIsOpenModalEditClasses(record)}
+          onDelete={data => setIsOpenModalDeleteService(data)}
+          onEdit={record => setIsOpenModalEditService(record)}
         />
       </div>
       <ModalWithI18n
         openVariant="controlled-state"
-        open={!!isOpenModalCreateCLasses}
-        onCancel={() => setIsOpenModalCreateClasses(false)}
+        open={!!isOpenModalCreateService}
+        onCancel={() => setIsOpenModalCreateService(false)}
         onOk={() => undefined}
-        title={t('classes:create_title')}
-        okText={t('classes:create')}
+        title={t('service:create_title')}
+        okText={t('service:create')}
         okButtonProps={{ htmlType: 'submit', form: FormCreate }}
         confirmLoading={isCreating}
       >
-        <ClassesFormMutation
+        <ServiceFormMutation
           fieldsError={createServiceFetcher.data?.fieldsError}
           uid={FormCreate}
-          defaultValues={ClassesModelToDefaultValuesOfFormMutation({ classes: undefined })}
+          defaultValues={ServicesModelToDefaultValuesOfFormMutation({ service: undefined })}
           onSubmit={values => {
             createServiceFetcher.submit(fetcherFormData.encrypt(values), {
               method: 'post',
-              action: `${ClassesWithModalBaseUrl}/api/create`,
+              action: `${ServiceWithModalBaseUrl}/api/create`,
             });
           }}
           isSubmiting={isCreating}
@@ -261,24 +259,24 @@ export const Page = () => {
       </ModalWithI18n>
       <ModalWithI18n
         openVariant="controlled-state"
-        open={!!isOpenModalEditClasses}
-        onCancel={() => setIsOpenModalEditClasses(null)}
+        open={!!isOpenModalEditService}
+        onCancel={() => setIsOpenModalEditService(null)}
         onOk={() => undefined}
-        title={t('classes:edit_title').toString()}
-        okText={t('classes:save')}
+        title={t('service:edit_title').toString()}
+        okText={t('service:save')}
         okButtonProps={{ htmlType: 'submit', form: FormUpdate }}
         confirmLoading={isEdting}
       >
-        <ClassesFormMutation
-          fieldsError={editClassesFetcher.data?.fieldsError}
+        <ServiceFormMutation
+          fieldsError={editServiceFetcher.data?.fieldsError}
           uid={FormUpdate}
-          defaultValues={ClassesModelToDefaultValuesOfFormMutation({
-            classes: isOpenModalEditClasses ?? undefined,
+          defaultValues={ServicesModelToDefaultValuesOfFormMutation({
+            service: isOpenModalEditService ?? undefined,
           })}
           onSubmit={values => {
-            editClassesFetcher.submit(fetcherFormData.encrypt(values), {
+            editServiceFetcher.submit(fetcherFormData.encrypt(values), {
               method: 'put',
-              action: `${ClassesWithModalBaseUrl}/api/${isOpenModalEditClasses?._id}/edit`,
+              action: `${ServiceWithModalBaseUrl}/api/${isOpenModalEditService?._id}/edit`,
             });
           }}
           isSubmiting={isEdting}
@@ -286,11 +284,11 @@ export const Page = () => {
       </ModalWithI18n>
       <ModalConfirmDelete
         openVariant="controlled-state"
-        open={!!isOpenModalDeleteClasses}
-        onCancel={() => setIsOpenModalDeleteClasses(false)}
+        open={!!isOpenModalDeleteService}
+        onCancel={() => setIsOpenModalDeleteService(false)}
         onOk={handleDelete}
-        title={t('classes:delete_title')}
-        description={t('classes:delete_description')}
+        title={t('service:delete_title')}
+        description={t('service:delete_description')}
         loading={isDeleting}
       />
     </>

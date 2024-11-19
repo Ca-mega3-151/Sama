@@ -1,12 +1,12 @@
-import { ClassesWithModalBaseUrl } from './constants/BaseUrl';
+import { ServiceWithModalBaseUrl } from './constants/BaseUrl';
 import type { ActionFunctionArgs, TypedResponse } from '~/overrides/remix';
 import { json, redirect } from '~/overrides/remix';
 import { deleteClass } from '~/packages/Classes/services/deleteClass';
 import { SimpleActionResponse } from '~/types/SimpleActionResponse';
 import { handleCatchClauseAsSimpleResponse } from '~/utils/functions/handleErrors/handleCatchClauseSimple';
 
-export type DeleteClassesActionResponse = SimpleActionResponse<undefined, undefined>;
-export const action = async (remixRequest: ActionFunctionArgs): Promise<TypedResponse<DeleteClassesActionResponse>> => {
+export type DeleteServiceActionResponse = SimpleActionResponse<undefined, undefined>;
+export const action = async (remixRequest: ActionFunctionArgs): Promise<TypedResponse<DeleteServiceActionResponse>> => {
   const { params } = remixRequest;
   try {
     if (params['id']) {
@@ -17,7 +17,7 @@ export const action = async (remixRequest: ActionFunctionArgs): Promise<TypedRes
         info: undefined,
       });
     }
-    return redirect(ClassesWithModalBaseUrl);
+    return redirect(ServiceWithModalBaseUrl);
   } catch (error) {
     return handleCatchClauseAsSimpleResponse(error);
   }

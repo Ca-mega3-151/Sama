@@ -1,8 +1,13 @@
-export const ClassesLocales = {
+export const CustomersLocales = {
   en: {
-    Classes: 'Classes',
-    code: 'Code',
-    name: 'Fare Class',
+    Customers: 'Customers',
+    code: 'Brand Code',
+    firstName: 'First Name',
+    lastName: 'Last Name',
+    phone: 'Phone Number',
+    email: 'Email Address',
+    address: 'Address',
+    totals: 'Total Sales',
     status: 'Status',
     updated_by: 'Updated By',
     updated_at: 'Updated At',

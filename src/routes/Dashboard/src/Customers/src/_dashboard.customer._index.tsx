@@ -1,29 +1,27 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { DeleteClassesActionResponse, action as actionDeleteClasses } from './_dashboard.classes.$id.delete';
 
-import { EditClassesActionResponse, action as actionEditClasses } from './_dashboard.classes.api.$id.edit';
+import { DeleteCustomerActionResponse, action as actionDeleteCustomer } from './_dashboard.customer.$id.delete';
+import { EditCustomerActionResponse, action as actionEditCustomer } from './_dashboard.customer.api.$id.edit';
+import { CreateCustomerActionResponse, action as actionCreateCustomer } from './_dashboard.customer.api.create';
 
-import { CreateClassesActionResponse, action as actionCreateClasses } from './_dashboard.classes.api.create';
-
-import { ClassesWithModalBaseUrl } from './constants/BaseUrl';
+import { CustomerWithModalBaseUrl } from './constants/BaseUrl';
 import { ModalConfirmDelete } from '~/components/ModalConfirmDelete';
 import { ModalWithI18n } from '~/components/ModalWithI18n';
 import { PageErrorBoundary } from '~/components/PageErrorBoundary';
-import { TypedResponse } from '~/overrides/remix';
-import { json, useFetcher, useLoaderData, LoaderFunctionArgs } from '~/overrides/remix';
+import { LoaderFunctionArgs, TypedResponse, json, useFetcher, useLoaderData } from '~/overrides/remix';
 import { useListingData } from '~/overrides/RemixJS/client';
 import { SimpleListingResponse } from '~/overrides/RemixJS/types';
 import { i18nServer } from '~/packages/_Common/I18n/i18n.server';
-import { ClassesFormMutation } from '~/packages/Classes/components/FormMutation/FormMutation';
-import { ClassesFormSearchNFilter } from '~/packages/Classes/components/Listing/FormSearchNFilter';
-import { ClassesListingHeader } from '~/packages/Classes/components/Listing/ListingHeader';
-import { ClassesListingTable } from '~/packages/Classes/components/Listing/ListingTable';
-import { Classes } from '~/packages/Classes/models/Classes';
-import { getClasses } from '~/packages/Classes/services/getClasses';
-import { ClassesListingSearchParams } from '~/packages/Classes/types/ListingSearchParams';
-import { ClassesModelToDefaultValuesOfFormMutation } from '~/packages/Classes/utils/ClassesModelToDefaultValuesOfFormMutation';
-import { classesLisitngUrlSearchParamsUtils } from '~/packages/Classes/utils/listingUrlSearchParams';
+import { CustomerFormMutation } from '~/packages/Customers/components/FormMutation/FormMutation';
+import { CustomerFormSearchNFilter } from '~/packages/Customers/components/Listing/FormSearchNFilter';
+import { CustomerListingHeader } from '~/packages/Customers/components/Listing/ListingHeader';
+import { CustomerListingTable } from '~/packages/Customers/components/Listing/ListingTable';
+import { Customers } from '~/packages/Customers/models/Customers';
+import { getCustomers } from '~/packages/Customers/services/getCustomers';
+import { CustomerListingSearchParams } from '~/packages/Customers/types/ListingSearchParams';
+import { CustomerModelToDefaultValuesOfFormMutation } from '~/packages/Customers/utils/CustomerModelToDefaultValuesOfFormMutation';
+import { customerLisitngUrlSearchParamsUtils } from '~/packages/Customers/utils/listingUrlSearchParams';
 import { RecordsPerPage } from '~/services/constants/RecordsPerPage';
 import { getTableSortOrderMappingToServiceSort } from '~/services/utils/TableSortOrderMappingToServiceSort';
 import { notification } from '~/shared/ReactJS';
@@ -35,21 +33,26 @@ import { preventRevalidateOnListingPage } from '~/utils/functions/preventRevalid
 
 export const loader = async (
   remixRequest: LoaderFunctionArgs,
-): Promise<TypedResponse<SimpleListingResponse<Classes>>> => {
+): Promise<TypedResponse<SimpleListingResponse<Customers>>> => {
   const { request } = remixRequest;
-  const t = await i18nServer.getFixedT(request, ['common', 'classes']);
-  const { page = 1, pageSize = RecordsPerPage, search, name } = classesLisitngUrlSearchParamsUtils.decrypt(request);
+  const t = await i18nServer.getFixedT(request, ['common', 'customer']);
+  const {
+    page = 1,
+    pageSize = RecordsPerPage,
+    search,
+    firstName,
+  } = customerLisitngUrlSearchParamsUtils.decrypt(request);
   try {
-    const response = await getClasses({
+    const response = await getCustomers({
       remixRequest,
       page,
       pageSize,
       searcher: {
-        name: { operator: 'contains', value: search },
-        code: { operator: 'contains', value: search },
+        firstName: { operator: 'contains', value: search },
+        lastName: { operator: 'contains', value: search },
       },
       sorter: {
-        name: getTableSortOrderMappingToServiceSort(name),
+        firstName: getTableSortOrderMappingToServiceSort(firstName),
       },
     });
 
@@ -75,28 +78,28 @@ export const loader = async (
   }
 };
 
-const FormCreate = 'FormCreateClasses';
-const FormUpdate = 'FormUpdateClasses';
+const FormCreate = 'FormCreateCustomers';
+const FormUpdate = 'FormUpdateCustomers';
 export const Page = () => {
-  const { t } = useTranslation(['classes']);
+  const { t } = useTranslation(['customer']);
 
   //#region Listing
-  const paramsInUrl = classesLisitngUrlSearchParamsUtils.decrypt(
-    classesLisitngUrlSearchParamsUtils.getUrlSearchParams().toString(),
+  const paramsInUrl = customerLisitngUrlSearchParamsUtils.decrypt(
+    customerLisitngUrlSearchParamsUtils.getUrlSearchParams().toString(),
   );
   const fetcherData = useFetcher<typeof loader>();
   const loaderData = useLoaderData<typeof loader>();
 
-  const handleRequest = (params: ClassesListingSearchParams) => {
-    const searchParamsToLoader = classesLisitngUrlSearchParamsUtils.encrypt({
+  const handleRequest = (params: CustomerListingSearchParams) => {
+    const searchParamsToLoader = customerLisitngUrlSearchParamsUtils.encrypt({
       ...paramsInUrl,
       ...params,
     });
-    fetcherData.load('/classes' + searchParamsToLoader);
+    fetcherData.load('/customer' + searchParamsToLoader);
     updateURLSearchParamsOfBrowserWithoutNavigation(searchParamsToLoader);
   };
 
-  const { data, isFetchingList } = useListingData<Classes>({
+  const { data, isFetchingList } = useListingData<Customers>({
     fetcherData: fetcherData,
     loaderData: loaderData,
     getNearestPageAvailable: page => handleRequest({ page }),
@@ -104,42 +107,42 @@ export const Page = () => {
   //#endregion
 
   //#region Delete
-  const deleteClassesFetcher = useFetcher<typeof actionDeleteClasses>();
+  const deleteCustomerFetcher = useFetcher<typeof actionDeleteCustomer>();
 
   const isDeleting = useMemo(() => {
-    return deleteClassesFetcher.state === 'loading' || deleteClassesFetcher.state === 'submitting';
-  }, [deleteClassesFetcher]);
-  const [isOpenModalDeleteClasses, setIsOpenModalDeleteClasses] = useState<Classes | false>(false);
+    return deleteCustomerFetcher.state === 'loading' || deleteCustomerFetcher.state === 'submitting';
+  }, [deleteCustomerFetcher]);
+  const [isOpenModalDeleteCustomer, setIsOpenModalDeleteCustomer] = useState<Customers | false>(false);
 
   const handleDelete = () => {
-    if (!isOpenModalDeleteClasses) {
+    if (!isOpenModalDeleteCustomer) {
       return;
     }
-    deleteClassesFetcher.submit({}, { method: 'DELETE', action: `/classes/${isOpenModalDeleteClasses._id}/delete` });
+    deleteCustomerFetcher.submit({}, { method: 'DELETE', action: `/customer/${isOpenModalDeleteCustomer._id}/delete` });
   };
 
   useEffect(() => {
-    if (deleteClassesFetcher.data && deleteClassesFetcher.state === 'idle') {
-      const response = deleteClassesFetcher.data as DeleteClassesActionResponse;
+    if (deleteCustomerFetcher.data && deleteCustomerFetcher.state === 'idle') {
+      const response = deleteCustomerFetcher.data as DeleteCustomerActionResponse;
       if (response.hasError) {
         notification.error({
-          message: t('classes:delete_error'),
+          message: t('customer:delete_error'),
           description: handleGetMessageToToast(t, response),
         });
       } else {
-        notification.success({ message: t('classes:delete_success') });
+        notification.success({ message: t('customer:delete_success') });
         handleRequest({});
-        setIsOpenModalDeleteClasses(false);
+        setIsOpenModalDeleteCustomer(false);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deleteClassesFetcher.state]);
+  }, [deleteCustomerFetcher.state]);
   //#endregion
 
   //#region Create
-  const createServiceFetcher = useFetcher<typeof actionCreateClasses>();
+  const createServiceFetcher = useFetcher<typeof actionCreateCustomer>();
 
-  const [isOpenModalCreateCLasses, setIsOpenModalCreateClasses] = useState(false);
+  const [isOpenModalCreateCustomer, setIsOpenModalCreateCustomer] = useState(false);
 
   const isCreating = useMemo(() => {
     return createServiceFetcher.state === 'loading' || createServiceFetcher.state === 'submitting';
@@ -147,19 +150,19 @@ export const Page = () => {
 
   useEffect(() => {
     if (createServiceFetcher.data && createServiceFetcher.state === 'idle') {
-      const response = createServiceFetcher.data as CreateClassesActionResponse;
+      const response = createServiceFetcher.data as CreateCustomerActionResponse;
       if (response.hasError) {
         notification.error({
-          message: t('classes:create_error').toString(),
+          message: t('customer:create_error').toString(),
           description: handleGetMessageToToast(t, response),
         });
       } else {
         notification.success({
-          message: t('classes:create_success').toString(),
+          message: t('customer:create_success').toString(),
           description: '',
         });
         handleRequest({});
-        setIsOpenModalCreateClasses(false);
+        setIsOpenModalCreateCustomer(false);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -168,45 +171,45 @@ export const Page = () => {
   //#endregion
 
   //#region Edit
-  const editClassesFetcher = useFetcher<typeof actionEditClasses>();
+  const editCustomerFetcher = useFetcher<typeof actionEditCustomer>();
 
-  const [isOpenModalEditClasses, setIsOpenModalEditClasses] = useState<Classes | null>(null);
+  const [isOpenModalEditCustomer, setIsOpenModalEditCustomer] = useState<Customers | null>(null);
 
   const isEdting = useMemo(() => {
-    return editClassesFetcher.state === 'loading' || editClassesFetcher.state === 'submitting';
+    return editCustomerFetcher.state === 'loading' || editCustomerFetcher.state === 'submitting';
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editClassesFetcher]);
+  }, [editCustomerFetcher]);
 
   useEffect(() => {
-    if (editClassesFetcher.data && editClassesFetcher.state === 'idle') {
-      const response = editClassesFetcher.data as EditClassesActionResponse;
+    if (editCustomerFetcher.data && editCustomerFetcher.state === 'idle') {
+      const response = editCustomerFetcher.data as EditCustomerActionResponse;
       if (response.hasError) {
         notification.error({
-          message: t('classes:edit_error').toString(),
+          message: t('customer:edit_error').toString(),
           description: handleGetMessageToToast(t, response),
         });
       } else {
         notification.success({
-          message: t('classes:edit_success').toString(),
+          message: t('customer:edit_success').toString(),
           description: '',
         });
         handleRequest({});
-        setIsOpenModalEditClasses(null);
+        setIsOpenModalEditCustomer(null);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editClassesFetcher.state]);
+  }, [editCustomerFetcher.state]);
   //#endregion
 
   // #region
-  const [selectedRecordsState, setSelectedRecordsState] = useState<Classes[]>([]);
+  const [selectedRecordsState, setSelectedRecordsState] = useState<Customers[]>([]);
   // #endregion
 
   return (
     <>
       <div className="flex h-full flex-col">
-        <ClassesListingHeader creatable onCreate={() => setIsOpenModalCreateClasses(true)} />
-        <ClassesFormSearchNFilter
+        <CustomerListingHeader creatable onCreate={() => setIsOpenModalCreateCustomer(true)} />
+        <CustomerFormSearchNFilter
           containerClassName="justify-end mb-1"
           searchValue={paramsInUrl.search?.toString()}
           formFilterValues={{
@@ -222,7 +225,7 @@ export const Page = () => {
           }}
           onSearch={value => handleRequest({ page: 1, search: value })}
         />
-        <ClassesListingTable
+        <CustomerListingTable
           offsetHeader={84}
           selectedRecordsState={selectedRecordsState}
           setSelectedRecordsState={setSelectedRecordsState}
@@ -232,28 +235,28 @@ export const Page = () => {
           totalRecords={data?.info.pagination.totalRecords}
           dataSource={data?.info.hits}
           onPaginationChange={({ page }) => handleRequest({ page })}
-          onDelete={data => setIsOpenModalDeleteClasses(data)}
-          onEdit={record => setIsOpenModalEditClasses(record)}
+          onDelete={data => setIsOpenModalDeleteCustomer(data)}
+          onEdit={record => setIsOpenModalEditCustomer(record)}
         />
       </div>
       <ModalWithI18n
         openVariant="controlled-state"
-        open={!!isOpenModalCreateCLasses}
-        onCancel={() => setIsOpenModalCreateClasses(false)}
+        open={!!isOpenModalCreateCustomer}
+        onCancel={() => setIsOpenModalCreateCustomer(false)}
         onOk={() => undefined}
-        title={t('classes:create_title')}
-        okText={t('classes:create')}
+        title={t('customer:create_title')}
+        okText={t('customer:create')}
         okButtonProps={{ htmlType: 'submit', form: FormCreate }}
         confirmLoading={isCreating}
       >
-        <ClassesFormMutation
+        <CustomerFormMutation
           fieldsError={createServiceFetcher.data?.fieldsError}
           uid={FormCreate}
-          defaultValues={ClassesModelToDefaultValuesOfFormMutation({ classes: undefined })}
+          defaultValues={CustomerModelToDefaultValuesOfFormMutation({ customer: undefined })}
           onSubmit={values => {
             createServiceFetcher.submit(fetcherFormData.encrypt(values), {
               method: 'post',
-              action: `${ClassesWithModalBaseUrl}/api/create`,
+              action: `${CustomerWithModalBaseUrl}/api/create`,
             });
           }}
           isSubmiting={isCreating}
@@ -261,24 +264,24 @@ export const Page = () => {
       </ModalWithI18n>
       <ModalWithI18n
         openVariant="controlled-state"
-        open={!!isOpenModalEditClasses}
-        onCancel={() => setIsOpenModalEditClasses(null)}
+        open={!!isOpenModalEditCustomer}
+        onCancel={() => setIsOpenModalEditCustomer(null)}
         onOk={() => undefined}
-        title={t('classes:edit_title').toString()}
-        okText={t('classes:save')}
+        title={t('customer:edit_title').toString()}
+        okText={t('customer:save')}
         okButtonProps={{ htmlType: 'submit', form: FormUpdate }}
         confirmLoading={isEdting}
       >
-        <ClassesFormMutation
-          fieldsError={editClassesFetcher.data?.fieldsError}
+        <CustomerFormMutation
+          fieldsError={editCustomerFetcher.data?.fieldsError}
           uid={FormUpdate}
-          defaultValues={ClassesModelToDefaultValuesOfFormMutation({
-            classes: isOpenModalEditClasses ?? undefined,
+          defaultValues={CustomerModelToDefaultValuesOfFormMutation({
+            customer: isOpenModalEditCustomer ?? undefined,
           })}
           onSubmit={values => {
-            editClassesFetcher.submit(fetcherFormData.encrypt(values), {
+            editCustomerFetcher.submit(fetcherFormData.encrypt(values), {
               method: 'put',
-              action: `${ClassesWithModalBaseUrl}/api/${isOpenModalEditClasses?._id}/edit`,
+              action: `${CustomerWithModalBaseUrl}/api/${isOpenModalEditCustomer?._id}/edit`,
             });
           }}
           isSubmiting={isEdting}
@@ -286,11 +289,11 @@ export const Page = () => {
       </ModalWithI18n>
       <ModalConfirmDelete
         openVariant="controlled-state"
-        open={!!isOpenModalDeleteClasses}
-        onCancel={() => setIsOpenModalDeleteClasses(false)}
+        open={!!isOpenModalDeleteCustomer}
+        onCancel={() => setIsOpenModalDeleteCustomer(false)}
         onOk={handleDelete}
-        title={t('classes:delete_title')}
-        description={t('classes:delete_description')}
+        title={t('customer:delete_title')}
+        description={t('customer:delete_description')}
         loading={isDeleting}
       />
     </>

@@ -1,13 +1,12 @@
 import { BellOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 import { isEmpty, range } from 'ramda';
-import { FC, UIEventHandler, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, UIEventHandler, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { io, Socket } from 'socket.io-client';
 import { v4 } from 'uuid';
 import { SessionData } from '~/packages/_Common/Auth/models/SessionData';
-import { Badge, Button, Dropdown, DropdownItem, Empty, Loading, notification } from '~/shared/ReactJS';
-import { humanizeTimeago, isBrowser } from '~/shared/Utilities';
+import { Badge, Button, Dropdown, DropdownItem, Empty, Loading } from '~/shared/ReactJS';
+import { humanizeTimeago } from '~/shared/Utilities';
 
 enum NotificationEvent {
   CREATE_SOMETHING = 'CREATE_SOMETHING',
@@ -22,7 +21,7 @@ interface NotificationItem {
 interface Props {
   sessionData: SessionData;
 }
-export const Notification: FC<Props> = ({ sessionData }) => {
+export const Notification: FC<Props> = () => {
   const { t } = useTranslation(['dashboard_layout', 'common']);
 
   //#region Listing
@@ -156,51 +155,51 @@ export const Notification: FC<Props> = ({ sessionData }) => {
   //#endregion
 
   //#region Socket
-  const connectionRef = useRef<Socket | null>(null);
+  // const connectionRef = useRef<Socket | null>(null);
 
-  const handleOffTopics = () => {
-    Object.values(NotificationEvent).forEach(topic => {
-      connectionRef.current?.off(topic);
-    });
-  };
+  // const handleOffTopics = () => {
+  //   Object.values(NotificationEvent).forEach(topic => {
+  //     connectionRef.current?.off(topic);
+  //   });
+  // };
 
-  useEffect(() => {
-    if (isBrowser() && sessionData?.accessToken) {
-      connectionRef.current = io('SOCKET_API', {
-        forceNew: true,
-        reconnection: true,
-        autoConnect: true,
-      });
+  // useEffect(() => {
+  //   if (isBrowser() && sessionData?.accessToken) {
+  //     connectionRef.current = io('SOCKET_API', {
+  //       forceNew: true,
+  //       reconnection: true,
+  //       autoConnect: true,
+  //     });
 
-      connectionRef.current?.on('connect', () => {
-        console.log('Connected');
-        connectionRef.current?.emit('identify', sessionData?.accessToken);
-      });
-      connectionRef.current?.on('disconnect', () => {
-        console.log('Disconnected');
-        handleOffTopics();
-      });
+  //     connectionRef.current?.on('connect', () => {
+  //       console.log('Connected');
+  //       connectionRef.current?.emit('identify', sessionData?.accessToken);
+  //     });
+  //     connectionRef.current?.on('disconnect', () => {
+  //       console.log('Disconnected');
+  //       handleOffTopics();
+  //     });
 
-      Object.values(NotificationEvent).forEach(topic => {
-        connectionRef.current?.on(topic, (data: NotificationItem) => {
-          setListingDataState(state => ({
-            ...state,
-            unreadCount: state.unreadCount + 1,
-            totalRecords: state.totalRecords + 1,
-            items: [data, ...state.items],
-          }));
-          notification.info({
-            message: t('dashboard_layout:have_new_notification'),
-            description: data.content,
-          });
-        });
-      });
-    }
-    return () => {
-      connectionRef.current?.disconnect();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sessionData]);
+  //     Object.values(NotificationEvent).forEach(topic => {
+  //       connectionRef.current?.on(topic, (data: NotificationItem) => {
+  //         setListingDataState(state => ({
+  //           ...state,
+  //           unreadCount: state.unreadCount + 1,
+  //           totalRecords: state.totalRecords + 1,
+  //           items: [data, ...state.items],
+  //         }));
+  //         notification.info({
+  //           message: t('dashboard_layout:mark_all_as_read'),
+  //           description: data.content,
+  //         });
+  //       });
+  //     });
+  //   }
+  //   return () => {
+  //     connectionRef.current?.disconnect();
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [sessionData]);
   //#endregion
 
   const dropdownItems: DropdownItem[] = useMemo(() => {

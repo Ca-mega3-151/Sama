@@ -6,6 +6,9 @@ import BrandingFullFeaturesRoutes from './src/BrandingFullFeaturesRoutes';
 import BrandingStandardWithModalRoutes from './src/BrandingStandardWithModal';
 import BrandingStandardWithPageRoutes from './src/BrandingStandardWithPage';
 import BrandingWithDeferRoutes from './src/BrandingWithDeferRoutes';
+import ClassesWithModalRoutes from './src/Classes';
+import CustomerWithModalRoutes from './src/Customers';
+import ServiceWithModalRoutes from './src/Service';
 
 export const DashboardRoutes: RouteObject[] = [
   {
@@ -26,6 +29,9 @@ export const DashboardRoutes: RouteObject[] = [
       ...BrandingWithDeferRoutes,
       ...BrandingStandardWithModalRoutes,
       ...BrandingStandardWithPageRoutes,
+      ...ClassesWithModalRoutes,
+      ...CustomerWithModalRoutes,
+      ...ServiceWithModalRoutes,
     ],
   },
 ];

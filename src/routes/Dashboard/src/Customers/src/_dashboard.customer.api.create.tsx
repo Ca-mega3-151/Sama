@@ -3,35 +3,38 @@ import { PageErrorBoundary } from '~/components/PageErrorBoundary';
 import { json } from '~/overrides/remix';
 import { validateFormData } from '~/overrides/remix-hook-form';
 import { i18nServer } from '~/packages/_Common/I18n/i18n.server';
-import {
-  ClassesFormMutationProps,
-  ClassesFormMutationValues,
-} from '~/packages/Classes/components/FormMutation/FormMutation';
 import { getFormMutationResolver } from '~/packages/Classes/components/FormMutation/zodResolver';
-import { Classes } from '~/packages/Classes/models/Classes';
-import { createClass } from '~/packages/Classes/services/createClass';
-import { classesFormMutationValuesToCreateClassesService } from '~/packages/Classes/utils/classesFormMutationValuesToCreateClassesService';
+import {
+  CustomerFormMutationProps,
+  CustomerFormMutationValues,
+} from '~/packages/Customers/components/FormMutation/FormMutation';
+import { Customers } from '~/packages/Customers/models/Customers';
+import { createCustomer } from '~/packages/Customers/services/createCustomer';
+
+import { customerFormMutationValuesToCreateCustomersService } from '~/packages/Customers/utils/customerFormMutationValuesToCreateCustomersService';
 import { SimpleActionResponse } from '~/types/SimpleActionResponse';
 import { fetcherFormData } from '~/utils/functions/formData/fetcherFormData';
 import { handleCatchClauseAsSimpleResponse } from '~/utils/functions/handleErrors/handleCatchClauseSimple';
 import { handleFormResolverError } from '~/utils/functions/handleErrors/handleFormResolverError';
 
-export type CreateClassesActionResponse = SimpleActionResponse<
-  Pick<Classes, '_id'>,
-  ClassesFormMutationProps['fieldsError']
+export type CreateCustomerActionResponse = SimpleActionResponse<
+  Pick<Customers, '_id'>,
+  CustomerFormMutationProps['fieldsError']
 >;
-export const action = async (remixRequest: ActionFunctionArgs): Promise<TypedResponse<CreateClassesActionResponse>> => {
+export const action = async (
+  remixRequest: ActionFunctionArgs,
+): Promise<TypedResponse<CreateCustomerActionResponse>> => {
   const { request } = remixRequest;
   try {
-    const t = await i18nServer.getFixedT(request, ['common', 'branding'] as const);
-    const { errors, data } = await validateFormData<ClassesFormMutationValues>(
+    const t = await i18nServer.getFixedT(request, ['common', 'customer'] as const);
+    const { errors, data } = await validateFormData<CustomerFormMutationValues>(
       await fetcherFormData.decrypt(request),
       getFormMutationResolver(t),
     );
     if (data) {
-      await createClass({
+      await createCustomer({
         remixRequest,
-        data: classesFormMutationValuesToCreateClassesService(data),
+        data: customerFormMutationValuesToCreateCustomersService(data),
       });
 
       return json({

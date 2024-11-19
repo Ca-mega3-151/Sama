@@ -6,6 +6,8 @@ export const DashboardLayoutLocales = {
     branding_standard_with_modal: 'Branding Standard With Modal',
     branding_standard_with_page: 'Branding Standard With Page',
     classes: 'Classes',
+    customer: 'Customer',
+    service: 'Service',
     logout: 'Logout',
     profile: 'Profile',
     mark_all_as_read: 'Đọc tất cả',

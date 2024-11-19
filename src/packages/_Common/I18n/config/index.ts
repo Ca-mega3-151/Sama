@@ -10,6 +10,8 @@ import { Page500Locales } from './locales/page500';
 import { BrandingLocales } from '~/packages/Branding/locales/branding';
 import { BrandingStandardLocales } from '~/packages/BrandingStandard/locales/brandingStandard';
 import { ClassesLocales } from '~/packages/Classes/locales/classes';
+import { CustomersLocales } from '~/packages/Customers/locales/customer';
+import { ServicesLocales } from '~/packages/Services/locales/services';
 import { getPublicEnv } from '~/utils/functions/getPublicEnv';
 
 // This is the list of languages your application supports
@@ -37,6 +39,8 @@ const resources = {
     dashboard_layout: DashboardLayoutLocales.en,
     dashboard: DashboardLocales.en,
     classes: ClassesLocales.en,
+    customer: CustomersLocales.en,
+    service: ServicesLocales.en,
   },
   fr: {
     translation: {},

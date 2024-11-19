@@ -7,6 +7,8 @@ import { BrandingStandardWithModalBaseUrl } from '~/routes/Dashboard/src/Brandin
 import { BrandingStandardWithPageBaseUrl } from '~/routes/Dashboard/src/BrandingStandardWithPage/src/constants/BaseUrl';
 import { BrandingWithDeferBaseUrl } from '~/routes/Dashboard/src/BrandingWithDeferRoutes/src/constants/BaseUrl';
 import { ClassesWithModalBaseUrl } from '~/routes/Dashboard/src/Classes/src/constants/BaseUrl';
+import { CustomerWithModalBaseUrl } from '~/routes/Dashboard/src/Customers/src/constants/BaseUrl';
+import { ServiceWithModalBaseUrl } from '~/routes/Dashboard/src/Service/src/constants/BaseUrl';
 import { MenuVerticalProps } from '~/shared/ReactJS';
 
 export const useGetNavData = () => {
@@ -51,6 +53,18 @@ export const useGetNavData = () => {
         icon: <StarOutlined />,
         label: t('dashboard_layout:classes'),
         onClick: () => navigate(ClassesWithModalBaseUrl),
+      },
+      {
+        key: CustomerWithModalBaseUrl,
+        icon: <StarOutlined />,
+        label: t('dashboard_layout:customer'),
+        onClick: () => navigate(CustomerWithModalBaseUrl),
+      },
+      {
+        key: ServiceWithModalBaseUrl,
+        icon: <StarOutlined />,
+        label: t('dashboard_layout:service'),
+        onClick: () => navigate(ServiceWithModalBaseUrl),
       },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
