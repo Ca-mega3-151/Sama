@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
 import { RouteObject } from 'react-router-dom';
-import * as EditCustomerWithModal from './src/_dashboard.customer.$id.edit';
-import * as DeleteCustomerWithModal from './src/_dashboard.customer.api.$id.delete';
-import * as CreateCustomerWithModal from './src/_dashboard.customer.create';
+import * as DeleteCustomerWithModal from './src/_dashboard.customer.$id.delete';
+import * as EditCustomerWithModal from './src/_dashboard.customer.api.$id.edit';
+import * as CreateCustomerWithModal from './src/_dashboard.customer.api.create';
 import { CustomerWithModalBaseUrl } from './src/constants/BaseUrl';
 
 const CustomerWithModalRoutes: RouteObject[] = [

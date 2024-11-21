@@ -3,11 +3,12 @@ import { PageErrorBoundary } from '~/components/PageErrorBoundary';
 import { json } from '~/overrides/remix';
 import { validateFormData } from '~/overrides/remix-hook-form';
 import { i18nServer } from '~/packages/_Common/I18n/i18n.server';
-import { getFormMutationResolver } from '~/packages/Classes/components/FormMutation/zodResolver';
+
 import {
   CustomerFormMutationProps,
   CustomerFormMutationValues,
 } from '~/packages/Customers/components/FormMutation/FormMutation';
+import { getFormMutationResolver } from '~/packages/Customers/components/FormMutation/zodResolver';
 import { Customers } from '~/packages/Customers/models/Customers';
 import { createCustomer } from '~/packages/Customers/services/createCustomer';
 
