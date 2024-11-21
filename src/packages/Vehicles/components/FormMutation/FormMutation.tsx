@@ -14,10 +14,10 @@ import { DeepPartial, FormMutationStateValues } from '~/shared/TypescriptUtiliti
 
 export type VehiclesFormMutationValues = TypeOf<ReturnType<typeof getFormMutationSchema>>;
 export type VehiclesFormMutationStateValues = FormMutationStateValues<VehiclesFormMutationValues>;
-
 const onChange: DatePickerProps<Dayjs[]>['onChange'] = (date, dateString) => {
   console.log(date, dateString);
 };
+
 export interface VehiclesFormMutationProps {
   uid: string;
   isSubmiting: boolean;

@@ -13,6 +13,10 @@ export interface Vehicles {
   expiryTechnicalVisitDate: string;
   insuranceExpiryDate: string;
   totalSeats: number;
+  seat: {
+    fare: string;
+    statusFare: FareClass;
+  };
   __v: 0;
 }
 

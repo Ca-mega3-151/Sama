@@ -52,7 +52,7 @@ const UpcomingDeparture = () => {
       </div>
       <div className="space-y-4">
         {departures.map((departure, index) => (
-          <div key={index} className="flex items-start rounded-lg border border-gray-200 bg-gray-50 p-4">
+          <div key={index} className="mt-3 flex items-start rounded-lg border border-gray-400 bg-gray-100 p-4">
             <img src={departure.image} alt={departure.bus} className="mr-4 h-16 w-20 rounded-lg object-cover" />
             <div className="flex-1">
               <div className="mb-2 flex items-center justify-between">
