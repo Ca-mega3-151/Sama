@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { action as actionDeleteBranding, DeleteVehiclesActionResponse } from './_dashboard.vehicle.$id.delete';
+import { action as actionDeleteVehicle, DeleteVehiclesActionResponse } from './_dashboard.vehicle.api.$id.delete';
 import { VehiclesWithPageBaseUrl } from './constants/BaseUrl';
 import { ModalConfirmDelete } from '~/components/ModalConfirmDelete';
 import { PageErrorBoundary } from '~/components/PageErrorBoundary';
@@ -87,7 +87,7 @@ export const Page = () => {
   //#endregion
 
   //#region Delete
-  const deleteVehiclesFetcher = useFetcher<typeof actionDeleteBranding>();
+  const deleteVehiclesFetcher = useFetcher<typeof actionDeleteVehicle>();
 
   const isDeleting = useMemo(() => {
     return deleteVehiclesFetcher.state === 'loading' || deleteVehiclesFetcher.state === 'submitting';

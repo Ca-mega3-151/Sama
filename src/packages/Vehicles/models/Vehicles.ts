@@ -15,3 +15,10 @@ export interface Vehicles {
   totalSeats: number;
   __v: 0;
 }
+
+export interface FareClass {
+  vvip: number;
+  vip: number;
+  business: number;
+  oridinary: number;
+}

@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
 import { RouteObject } from 'react-router-dom';
-import * as DeleteVehiclesWithPage from './src/_dashboard.vehicle.$id.delete';
-import * as EditVehiclesWithPage from './src/_dashboard.vehicle.api.$id.edit';
-import * as CreateVehiclesWithPage from './src/_dashboard.vehicle.api.create';
+import * as EditVehiclesWithPage from './src/_dashboard.vehicle.$id.edit';
+import * as DeleteVehiclesWithPage from './src/_dashboard.vehicle.api.$id.delete';
+import * as CreateVehiclesWithPage from './src/_dashboard.vehicle.create';
 import { VehiclesWithPageBaseUrl } from './src/constants/BaseUrl';
 
 const VehiclesdWithPageRoutes: RouteObject[] = [
@@ -38,7 +38,7 @@ const VehiclesdWithPageRoutes: RouteObject[] = [
     errorElement: <CreateVehiclesWithPage.ErrorBoundary />,
   },
   {
-    path: `${VehiclesWithPageBaseUrl}/$id/delete`,
+    path: `${VehiclesWithPageBaseUrl}/api/:id/delete`,
     action: DeleteVehiclesWithPage.action,
   },
 ];

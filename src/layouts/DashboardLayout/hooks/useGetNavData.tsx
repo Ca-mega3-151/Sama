@@ -1,6 +1,10 @@
-import { HomeOutlined, StarOutlined } from '@ant-design/icons';
+import { HomeOutlined } from '@ant-design/icons';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { IconClass } from '~/components/Icons/IconClass';
+import { IconCustomer } from '~/components/Icons/IconCustomer';
+import { IconService } from '~/components/Icons/IconService';
+import { IconVehicle } from '~/components/Icons/IconVehicle';
 import { useLocation, useNavigate } from '~/overrides/remix';
 // import { BrandingFullFeaturesBaseUrl } from '~/routes/Dashboard/src/BrandingFullFeaturesRoutes/src/constants/BaseUrl';
 // import { BrandingStandardWithModalBaseUrl } from '~/routes/Dashboard/src/BrandingStandardWithModal/src/constants/BaseUrl';
@@ -51,25 +55,25 @@ export const useGetNavData = () => {
       // },
       {
         key: ClassesWithModalBaseUrl,
-        icon: <StarOutlined />,
+        icon: <IconClass />,
         label: t('dashboard_layout:classes'),
         onClick: () => navigate(ClassesWithModalBaseUrl),
       },
       {
         key: CustomerWithModalBaseUrl,
-        icon: <StarOutlined />,
+        icon: <IconCustomer />,
         label: t('dashboard_layout:customer'),
         onClick: () => navigate(CustomerWithModalBaseUrl),
       },
       {
         key: ServiceWithModalBaseUrl,
-        icon: <StarOutlined />,
+        icon: <IconService />,
         label: t('dashboard_layout:service'),
         onClick: () => navigate(ServiceWithModalBaseUrl),
       },
       {
         key: VehiclesWithPageBaseUrl,
-        icon: <StarOutlined />,
+        icon: <IconVehicle />,
         label: t('dashboard_layout:vehicles'),
         onClick: () => navigate(VehiclesWithPageBaseUrl),
       },
