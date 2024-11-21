@@ -1,21 +1,24 @@
-import { Customers } from '../models/Customers';
+import { Vehicles } from '../models/Vehicles';
+import { CreateVehicle } from './createVehicle';
 import { ActionFunctionArgs, LoaderFunctionArgs } from '~/overrides/remix';
 import { ResponseDetailSuccess } from '~/services/types/Response';
 
-export interface GetCustomer {
+export interface UpdateVehicle {
   remixRequest?: LoaderFunctionArgs | ActionFunctionArgs;
-  data: {
-    _id: Customers['_id'];
+  data: CreateVehicle['data'] & {
+    _id: Vehicles['_id'];
   };
 }
 
-type ResponseData = Customers;
+interface ResponseData {}
 
-export const getCustomer = async (_: GetCustomer) => {
+export const updateVehicle = async (_: UpdateVehicle) => {
   // const fetchApi = await getFetchApiInstance(remixRequest);
 
   // const response = await fetchApi.request<ResponseDetailSuccess<ResponseData> | ResponseFailure>({
   //   // url: `/merchants/category/classes/${data._id}`,
+  //   // method: 'PUT',
+  //   data,
   // }).axiosPromise;
 
   // if (isResponseError(response)) {
@@ -25,17 +28,7 @@ export const getCustomer = async (_: GetCustomer) => {
 
   const response: ResponseDetailSuccess<ResponseData> = {
     code: 0,
-    data: {
-      _id: 'GqsbNgZT',
-      firstName: 'Zvcds',
-      lastName: 'Oqtsbnl',
-      phone: '+99-493-9268',
-      email: 'zvcds.oqtsbnl@example.com',
-      address: '198 qiafN Street, wveVCdG, bBaOPM',
-      total: 2382,
-      __v: 0,
-    },
+    data: {},
   };
-
   return response;
 };

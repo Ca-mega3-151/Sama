@@ -83,7 +83,7 @@ export const CustomerFormMutation = forwardRef<CustomerFormMutationActions, Cust
 
   return (
     <Form method="POST" id={uid} onSubmit={handleSubmit}>
-      <div className="grid grid-cols-1 gap-3">
+      <div className="grid grid-cols-2 gap-3">
         <Field withRequiredMark label={t('customer:firstName')} error={errors.firstName?.message}>
           <Input
             valueVariant="controlled-state"

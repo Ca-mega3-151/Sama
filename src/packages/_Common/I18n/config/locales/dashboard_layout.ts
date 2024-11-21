@@ -7,6 +7,7 @@ export const DashboardLayoutLocales = {
     branding_standard_with_page: 'Branding Standard With Page',
     classes: 'Classes',
     customer: 'Customer',
+    vehicles: 'Vehicles',
     service: 'Service',
     logout: 'Logout',
     profile: 'Profile',

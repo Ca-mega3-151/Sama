@@ -1,17 +1,17 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Customers } from '../../models/Customers';
-import { CustomerListingSearchParams } from '../../types/ListingSearchParams';
+import { Vehicles } from '../../models/Vehicles';
+import { VehiclesListingSearchParams } from '../../types/ListingSearchParams';
 import { ListingColumnType, ListingTable, ListingTableProps } from '~/components/Listing';
 import { TableActions } from '~/shared/ReactJS';
 import { FormQueryStateValues } from '~/shared/TypescriptUtilities';
 
-export interface SortValues extends FormQueryStateValues<CustomerListingSearchParams, 'firstName'> {}
+export interface SortValues extends FormQueryStateValues<VehiclesListingSearchParams, 'name'> {}
 
 interface Props
   extends Pick<
-    ListingTableProps<Customers>,
+    ListingTableProps<Vehicles>,
     | 'currentPage'
     | 'dataSource'
     | 'loading'
@@ -26,11 +26,13 @@ interface Props
     | 'setSelectedRecordsState'
     | 'recordSelectable'
   > {
-  onEdit: (record: Customers) => void;
-  onDelete: (record: Customers) => void;
+  onEdit: (record: Vehicles) => void;
+  onDelete: (record: Vehicles) => void;
+  onCopy: (record: Vehicles) => void;
+  onView: (record: Vehicles) => void;
 }
 
-export const CustomerListingTable = ({
+export const VehiclesListingTable = ({
   currentPage = 1,
   pageSize,
   totalRecords,
@@ -38,56 +40,48 @@ export const CustomerListingTable = ({
   onPaginationChange,
   onEdit,
   onDelete,
+  onCopy,
+  onView,
   ...props
 }: Props) => {
-  const { t } = useTranslation(['common', 'customer'] as const);
+  const { t } = useTranslation(['common', 'vehicles'] as const);
 
-  const columns: Array<ListingColumnType<Customers, keyof SortValues>> = useMemo(() => {
+  const columns: Array<ListingColumnType<Vehicles, keyof SortValues>> = useMemo(() => {
     return [
       {
-        id: 'firstName',
-        title: t('customer:firstName'),
-        width: 200,
-        render: record => {
-          return <div>{record.firstName}</div>;
-        },
+        id: 'code',
+        title: t('vehicles:code'),
+        width: 150,
+        render: record => record.code,
       },
       {
-        id: 'lastName',
-        title: t('customer:lastName'),
-        width: 200,
-        render: record => {
-          return <div>{record.lastName}</div>;
-        },
-      },
-
-      {
-        id: 'phone',
-        title: t('customer:phone'),
-        width: 200,
-        render: record => record.phone,
+        id: 'img',
+        title: t('vehicles:img'),
+        width: 130,
+        render: record => <img src={record.img} alt="img" width={100} height={50} />,
       },
       {
-        id: 'email',
-        title: t('customer:email'),
-        width: 200,
-        render: record => record.email,
+        id: 'vehicleModel',
+        title: t('vehicles:vehicleModel'),
+        width: 320,
+        render: record => record.vehicleModel,
       },
       {
-        id: 'address',
-        title: t('customer:address'),
+        id: 'RegisterNumber',
+        title: t('vehicles:registerNumber'),
         width: 200,
-        render: record => record.address,
+        render: record => record.registerNumber,
       },
       {
         id: 'total',
-        title: t('customer:total'),
-        width: 100,
-        render: record => record.total,
+        title: t('vehicles:totalSeats'),
+        width: 200,
+        render: record => record.totalSeats,
       },
+
       {
         id: 'action',
-        title: t('customer:action'),
+        title: t('vehicles:action'),
         width: 90,
         align: 'center',
         fixed: 'right',
@@ -97,14 +91,26 @@ export const CustomerListingTable = ({
               items={[
                 {
                   key: '1',
-                  label: t('customer:edit'),
+                  label: t('vehicles:content'),
+                  icon: <EditOutlined />,
+                  onClick: () => onView?.(record),
+                },
+                {
+                  key: '2',
+                  label: t('vehicles:copy'),
+                  icon: <EditOutlined />,
+                  onClick: () => onCopy?.(record),
+                },
+                {
+                  key: '3',
+                  label: t('vehicles:edit'),
                   icon: <EditOutlined />,
                   onClick: () => onEdit?.(record),
                 },
                 {
-                  key: '2',
+                  key: '4',
                   danger: true,
-                  label: <div>{t('customer:delete')}</div>,
+                  label: <div>{t('vehicles:delete')}</div>,
                   icon: <DeleteOutlined />,
                   onClick: () => onDelete?.(record),
                 },
@@ -118,7 +124,7 @@ export const CustomerListingTable = ({
   }, [t]);
 
   return (
-    <ListingTable<Customers>
+    <ListingTable<Vehicles>
       {...props}
       dataSource={dataSource}
       columns={columns}

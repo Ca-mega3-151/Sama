@@ -5,6 +5,6 @@ export interface Customers {
   phone: string;
   email: string;
   address: string;
-  totals: number;
+  total: number;
   __v: 0;
 }

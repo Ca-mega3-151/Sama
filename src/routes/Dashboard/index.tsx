@@ -9,6 +9,7 @@ import BrandingWithDeferRoutes from './src/BrandingWithDeferRoutes';
 import ClassesWithModalRoutes from './src/Classes';
 import CustomerWithModalRoutes from './src/Customers';
 import ServiceWithModalRoutes from './src/Service';
+import VehiclesdWithPageRoutes from './src/Vehicles';
 
 export const DashboardRoutes: RouteObject[] = [
   {
@@ -32,6 +33,7 @@ export const DashboardRoutes: RouteObject[] = [
       ...ClassesWithModalRoutes,
       ...CustomerWithModalRoutes,
       ...ServiceWithModalRoutes,
+      ...VehiclesdWithPageRoutes,
     ],
   },
 ];

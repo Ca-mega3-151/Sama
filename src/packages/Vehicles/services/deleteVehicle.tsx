@@ -1,41 +1,28 @@
-import { Customers } from '../models/Customers';
+import { Vehicles } from '../models/Vehicles';
 import { ActionFunctionArgs, LoaderFunctionArgs } from '~/overrides/remix';
 import { ResponseDetailSuccess } from '~/services/types/Response';
 
-export interface GetCustomer {
+interface ResponseData {}
+
+interface DeleteVehicle {
   remixRequest?: LoaderFunctionArgs | ActionFunctionArgs;
-  data: {
-    _id: Customers['_id'];
-  };
+  _id: Vehicles['_id'];
 }
-
-type ResponseData = Customers;
-
-export const getCustomer = async (_: GetCustomer) => {
+export const deleteVehicle = async (_: DeleteVehicle) => {
   // const fetchApi = await getFetchApiInstance(remixRequest);
 
   // const response = await fetchApi.request<ResponseDetailSuccess<ResponseData> | ResponseFailure>({
-  //   // url: `/merchants/category/classes/${data._id}`,
+  //   // url: `/merchants/category/classes/${_id}`,
+  //   // method: 'DELETE',
   // }).axiosPromise;
 
   // if (isResponseError(response)) {
   //   throw new ServiceException(response.data.message, response.data);
   // }
   // return response.data as ResponseDetailSuccess<ResponseData>;
-
   const response: ResponseDetailSuccess<ResponseData> = {
     code: 0,
-    data: {
-      _id: 'GqsbNgZT',
-      firstName: 'Zvcds',
-      lastName: 'Oqtsbnl',
-      phone: '+99-493-9268',
-      email: 'zvcds.oqtsbnl@example.com',
-      address: '198 qiafN Street, wveVCdG, bBaOPM',
-      total: 2382,
-      __v: 0,
-    },
+    data: {},
   };
-
   return response;
 };

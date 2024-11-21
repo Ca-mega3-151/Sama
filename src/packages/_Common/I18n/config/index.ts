@@ -12,6 +12,7 @@ import { BrandingStandardLocales } from '~/packages/BrandingStandard/locales/bra
 import { ClassesLocales } from '~/packages/Classes/locales/classes';
 import { CustomersLocales } from '~/packages/Customers/locales/customer';
 import { ServicesLocales } from '~/packages/Services/locales/services';
+import { VehiclesLocales } from '~/packages/Vehicles/locales/vehicles';
 import { getPublicEnv } from '~/utils/functions/getPublicEnv';
 
 // This is the list of languages your application supports
@@ -41,6 +42,7 @@ const resources = {
     classes: ClassesLocales.en,
     customer: CustomersLocales.en,
     service: ServicesLocales.en,
+    vehicles: VehiclesLocales.en,
   },
   fr: {
     translation: {},
