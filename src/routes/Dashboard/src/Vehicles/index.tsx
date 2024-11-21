@@ -9,7 +9,7 @@ const VehiclesdWithPageRoutes: RouteObject[] = [
   {
     path: VehiclesWithPageBaseUrl,
     lazy: async () => {
-      const module = await import('./src/_dashboard.vehicles._index');
+      const module = await import('./src/_dashboard.vehicle._index');
       return {
         loader: module.loader,
         shouldRevalidate: module.shouldRevalidate,
@@ -26,7 +26,7 @@ const VehiclesdWithPageRoutes: RouteObject[] = [
   {
     path: `${VehiclesWithPageBaseUrl}/:id/edit`,
     action: EditVehiclesWithPage.action,
-    // loader: EditVehiclesWithPage.loader,
+    loader: EditVehiclesWithPage.loader,
     element: <EditVehiclesWithPage.Page />,
     shouldRevalidate: EditVehiclesWithPage.shouldRevalidate,
     errorElement: <EditVehiclesWithPage.ErrorBoundary />,

@@ -1,21 +1,19 @@
-import { LoaderFunctionArgs } from '@remix-run/node';
-import { useActionData, useLoaderData, useNavigate, useNavigation } from '@remix-run/react';
 import { notification } from 'antd';
 import { useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { VehiclesWithPageBaseUrl } from './constants/BaseUrl';
-import type { ActionFunctionArgs, TypedResponse } from '~/overrides/remix';
+import type { ActionFunctionArgs, LoaderFunctionArgs, TypedResponse } from '~/overrides/remix';
 import { BoxFields } from '~/components/BoxFields';
 import { ModalConfirmNavigate } from '~/components/ModalConfirmNavigate';
 import { MutationFooter, MutationHeader } from '~/components/Mutation';
 import { PageErrorBoundary } from '~/components/PageErrorBoundary';
-import { json, redirect } from '~/overrides/remix';
+import { json, redirect, useActionData, useNavigate, useNavigation } from '~/overrides/remix';
 import { validateFormData } from '~/overrides/remix-hook-form';
+import { useCallbackPrompt } from '~/overrides/RemixJS/client';
 import { SimpleLoaderResponse } from '~/overrides/RemixJS/types';
 import { i18nServer } from '~/packages/_Common/I18n/i18n.server';
 import { getFormMutationResolver } from '~/packages/Classes/components/FormMutation/zodResolver';
 import {
-  VehiclesFormMutation,
   VehiclesFormMutationActions,
   VehiclesFormMutationProps,
   VehiclesFormMutationValues,
@@ -25,10 +23,7 @@ import { Vehicles } from '~/packages/Vehicles/models/Vehicles';
 import { getVehicle } from '~/packages/Vehicles/services/getVehicle';
 import { updateVehicle } from '~/packages/Vehicles/services/updateVehicle';
 import { vehiclesFormMutationValuesToCreateVehiclesService } from '~/packages/Vehicles/utils/vehicleFormMutationValuesToCreateCVehiclesService';
-import { VehiclesModelToDefaultValuesOfFormMutation } from '~/packages/Vehicles/utils/VehiclesModelToDefaultValuesOfFormMutation';
-import { useCallbackPrompt } from '~/shared/RemixJS/client';
 import { SimpleActionResponse } from '~/types/SimpleActionResponse';
-import { fetcherFormData } from '~/utils/functions/formData/fetcherFormData';
 import { handleCatchClauseAsSimpleResponse } from '~/utils/functions/handleErrors/handleCatchClauseSimple';
 import { handleFormResolverError } from '~/utils/functions/handleErrors/handleFormResolverError';
 import { handleGetMessageToToast } from '~/utils/functions/handleErrors/handleGetMessageToToast';
@@ -45,10 +40,7 @@ export const action = async (remixRequest: ActionFunctionArgs): Promise<TypedRes
   }
   try {
     const t = await i18nServer.getFixedT(request, ['common', 'vehicles'] as const);
-    const { errors, data } = await validateFormData<VehiclesFormMutationValues>(
-      await fetcherFormData.decrypt(request),
-      getFormMutationResolver(t),
-    );
+    const { errors, data } = await validateFormData<VehiclesFormMutationValues>(request, getFormMutationResolver(t));
     if (data) {
       await updateVehicle({
         remixRequest,
@@ -105,15 +97,15 @@ export const Page = () => {
   const { t } = useTranslation(['vehicles']);
 
   const navigation = useNavigation();
-  const loaderData = useLoaderData<typeof loader>();
+  // const loaderData = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
 
-  const defaultValues = useMemo(() => {
-    return VehiclesModelToDefaultValuesOfFormMutation({
-      vehicles: loaderData.info?.vehicles,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // const defaultValues = useMemo(() => {
+  //   return VehiclesModelToDefaultValuesOfFormMutation({
+  //     vehicles: loaderData.info?.vehicles,
+  //   });
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const isSubmiting = useMemo(() => {
     return navigation.state === 'loading' || navigation.state === 'submitting';
@@ -125,7 +117,7 @@ export const Page = () => {
     whenEnableForBrowser: () => {
       return !!formActionsRef.current?.isDirty();
     },
-    whenEnableForRemixRouter: ({ currentLocation, nextLocation }) => {
+    whenEnableForReactRouter: ({ currentLocation, nextLocation }) => {
       if (isReadyNavigateAfterSubmit.current) {
         return false;
       }
@@ -160,12 +152,12 @@ export const Page = () => {
       <MutationHeader title={t('vehicles:edit_title')} onBack={() => navigate(VehiclesWithPageBaseUrl)} />
       <div className="mb-4 flex-1">
         <BoxFields>
-          <VehiclesFormMutation
+          {/* <VehiclesFormMutation
             ref={formActionsRef}
             isSubmiting={isSubmiting}
             uid={FormUpdateUid}
             defaultValues={defaultValues}
-          />
+          /> */}
           <CreateTabs />
         </BoxFields>
       </div>

@@ -40,7 +40,7 @@ const CreateTabs: React.FC = () => {
     {
       key: '2',
       label: 'Seat Selection',
-      children: <SeatSelection />, // Use the SeatSelection component here
+      children: <SeatSelection />,
     },
   ];
 

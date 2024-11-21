@@ -162,7 +162,6 @@ export const Page = () => {
           onDelete={data => setIsOpenModalDeleteVehicles(data)}
           onEdit={record => navigate(`${VehiclesWithPageBaseUrl}/${record._id}/edit`)}
           onCopy={record => navigate(`${VehiclesWithPageBaseUrl}/${record._id}/copy`)}
-          onView={record => navigate(`${VehiclesWithPageBaseUrl}/${record._id}/view`)}
         />
       </div>
       <ModalConfirmDelete

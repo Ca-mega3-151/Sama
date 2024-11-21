@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { DeleteCustomerActionResponse, action as actionDeleteCustomer } from './_dashboard.customer.$id.delete';
-import { EditCustomerActionResponse, action as actionEditCustomer } from './_dashboard.customer.api.$id.edit';
-import { CreateCustomerActionResponse, action as actionCreateCustomer } from './_dashboard.customer.api.create';
+import { DeleteCustomerActionResponse, action as actionDeleteCustomer } from './_dashboard.customer.api.$id.delete';
+import { EditCustomerActionResponse, action as actionEditCustomer } from './_dashboard.customer.$id.edit';
+import { CreateCustomerActionResponse, action as actionCreateCustomer } from './_dashboard.customer.create';
 
 import { CustomerWithModalBaseUrl } from './constants/BaseUrl';
 import { ModalConfirmDelete } from '~/components/ModalConfirmDelete';

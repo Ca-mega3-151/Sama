@@ -1,1 +1,1 @@
-export const VehiclesWithPageBaseUrl = '/vehicles';
+export const VehiclesWithPageBaseUrl = '/vehicle';

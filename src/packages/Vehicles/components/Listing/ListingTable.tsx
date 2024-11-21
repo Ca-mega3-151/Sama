@@ -29,7 +29,6 @@ interface Props
   onEdit: (record: Vehicles) => void;
   onDelete: (record: Vehicles) => void;
   onCopy: (record: Vehicles) => void;
-  onView: (record: Vehicles) => void;
 }
 
 export const VehiclesListingTable = ({
@@ -41,7 +40,6 @@ export const VehiclesListingTable = ({
   onEdit,
   onDelete,
   onCopy,
-  onView,
   ...props
 }: Props) => {
   const { t } = useTranslation(['common', 'vehicles'] as const);
@@ -89,12 +87,12 @@ export const VehiclesListingTable = ({
           return (
             <TableActions
               items={[
-                {
-                  key: '1',
-                  label: t('vehicles:content'),
-                  icon: <EditOutlined />,
-                  onClick: () => onView?.(record),
-                },
+                // {
+                //   key: '1',
+                //   label: t('vehicles:content'),
+                //   icon: <EditOutlined />,
+                //   onClick: () => onView?.(record),
+                // },
                 {
                   key: '2',
                   label: t('vehicles:copy'),
