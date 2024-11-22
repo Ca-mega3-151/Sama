@@ -28,12 +28,6 @@ interface ResponseData {
   expiryTechnicalVisitDate: string;
   insuranceExpiryDate: string;
   namefare: string;
-  typeFare: {
-    vvip: number;
-    vip: number;
-    business: number;
-    oridinary: number;
-  };
 }
 
 export const createVehicle = async (_: CreateVehicle) => {
@@ -64,12 +58,6 @@ export const createVehicle = async (_: CreateVehicle) => {
       expiryTechnicalVisitDate: '1978-01-02',
       insuranceExpiryDate: '1973-11-05',
       namefare: 'respond',
-      typeFare: {
-        vvip: 180,
-        vip: 91,
-        business: 44,
-        oridinary: 30,
-      },
     },
   } as ResponseDetailSuccess<ResponseData>;
 };

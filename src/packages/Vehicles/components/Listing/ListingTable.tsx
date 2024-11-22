@@ -87,12 +87,6 @@ export const VehiclesListingTable = ({
           return (
             <TableActions
               items={[
-                // {
-                //   key: '1',
-                //   label: t('vehicles:content'),
-                //   icon: <EditOutlined />,
-                //   onClick: () => onView?.(record),
-                // },
                 {
                   key: '2',
                   label: t('vehicles:copy'),
