@@ -81,7 +81,7 @@ export const Tabs = <Key extends string>({
       items={tabs_}
       moreIcon={moreIcon}
       tabPosition={tabPosition}
-      activeKey={initializeContext?.isSSR && isMounted ? valueState : undefined}
+      activeKey={isMounted ? valueState : undefined}
       onChange={handleChange}
     />
   );

@@ -12,7 +12,7 @@ interface GetService {
   sorter: Sorter<ResponseData>;
   searcher: Searcher<ResponseData>;
 }
-export const getService = async (_: GetService): Promise<ResponseListSuccess<ResponseData>> => {
+export const getServices = async (_: GetService): Promise<ResponseListSuccess<ResponseData>> => {
   // const fetchApi = await getFetchApiInstance(remixRequest);
   // const response = await fetchApi.request<ResponseListSuccess<ResponseData> | ResponseFailure>({
   //   url: '/merchants/category/SGetService',

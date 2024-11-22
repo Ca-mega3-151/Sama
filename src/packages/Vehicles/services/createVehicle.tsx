@@ -5,11 +5,10 @@ export interface CreateVehicle {
   remixRequest?: LoaderFunctionArgs | ActionFunctionArgs;
   data: {
     vehicleBrand: string;
-    // img: string;
     vehicleModel: string;
     registrationNumber: string;
     manufacturerDate: string;
-    service: string;
+    services: string[];
     registrationDate: string;
     firstcirculationDate: string;
     expiryTechnicalVisitDate: string;
@@ -28,6 +27,13 @@ interface ResponseData {
   firstcirculationDate: string;
   expiryTechnicalVisitDate: string;
   insuranceExpiryDate: string;
+  namefare: string;
+  typeFare: {
+    vvip: number;
+    vip: number;
+    business: number;
+    oridinary: number;
+  };
 }
 
 export const createVehicle = async (_: CreateVehicle) => {
@@ -47,16 +53,23 @@ export const createVehicle = async (_: CreateVehicle) => {
   // Mocked response for demonstration purposes
   return {
     data: {
-      _id: '8a3c7337-5e07-4bfc-a32e-27967a0d1490',
-      vehicleBrand: 'Rice-Smith',
-      vehicleModel: 'Series-346',
-      registrationNumber: 'ádas',
-      manufacturerDate: '1999-03-25',
-      service: 'Brake Check',
-      registrationDate: '2022-10-05',
-      firstcirculationDate: '2021-10-24',
-      expiryTechnicalVisitDate: '2025-06-08',
-      insuranceExpiryDate: '2025-08-05',
+      _id: '66dae849-7fe0-4a7c-b49f-803c04c0c88b',
+      vehicleBrand: 'Herman, Lee and Donaldson',
+      vehicleModel: 'there',
+      registrationNumber: '197 AMR',
+      manufacturerDate: '2019-06-06',
+      service: 'Social researcher',
+      registrationDate: '1996-12-12',
+      firstcirculationDate: '2018-09-06',
+      expiryTechnicalVisitDate: '1978-01-02',
+      insuranceExpiryDate: '1973-11-05',
+      namefare: 'respond',
+      typeFare: {
+        vvip: 180,
+        vip: 91,
+        business: 44,
+        oridinary: 30,
+      },
     },
   } as ResponseDetailSuccess<ResponseData>;
 };

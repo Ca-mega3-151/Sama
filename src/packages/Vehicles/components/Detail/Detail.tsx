@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Vehicles } from '../../models/Vehicles';
 import { VehiclesModelToDefaultValuesOfFormMutation } from '../../utils/VehiclesModelToDefaultValuesOfFormMutation';
-import { VehiclesFormMutation } from '../FormMutation/FormMutation';
+import { VehicleFormMutation } from '../FormMutation/Formmutation';
 
 interface Props {
   vehicles: Vehicles;
@@ -12,5 +12,5 @@ export const BrandingStandardDetail = ({ vehicles }: Props) => {
     return VehiclesModelToDefaultValuesOfFormMutation({ vehicles });
   }, [vehicles]);
 
-  return <VehiclesFormMutation isSubmiting={false} uid="" disabled defaultValues={defaultValues} />;
+  return <VehicleFormMutation vehicles={vehicles} isSubmiting={false} uid="" disabled defaultValues={defaultValues} />;
 };

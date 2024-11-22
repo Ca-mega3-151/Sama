@@ -1,69 +1,74 @@
-import { DatePicker } from 'antd';
+import { TFunction } from 'i18next';
 import { equals } from 'ramda';
-import { forwardRef, useImperativeHandle } from 'react';
+import { Dispatch, forwardRef, SetStateAction, useImperativeHandle, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TypeOf } from 'zod';
+import { Vehicles } from '../../models/Vehicles';
+import { VehicleIfnormation } from './component/Information';
+import { SeatSelection } from './component/Seat';
 import { getFormMutationResolver, getFormMutationSchema } from './zodResolver';
-import type { DatePickerProps } from 'antd';
-import type { Dayjs } from 'dayjs';
+import { BoxFields } from '~/components/BoxFields';
 import { Form } from '~/overrides/remix';
 import { useRemixForm } from '~/overrides/remix-hook-form';
-import { Input } from '~/shared/ReactJS';
-import { Field, useDeepCompareEffect } from '~/shared/ReactJS';
-import { DeepPartial, FormMutationStateValues } from '~/shared/TypescriptUtilities';
+import { Tabs, useDeepCompareEffect } from '~/shared/ReactJS';
+import { DeepPartial, DeepUnpartial, FormMutationStateValues } from '~/shared/TypescriptUtilities';
 
-export type VehiclesFormMutationValues = TypeOf<ReturnType<typeof getFormMutationSchema>>;
-export type VehiclesFormMutationStateValues = FormMutationStateValues<VehiclesFormMutationValues>;
-const onChange: DatePickerProps<Dayjs[]>['onChange'] = (date, dateString) => {
-  console.log(date, dateString);
-};
-
-export interface VehiclesFormMutationProps {
+export interface VehicleFormMutationValues extends TypeOf<ReturnType<typeof getFormMutationSchema>> {}
+export type VehicleFormMutationStateValues = FormMutationStateValues<DeepUnpartial<VehicleFormMutationValues>>;
+export interface VehicleFormMutationProps {
   uid: string;
   isSubmiting: boolean;
-  defaultValues: VehiclesFormMutationStateValues;
-  fieldsError?: DeepPartial<Record<keyof VehiclesFormMutationValues, string>>;
-  onSubmit?: (values: VehiclesFormMutationValues) => void;
+  defaultValues: VehicleFormMutationStateValues;
+  fieldsError?: DeepPartial<Record<keyof VehicleFormMutationValues, string>>;
+  onSubmit?: (values: VehicleFormMutationValues) => void;
   disabled?: boolean;
   statusUpdatable?: boolean;
+  tabActive?: VehicleFormMutationTabKey;
+  setTabActive?: Dispatch<SetStateAction<VehicleFormMutationTabKey>>;
+  hideTabs?: boolean;
+  isEdit?: boolean;
+  vehicles: Vehicles | undefined;
 }
-
-export interface VehiclesFormMutationActions {
+export type VehicleFormMutationTabKey = 'vehicle_information' | 'seat_settings';
+export interface VehicleFormMutationActions {
   isDirty: () => boolean;
 }
-
-export const VehiclesFormMutation = forwardRef<VehiclesFormMutationActions, VehiclesFormMutationProps>((props, ref) => {
-  const { uid, defaultValues, fieldsError = {}, isSubmiting, onSubmit, disabled } = props;
+export const VehicleFormMutation = forwardRef<VehicleFormMutationActions, VehicleFormMutationProps>((props, ref) => {
+  const {
+    uid,
+    defaultValues,
+    fieldsError = {},
+    isSubmiting,
+    disabled,
+    onSubmit,
+    setTabActive,
+    tabActive,
+    isEdit = false,
+    vehicles,
+  } = props;
 
   const { t } = useTranslation(['common', 'vehicles']);
+  const [tabActiveState, setTabActiveState] = useState<VehicleFormMutationTabKey>('vehicle_information');
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const setTabActive_ = setTabActive ?? setTabActiveState;
+  const tabActive_ = tabActive ?? tabActiveState;
   const disabledField = disabled || isSubmiting;
-
-  const {
-    handleSubmit,
-    setError,
-    reset,
-    formState: { errors },
-    watch,
-    setValue,
-    trigger,
-    getValues,
-  } = useRemixForm<VehiclesFormMutationStateValues>({
+  const form = useRemixForm<VehicleFormMutationStateValues>({
     mode: 'onSubmit',
     submitHandlers: {
       onValid: onSubmit as any,
-      onInvalid: console.log,
+      onInvalid: errors => {
+        if (errors.vehicleInformation) {
+          setTabActive_('vehicle_information');
+        } else if (errors.seatSettings) {
+          setTabActive_('seat_settings');
+        }
+      },
     },
-    defaultValues: {
-      ...defaultValues,
-    },
-    resolver: getFormMutationResolver(t),
+    defaultValues,
+    resolver: getFormMutationResolver(t as TFunction<['common', 'vehicles']>),
   });
-
-  const registrationNumber = watch('registrationNumber');
-  const vehicleBrand = watch('vehicleBrand');
-  const vehicleModel = watch('vehicleModel');
-  const service = watch('service');
-
+  const { handleSubmit, setError, reset, getValues } = form;
   useDeepCompareEffect(() => {
     Object.keys(fieldsError).forEach(key => {
       const key_ = key as keyof typeof fieldsError;
@@ -74,184 +79,63 @@ export const VehiclesFormMutation = forwardRef<VehiclesFormMutationActions, Vehi
       }
     });
   }, [fieldsError]);
-
   useDeepCompareEffect(() => {
     if (defaultValues) {
       reset(defaultValues);
     }
   }, [defaultValues]);
-
   useImperativeHandle(ref, () => {
     return {
-      isDirty: () => !equals(defaultValues, getValues()),
+      isDirty: () => {
+        return !equals(defaultValues, getValues());
+      },
     };
   }, [defaultValues, getValues]);
 
+  console.log(111, tabActive_);
   return (
-    <Form method="POST" id={uid} onSubmit={handleSubmit}>
-      <div className="grid h-full grid-cols-2 gap-5">
-        <div>
-          <Field withRequiredMark label={t('vehicles:registrationNumber')} error={errors.registrationNumber?.message}>
-            <Input
-              valueVariant="controlled-state"
-              value={registrationNumber}
-              onChange={value => {
-                setValue('registrationNumber', value);
-                if (errors.registrationNumber) {
-                  trigger('registrationNumber');
-                }
-              }}
-              disabled={disabledField}
-              placeholder={t('vehicles:registrationNumber')}
-            />
-          </Field>
-          <div className="flex gap-5">
-            <div className="w-1/2">
-              <Field withRequiredMark label={t('vehicles:vehicleModel')} error={errors.vehicleModel?.message}>
-                <Input
-                  valueVariant="controlled-state"
-                  value={vehicleModel}
-                  onChange={value => {
-                    setValue('vehicleModel', value);
-                    if (errors.vehicleModel) {
-                      trigger('vehicleModel');
-                    }
-                  }}
-                  disabled={disabledField}
-                  placeholder={t('vehicles:vehicleModel')}
-                />
-              </Field>
-              <Field withRequiredMark label={t('vehicles:RegistrationDate')} error={errors.registrationDate?.message}>
-                {/* <Input
-                  valueVariant="controlled-state"
-                  value={registrationNumber}
-                  onChange={value => {
-                    setValue('registrationNumber', value);
-                    if (errors.registrationNumber) {
-                      trigger('registrationNumber');
-                    }
-                  }}
-                  disabled={disabledField}
-                  placeholder={t('vehicles:registrationNumber')}
-                /> */}
-                <DatePicker onChange={onChange} needConfirm className="w-full" />
-              </Field>
-            </div>
-            <div className="w-1/2">
-              <Field withRequiredMark label={t('vehicles:ManufactureDate')} error={errors.manufacturerDate?.message}>
-                {/* <Input
-                  valueVariant="controlled-state"
-                  value={registrationNumber}
-                  onChange={value => {
-                    setValue('registrationNumber', value);
-                    if (errors.registrationNumber) {
-                      trigger('registrationNumber');
-                    }
-                  }}
-                  disabled={disabledField}
-                  placeholder={t('vehicles:registrationNumber')}
-                /> */}
-                <DatePicker onChange={onChange} needConfirm className="w-full" />
-              </Field>
-              <Field
-                withRequiredMark
-                label={t('vehicles:FirstCirculationDate')}
-                error={errors.firstcirculationDate?.message}
-              >
-                {/* <Input
-                  valueVariant="controlled-state"
-                  value={registrationNumber}
-                  onChange={value => {
-                    setValue('registrationNumber', value);
-                    if (errors.registrationNumber) {
-                      trigger('registrationNumber');
-                    }
-                  }}
-                  disabled={disabledField}
-                  placeholder={t('vehicles:registrationNumber')}
-                /> */}
-                <DatePicker onChange={onChange} needConfirm className="w-full" />
-              </Field>
-            </div>
-          </div>
-        </div>
-        <div>
-          <Field withRequiredMark label={t('vehicles:vehicleBrand')} error={errors.vehicleBrand?.message}>
-            <Input
-              valueVariant="controlled-state"
-              value={vehicleBrand}
-              onChange={value => {
-                setValue('vehicleBrand', value);
-                if (errors.vehicleBrand) {
-                  trigger('vehicleBrand');
-                }
-              }}
-              disabled={disabledField}
-              placeholder={t('vehicles:vehicleBrand')}
-            />
-          </Field>
-          <Field withRequiredMark label={t('vehicles:service')} error={errors.service?.message}>
-            <Input
-              valueVariant="controlled-state"
-              value={service}
-              onChange={value => {
-                setValue('service', value);
-                if (errors.service) {
-                  trigger('service');
-                }
-              }}
-              disabled={disabledField}
-              placeholder={t('vehicles:service')}
-            />
-          </Field>
-          <div className="flex gap-5">
-            <div className="w-1/2">
-              <Field
-                withRequiredMark
-                label={t('vehicles:ExpiryTechnicalVisitDate')}
-                error={errors.expiryTechnicalVisitDate?.message}
-              >
-                {/* <Input
-                  valueVariant="controlled-state"
-                  value={service}
-                  onChange={value => {
-                    setValue('service', value);
-                    if (errors.service) {
-                      trigger('service');
-                    }
-                  }}
-                  disabled={disabledField}
-                  placeholder={t('vehicles:service')}
-                /> */}
-                <DatePicker onChange={onChange} needConfirm className="w-full" />
-              </Field>
-            </div>
-            <div className="w-1/2">
-              <Field
-                withRequiredMark
-                label={t('vehicles:InsuranceExpiryDate')}
-                error={errors.insuranceExpiryDate?.message}
-              >
-                {/* <Input
-                  valueVariant="controlled-state"
-                  value={vehicleBrand}
-                  onChange={value => {
-                    setValue('vehicleBrand', value);
-                    if (errors.vehicleBrand) {
-                      trigger('vehicleBrand');
-                    }
-                  }}
-                  disabled={disabledField}
-                  placeholder={t('vehicles:vehicleBrand')}
-                /> */}
-                <DatePicker width={500} onChange={onChange} needConfirm className="w-full" />
-              </Field>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Form>
+    <div>
+      <Form
+        ref={formRef}
+        method="POST"
+        id={uid}
+        onSubmit={event => {
+          event.stopPropagation();
+          handleSubmit(event);
+        }}
+        onKeyDown={event => {
+          if (event.key === 'Enter') {
+            event.preventDefault();
+          }
+        }}
+      >
+        <Tabs
+          tabActive={tabActive_}
+          onChange={value => setTabActive_(value as VehicleFormMutationTabKey)}
+          tabs={[
+            {
+              key: 'vehicle_information',
+              label: t('vehicles:information'),
+              children: (
+                <BoxFields>
+                  <VehicleIfnormation form={form} vehicles={vehicles} disabledField={disabledField} isEdit={isEdit} />
+                </BoxFields>
+              ),
+            },
+            {
+              key: 'seat_settings',
+              label: t('vehicles:seat'),
+              children: (
+                <BoxFields>
+                  <SeatSelection form={form} vehicles={vehicles} disabledField={disabledField} isEdit={isEdit} />
+                </BoxFields>
+              ),
+            },
+          ]}
+        />
+      </Form>
+    </div>
   );
 });
 
-VehiclesFormMutation.displayName = 'VehiclesFormMutation';
+VehicleFormMutation.displayName = 'VehicleFormMutation';

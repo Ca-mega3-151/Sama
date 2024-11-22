@@ -18,7 +18,7 @@ import { ServiceFormSearchNFilter } from '~/packages/Services/components/Listing
 import { ServiceListingHeader } from '~/packages/Services/components/Listing/ListingHeader';
 import { ServiceListingTable } from '~/packages/Services/components/Listing/ListingTable';
 import { Services } from '~/packages/Services/models/Services';
-import { getService } from '~/packages/Services/services/getServices';
+import { getServices } from '~/packages/Services/services/getServices';
 import { ServiceListingSearchParams } from '~/packages/Services/types/ListingSearchParams';
 import { serviceLisitngUrlSearchParamsUtils } from '~/packages/Services/utils/listingUrlSearchParams';
 import { ServicesModelToDefaultValuesOfFormMutation } from '~/packages/Services/utils/ServiceModelToDefaultValuesOfFormMutation';
@@ -38,7 +38,7 @@ export const loader = async (
   const t = await i18nServer.getFixedT(request, ['common', 'service']);
   const { page = 1, pageSize = RecordsPerPage, search, name } = serviceLisitngUrlSearchParamsUtils.decrypt(request);
   try {
-    const response = await getService({
+    const response = await getServices({
       remixRequest,
       page,
       pageSize,

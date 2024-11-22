@@ -7,23 +7,23 @@ import { BoxFields } from '~/components/BoxFields';
 import { ModalConfirmNavigate } from '~/components/ModalConfirmNavigate';
 import { MutationFooter, MutationHeader } from '~/components/Mutation';
 import { PageErrorBoundary } from '~/components/PageErrorBoundary';
-import { json, redirect, useActionData, useNavigate, useNavigation } from '~/overrides/remix';
+import { json, redirect, useActionData, useLoaderData, useNavigate, useNavigation } from '~/overrides/remix';
 import { validateFormData } from '~/overrides/remix-hook-form';
 import { useCallbackPrompt } from '~/overrides/RemixJS/client';
 import { SimpleLoaderResponse } from '~/overrides/RemixJS/types';
 import { i18nServer } from '~/packages/_Common/I18n/i18n.server';
-
 import {
-  VehiclesFormMutationActions,
-  VehiclesFormMutationProps,
-  VehiclesFormMutationValues,
-} from '~/packages/Vehicles/components/FormMutation/FormMutation';
-import { CreateTabs } from '~/packages/Vehicles/components/FormMutation/tab';
+  VehicleFormMutation,
+  VehicleFormMutationActions,
+  VehicleFormMutationProps,
+  VehicleFormMutationValues,
+} from '~/packages/Vehicles/components/FormMutation/Formmutation';
 import { getFormMutationResolver } from '~/packages/Vehicles/components/FormMutation/zodResolver';
 import { Vehicles } from '~/packages/Vehicles/models/Vehicles';
 import { getVehicle } from '~/packages/Vehicles/services/getVehicle';
 import { updateVehicle } from '~/packages/Vehicles/services/updateVehicle';
 import { vehiclesFormMutationValuesToCreateVehiclesService } from '~/packages/Vehicles/utils/vehicleFormMutationValuesToCreateCVehiclesService';
+import { VehiclesModelToDefaultValuesOfFormMutation } from '~/packages/Vehicles/utils/VehiclesModelToDefaultValuesOfFormMutation';
 import { SimpleActionResponse } from '~/types/SimpleActionResponse';
 import { handleCatchClauseAsSimpleResponse } from '~/utils/functions/handleErrors/handleCatchClauseSimple';
 import { handleFormResolverError } from '~/utils/functions/handleErrors/handleFormResolverError';
@@ -32,7 +32,7 @@ import { preventRevalidateOnEditPage } from '~/utils/functions/preventRevalidate
 
 export type EditVehiclesActionResponse = SimpleActionResponse<
   Pick<Vehicles, '_id'>,
-  VehiclesFormMutationProps['fieldsError']
+  VehicleFormMutationProps['fieldsError']
 >;
 export const action = async (remixRequest: ActionFunctionArgs): Promise<TypedResponse<EditVehiclesActionResponse>> => {
   const { request, params } = remixRequest;
@@ -41,7 +41,7 @@ export const action = async (remixRequest: ActionFunctionArgs): Promise<TypedRes
   }
   try {
     const t = await i18nServer.getFixedT(request, ['common', 'vehicles'] as const);
-    const { errors, data } = await validateFormData<VehiclesFormMutationValues>(request, getFormMutationResolver(t));
+    const { errors, data } = await validateFormData<VehicleFormMutationValues>(request, getFormMutationResolver(t));
     if (data) {
       await updateVehicle({
         remixRequest,
@@ -98,21 +98,21 @@ export const Page = () => {
   const { t } = useTranslation(['vehicles']);
 
   const navigation = useNavigation();
-  // const loaderData = useLoaderData<typeof loader>();
+  const loaderData = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
 
-  // const defaultValues = useMemo(() => {
-  //   return VehiclesModelToDefaultValuesOfFormMutation({
-  //     vehicles: loaderData.info?.vehicles,
-  //   });
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+  const defaultValues = useMemo(() => {
+    return VehiclesModelToDefaultValuesOfFormMutation({
+      vehicles: loaderData.info?.vehicles,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const isSubmiting = useMemo(() => {
     return navigation.state === 'loading' || navigation.state === 'submitting';
   }, [navigation.state]);
 
-  const formActionsRef = useRef<VehiclesFormMutationActions | null>(null);
+  const formActionsRef = useRef<VehicleFormMutationActions | null>(null);
   const isReadyNavigateAfterSubmit = useRef<boolean>(false);
   const { cancelNavigation, confirmNavigation, showPrompt } = useCallbackPrompt({
     whenEnableForBrowser: () => {
@@ -153,13 +153,13 @@ export const Page = () => {
       <MutationHeader title={t('vehicles:edit_title')} onBack={() => navigate(VehiclesWithPageBaseUrl)} />
       <div className="mb-4 flex-1">
         <BoxFields>
-          {/* <VehiclesFormMutation
+          <VehicleFormMutation
+            vehicles={undefined}
+            uid={FormUpdateUid}
             ref={formActionsRef}
             isSubmiting={isSubmiting}
-            uid={FormUpdateUid}
             defaultValues={defaultValues}
-          /> */}
-          <CreateTabs />
+          />
         </BoxFields>
       </div>
       <MutationFooter

@@ -1,23 +1,46 @@
-import React from 'react';
+import { sum, values } from 'ramda';
+import React, { useMemo } from 'react';
+import { VehicleFormMutationStateValues } from '../Formmutation';
+import { useRemixForm } from '~/overrides/remix-hook-form';
+import { FareStatus } from '~/packages/Vehicles/models/Vehicles';
 
 interface FareSummaryProps {
-  seatClasses: { [seat: string]: string };
   totalSeats: number;
+  form: ReturnType<typeof useRemixForm<VehicleFormMutationStateValues>>;
 }
+const FareSummary: React.FC<FareSummaryProps> = ({ form, totalSeats }) => {
+  const { watch } = form;
 
-const FareSummary: React.FC<FareSummaryProps> = ({ seatClasses, totalSeats }) => {
+  const seats = watch('seatSettings.seats');
+
   const fareTypes = ['VVIP', 'VIP', 'Business', 'Ordinary'];
 
-  // Tính toán số lượng ghế theo từng hạng vé
-  const counts = fareTypes.reduce(
-    (acc, type) => {
-      acc[type] = Object.values(seatClasses).filter(value => value === type).length;
-      return acc;
-    },
-    {} as { [key: string]: number },
-  );
+  const counts = useMemo(() => {
+    const result: Record<(typeof fareTypes)[number], number> = {
+      VVIP: 0,
+      VIP: 0,
+      Business: 0,
+      Ordinary: 0,
+    };
 
-  const selectedSeats = Object.keys(seatClasses).filter(seat => seatClasses[seat]).length;
+    (seats ?? []).forEach(seat => {
+      if (seat.type === FareStatus.vvip) {
+        result['VVIP']++;
+      }
+      if (seat.type === FareStatus.vip) {
+        result['VIP']++;
+      }
+      if (seat.type === FareStatus.business) {
+        result['Business']++;
+      }
+      if (seat.type === FareStatus.oridinary) {
+        result['Ordinary']++;
+      }
+    });
+
+    return result;
+  }, [seats]);
+  const selectedSeats = sum(values(counts));
 
   return (
     <div className=" flex-1 rounded-lg bg-white p-4 shadow-md ">

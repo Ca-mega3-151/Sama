@@ -10,19 +10,17 @@ import { json, useActionData, useNavigate, useNavigation } from '~/overrides/rem
 import { getValidatedFormData } from '~/overrides/remix-hook-form';
 import { useCallbackPrompt } from '~/overrides/RemixJS/client';
 import { i18nServer } from '~/packages/_Common/I18n/i18n.server';
-
 import {
-  // VehiclesFormMutation,
-  VehiclesFormMutationActions,
-  VehiclesFormMutationProps,
-  VehiclesFormMutationValues,
-} from '~/packages/Vehicles/components/FormMutation/FormMutation';
-import { CreateTabs } from '~/packages/Vehicles/components/FormMutation/tab';
+  VehicleFormMutation,
+  VehicleFormMutationActions,
+  VehicleFormMutationProps,
+  VehicleFormMutationValues,
+} from '~/packages/Vehicles/components/FormMutation/Formmutation';
 import { getFormMutationResolver } from '~/packages/Vehicles/components/FormMutation/zodResolver';
 import { Vehicles } from '~/packages/Vehicles/models/Vehicles';
 import { createVehicle } from '~/packages/Vehicles/services/createVehicle';
 import { vehiclesFormMutationValuesToCreateVehiclesService } from '~/packages/Vehicles/utils/vehicleFormMutationValuesToCreateCVehiclesService';
-// import { VehiclesModelToDefaultValuesOfFormMutation } from '~/packages/Vehicles/utils/VehiclesModelToDefaultValuesOfFormMutation';
+import { VehiclesModelToDefaultValuesOfFormMutation } from '~/packages/Vehicles/utils/VehiclesModelToDefaultValuesOfFormMutation';
 import { notification } from '~/shared/ReactJS';
 import { SimpleActionResponse } from '~/types/SimpleActionResponse';
 import { handleCatchClauseAsSimpleResponse } from '~/utils/functions/handleErrors/handleCatchClauseSimple';
@@ -31,7 +29,7 @@ import { handleGetMessageToToast } from '~/utils/functions/handleErrors/handleGe
 
 export type CreateVehiclesActionResponse = SimpleActionResponse<
   Pick<Vehicles, '_id'>,
-  VehiclesFormMutationProps['fieldsError']
+  VehicleFormMutationProps['fieldsError']
 >;
 export const action = async (
   remixRequest: ActionFunctionArgs,
@@ -39,10 +37,7 @@ export const action = async (
   const { request } = remixRequest;
   try {
     const t = await i18nServer.getFixedT(request, ['common', 'vehicles'] as const);
-    const { errors, data } = await getValidatedFormData<VehiclesFormMutationValues>(
-      request,
-      getFormMutationResolver(t),
-    );
+    const { errors, data } = await getValidatedFormData<VehicleFormMutationValues>(request, getFormMutationResolver(t));
     if (data) {
       await createVehicle({
         remixRequest,
@@ -71,15 +66,15 @@ export const Page = () => {
   const navigation = useNavigation();
   const actionData = useActionData<typeof action>();
 
-  // const defaultValues = useMemo(() => {
-  //   return VehiclesModelToDefaultValuesOfFormMutation({ vehicles: undefined });
-  // }, []);
+  const defaultValues = useMemo(() => {
+    return VehiclesModelToDefaultValuesOfFormMutation({ vehicles: undefined });
+  }, []);
   const isSubmiting = useMemo(() => {
     return navigation.state === 'loading' || navigation.state === 'submitting';
   }, [navigation.state]);
 
   //#region Confirm back when form is dirty
-  const formActionsRef = useRef<VehiclesFormMutationActions | null>(null);
+  const formActionsRef = useRef<VehicleFormMutationActions | null>(null);
   const isReadyNavigateAfterSubmit = useRef<boolean>(false);
   const { cancelNavigation, confirmNavigation, showPrompt } = useCallbackPrompt({
     whenEnableForBrowser: () => {
@@ -120,13 +115,13 @@ export const Page = () => {
       <MutationHeader title={t('vehicles:create_title')} onBack={() => navigate(VehiclesWithPageBaseUrl)} />
       <div className="mb-4 flex-1">
         <BoxFields>
-          {/* <VehiclesFormMutation
+          <VehicleFormMutation
+            vehicles={undefined}
+            uid={FormCreateUid}
             ref={formActionsRef}
             isSubmiting={isSubmiting}
-            uid={FormCreateUid}
             defaultValues={defaultValues}
-          /> */}
-          <CreateTabs />
+          />
         </BoxFields>
       </div>
       <MutationFooter
