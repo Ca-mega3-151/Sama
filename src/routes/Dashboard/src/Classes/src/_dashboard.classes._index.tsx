@@ -20,7 +20,8 @@ import { ClassesFormSearchNFilter } from '~/packages/Classes/components/Listing/
 import { ClassesListingHeader } from '~/packages/Classes/components/Listing/ListingHeader';
 import { ClassesListingTable } from '~/packages/Classes/components/Listing/ListingTable';
 import { Classes } from '~/packages/Classes/models/Classes';
-import { getClasses } from '~/packages/Classes/services/getClasses';
+
+import { getClasses } from '~/packages/Classes/services/getclasses';
 import { ClassesListingSearchParams } from '~/packages/Classes/types/ListingSearchParams';
 import { ClassesModelToDefaultValuesOfFormMutation } from '~/packages/Classes/utils/ClassesModelToDefaultValuesOfFormMutation';
 import { classesLisitngUrlSearchParamsUtils } from '~/packages/Classes/utils/listingUrlSearchParams';

@@ -1,7 +1,7 @@
 import { Button, Popover, Radio } from 'antd';
 import classNames from 'classnames';
 import React from 'react';
-import { VehicleFormMutationStateValues } from '../Formmutation';
+import { VehicleFormMutationStateValues } from '../FormMutation';
 import FareSummary from './totalSeat';
 import { useRemixForm } from '~/overrides/remix-hook-form';
 import { FareStatus, Vehicles } from '~/packages/Vehicles/models/Vehicles';
@@ -33,20 +33,36 @@ interface Props {
   isEdit: boolean;
   vehicles: Vehicles | undefined;
 }
+
 const SeatSelection: React.FC<Props> = ({ form }) => {
   const { setValue, watch } = form;
 
   const seats = watch('seatSettings.seats');
 
-  const fareTypes = ['VVIP', 'VIP', 'Business', 'Ordinary'];
+  // Sử dụng enum FareStatus
+  const fareTypes = Object.values(FareStatus);
+
   const totalSeats = 73;
+
+  // Mapping fare classes to colors
+  const seatColorMap: { [key in FareStatus]: string } = {
+    [FareStatus.vvip]: 'bg-yellow-200',
+    [FareStatus.vip]: 'bg-purple-200',
+    [FareStatus.business]: 'bg-green-200',
+    [FareStatus.oridinary]: 'bg-orange-200',
+  };
 
   const handleClassChange = (seatId: string, fareStatus: FareStatus | 'CLEAR', isSelected: boolean) => {
     if (fareStatus === 'CLEAR') {
+      // Xóa ghế khỏi danh sách
+      setValue(
+        'seatSettings.seats',
+        (seats ?? []).filter(seatItem => seatItem._id !== seatId),
+      );
       return;
     }
     if (isSelected) {
-      // Cần update
+      // Cập nhật loại ghế
       setValue(
         'seatSettings.seats',
         (seats ?? []).map(seatItem => {
@@ -61,15 +77,8 @@ const SeatSelection: React.FC<Props> = ({ form }) => {
       );
       return;
     }
-    // Cần thêm vào mảng
-    setValue(
-      'seatSettings.seats',
-      (seats ?? []).concat({
-        _id: seatId,
-        type: fareStatus,
-      }),
-    );
-    // FIXME: Clear ghế
+    // Thêm ghế mới vào danh sách
+    setValue('seatSettings.seats', (seats ?? []).concat({ _id: seatId, type: fareStatus }));
   };
 
   const renderSeat = (seatId: string) => {
@@ -77,12 +86,9 @@ const SeatSelection: React.FC<Props> = ({ form }) => {
 
     const content = (
       <div className="p-2">
-        <div className="mb-8 flex justify-between">
-          <h4 className="mb-2 text-sm font-medium">Fare class</h4>
-          <Button
-            className="mt-2 cursor-pointer text-xs text-red-500"
-            onClick={() => handleClassChange(seatId, 'CLEAR', !!_seatValue)}
-          >
+        <div className="mb-2 flex justify-between">
+          <h4 className="text-sm font-medium">Fare Class</h4>
+          <Button type="link" size="small" danger onClick={() => handleClassChange(seatId, 'CLEAR', !!_seatValue)}>
             Clear
           </Button>
         </div>
@@ -99,13 +105,15 @@ const SeatSelection: React.FC<Props> = ({ form }) => {
       </div>
     );
 
+    // Xác định class màu dựa trên loại ghế
+    const seatClass = _seatValue?.type ? seatColorMap[_seatValue.type as FareStatus] : '';
+
     return (
-      <Popover content={content} title={seatId} trigger="click">
+      <Popover content={content} title={seatId} trigger="click" key={seatId}>
         <div
           className={classNames(
-            'flex size-12 cursor-pointer items-center justify-center rounded-lg border text-sm font-medium',
-            '',
-            // FIXME: In ra màu từ "seatValue"
+            'flex h-12 w-12 cursor-pointer items-center justify-center rounded-lg border text-sm font-medium',
+            seatClass,
           )}
         >
           {seatId}
@@ -116,12 +124,10 @@ const SeatSelection: React.FC<Props> = ({ form }) => {
 
   return (
     <div className="flex flex-col gap-8 md:flex-row">
-      <div className=" flex-1 p-4">
+      <div className="flex-1 p-4">
         <h2 className="mb-4 text-lg font-medium">Seat Setting</h2>
         <div className="flex justify-center">
-          <div className="grid grid-cols-4 gap-2">
-            {seatRows.map(row => row.map(seat => <React.Fragment key={seat}>{renderSeat(seat)}</React.Fragment>))}
-          </div>
+          <div className="grid grid-cols-4 gap-2">{seatRows.map(row => row.map(seat => renderSeat(seat)))}</div>
         </div>
       </div>
       <div className="w-1/2">

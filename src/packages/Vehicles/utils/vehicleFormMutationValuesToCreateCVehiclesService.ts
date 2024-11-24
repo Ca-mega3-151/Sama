@@ -1,4 +1,4 @@
-import { VehicleFormMutationValues } from '../components/FormMutation/Formmutation';
+import { VehicleFormMutationValues } from '../components/FormMutation/FormMutation';
 import { CreateVehicle } from '../services/createVehicle';
 
 export const vehiclesFormMutationValuesToCreateVehiclesService = (
